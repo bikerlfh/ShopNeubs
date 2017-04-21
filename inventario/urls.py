@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^marca/$', views.marcas, name = 'marcas'),
     url(r'^marca/(?P<descripcion_marca>[\w ]{2,30})/$', views.productos_marca, name = 'productos_marca'),
     url(r'^ofertas/$', views.ofertas, name = 'ofertas'),
+    url(r'^ofertas/(?P<descripcion_marca>[\w ]{2,30})/$', views.ofertas, name = 'ofertas_marca'),
     url(r'^producto/busqueda-asincrona-producto/$', views.busqueda_asincrona_producto, name = 'busqueda_asincrona_producto'),
     url(r'^producto/json/$', login_required(permission_required('compras.solicitar_compra',login_url='/')(views.producto_json))),
     url(r'^saldo-inventario/json/$', login_required(permission_required('compras.solicitar_compra',login_url='/')(views.saldo_inventario_json)),name='saldo_inventario_json'),

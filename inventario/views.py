@@ -16,11 +16,13 @@ def marcas(request):
 	return render(request,"inventario/marcas.html",{'listado_marcas': get_list_or_404(Marca)})
 
 def productos_categoria(request,descripcion_categoria,descripcion_marca = None):
+	page_title = descripcion_categoria
 	categoria = get_object_or_404(Categoria,descripcion = descripcion_categoria)
 	filtro_Q = Q(producto__categoria = categoria.pk) | Q(producto__categoria__categoriaPadre = categoria.pk)
 	if descripcion_marca is not None:
 		marca = get_object_or_404(Marca,descripcion__iexact = descripcion_marca)
 		filtro_Q = Q(producto__marca = marca.pk) & (filtro_Q)
+		page_title = "%s (%s)" % (descripcion_categoria,descripcion_marca)
 
 	order = request.GET.get('order','rel')
 	page = request.GET.get('page', 1)
@@ -36,7 +38,7 @@ def productos_categoria(request,descripcion_categoria,descripcion_marca = None):
 	return render(request,"inventario/filtro_producto.html",{ 'listado_saldo_inventario': listado_saldo_inventario,
 															  'listado_marcas': listado_marcas,
 															  'listado_categorias' : core.get_categorias(),
-															  'page_title': descripcion_categoria})
+															  'page_title': page_title})
 
 
 def productos_marca(request,descripcion_marca):
@@ -44,7 +46,8 @@ def productos_marca(request,descripcion_marca):
 	page = request.GET.get('page', 1)
 	#listado_saldo_inventario = get_list_or_404(SaldoInventario,producto__marca__descripcion = descripcion_marca)
 	listado_saldo_inventario = core.consultar_saldo_inventario_paginado(Q(producto__marca__descripcion = descripcion_marca),order,page)
-	return render(request,"inventario/filtro_producto.html",{ 'listado_saldo_inventario': listado_saldo_inventario , 'listado_categorias' : core.get_categorias()})	
+	return render(request,"inventario/filtro_producto.html",{ 'listado_saldo_inventario': listado_saldo_inventario , 
+															  'listado_categorias' : core.get_categorias()})	
 
 
 
@@ -106,15 +109,26 @@ def search_producto(request):
 	return render(request,"inventario/filtro_producto.html",{'listado_saldo_inventario' : listado_saldo_inventario,'listado_marcas':listado_marcas, 'listado_categorias' : core.get_categorias() })
 	#return render_to_response("inventario/filtrar_producto.html",{'listadoProductos' : list_productos })
 
-def ofertas(request):
+def ofertas(request,descripcion_marca = None):
+	page_title = "Ofertas"
+
 	order = request.GET.get('order','rel')
 	page = request.GET.get('page', 1)
-	listado_saldo_inventario = core.consultar_saldo_inventario_paginado(Q(precioOferta__isnull=False,estado = True),order,page)
-	listado_marcas = core.cargar_marcas_desde_listado_saldo_inventario(listado_saldo_inventario)
+
+	filtro_Q = Q(precioOferta__isnull=False,estado = True)
+	listado_marcas = None
+	if descripcion_marca != None:
+		marca = get_object_or_404(Marca,descripcion__iexact = descripcion_marca)
+		filtro_Q = filtro_Q & Q(producto__marca = marca.pk)
+		page_title = "Ofertas (%s)" % marca.descripcion
+
+	listado_saldo_inventario = core.consultar_saldo_inventario_paginado(filtro_Q,order,page)
+	if descripcion_marca == None:
+		listado_marcas = core.cargar_marcas_desde_listado_saldo_inventario(listado_saldo_inventario)
 	return render(request,"inventario/filtro_producto.html",{'listado_saldo_inventario' : listado_saldo_inventario,
 															 'listado_marcas':listado_marcas, 
 															 'listado_categorias' : core.get_categorias(),
-															 'page_title': 'Ofertas' })
+															 'page_title':page_title })
 
 # Esta vista se llama asincronamente
 def busqueda_asincrona_producto(request):
