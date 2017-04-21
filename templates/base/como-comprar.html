@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load tags_extra %}
+
+{% block title %}
+	Como Comprar
+{% endblock %}
+
+{% block meta_description %}
+	Encuentra la forma mas facil de comprar paso a paso
+{% endblock %}
+
+{% block posicion_pagina %}
+	{% get_breadcrumb request.get_full_path %}
+{% endblock %}
+
+{% block script_head %}
+	<style type="text/css">
+		p , ul{
+			padding-top: 8px;
+		}
+		ul{
+			padding-left: 0px;
+		}
+		ul > li > div> span{
+			font-size: 41px;
+		}
+		
+		@media screen and (min-width: 768px) {
+            .col-lg-4 , .col-md-4 ,  .col-sm-4 {
+                width: 32%;
+				margin-left: 8px;
+				height: 250px;
+            }
+        }
+        @media screen and (max-width: 767px)  {
+            .col-xs-6{
+                width: 45%;
+                margin-right: 8px;
+                height: 300px;
+            }
+        }
+        .item-paso{
+        	padding-bottom: 10px;
+        }
+       	.panel{
+       		display: none;
+       	}
+       	h4.title-principal{
+       		color:#FF5722;
+       	}
+	</style>
+{% endblock %}
+
+{% block content %}
+	<div class="container-fluid" style="padding-right: 10px;">
+		<div class="row"  style="margin-left: 0px">
+			<div class="page-header">
+				<h3 class="title-principal">¿Cómo comprar en ShopNeubs?</h3>
+			</div>
+			<div class="row" style="margin-left: 0px">
+				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bg-grey item-paso">
+					<ul>
+						<li style="list-style-type: none">
+							<div class="text-center" style="padding-top: 9px;">
+						    	<span class="glyphicon glyphicon-user bg-orange"></span>
+						    </div>
+						    <h4 class="title-principal text-center">1. Regístrase e Inicie Sesion</h4>
+							<p class="item-text text-justify">
+								Para realizar pedidos desde la aplicación, debe <a href="{% url 'auth_login'%}"><b>iniciar sesion</b></a>. Si aún no esta registrado, diríjase al siguiente link <a href="{% url 'registration_register'%}"><b>Registro</b></a>
+						    </p> 
+						</li>
+					</ul>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bg-grey item-paso">
+					<ul >
+						<li style="list-style-type: none">
+							<div class="text-center" style="padding-top: 9px;">
+						    	<span class="glyphicon glyphicon-search bg-orange"></span>
+						    </div>
+						    <h4 class="title-principal text-center">2. Busque y verifique sus productos</h4>
+						    <p class="text-justify" style="padding-left: 0px;">
+					    		Puede realizar la busqueda con palabras especificas desde el campo en la parte superior de la pagina
+					     		o desde el filtro por categorías o marcas.<br>
+					     		Verifique los productos antes de agregarlos al carro de compras.
+						    </p>
+						</li>
+					</ul>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bg-grey item-paso">
+					<ul >
+						<li style="list-style-type: none">
+							<div class="text-center" style="padding-top: 9px;">
+						    	<span class="glyphicon glyphicon-shopping-cart bg-orange bg-orange"></span>
+						    </div>
+						    <h4 class="title-principal text-center">4. Agrege al carro de compra</h4>
+							<p class="item-text text-justify"> Puede agregar los productos al carro de compras ya sea desde la busqueda (botón <span class="glyphicon glyphicon-shopping-cart "></span>) o
+							desde el detalle de cada producto (botón <b>Agregar al Carrito</b>)
+						    </p>
+						</li>
+					</ul>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bg-grey item-paso">
+					<ul >
+						<li style="list-style-type: none">
+							<div class="text-center" style="padding-top: 9px;">
+						    	<span class="glyphicon glyphicon-list-alt bg-orange bg-orange"></span>
+						    </div>
+						    <h4 class="title-principal text-center">5. Verifique su carro de compras</h4>
+							<p class="item-text text-justify"> Para verificar qué productos tiene en el carro de compras, de clic en el <b>botón flotante</b> que esta en la parte superior derecha de la pagina. Allí podrá gestionar sus productos antes de realizar el pedido.
+						    </p>
+						</li>
+					</ul>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bg-grey item-paso">
+					<ul>
+						<li style="list-style-type: none">
+							<div class="text-center" style="padding-top: 9px;">
+						    	<span class="glyphicon glyphicon-ok bg-orange"></span>
+						    </div>
+						    <h4 class="title-principal text-center">6. Complete su Pedido</h4>
+							<p class="item-text text-justify">
+								Una vez verificada la lista de sus productos, de clic en el botón <b>Completar Pedido</b> el cual
+								le redireccionará a la pagina de confirmación de envío del pedido, donde encontrará el detalle de su pedido seguido del número de pedido con el cual fue registrado.
+						    </p>
+						</li>
+					</ul>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bg-grey item-paso">
+					<ul>
+						<li style="list-style-type: none">
+							<div class="text-center" style="padding-top: 9px;">
+						    	<span class="glyphicon glyphicon-check bg-orange"></span>
+						    </div>
+						    <h4 class="title-principal text-center">7. Recepción del pedido</h4>
+							<p class="item-text text-justify">
+								Nos comunicaremos con usted para ultimar detalles como el método de pago, datos de envío y recepción de sus productos.
+						    </p>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-lg-12">
+				<p class="text-justify">
+					Para realizar compras en ShopNeubs manejamos las siguientes formas de pago. Tenga en cuenta que es necesario confirmar stock de la mercancía antes de realizar cualquier tipo de transacción.
+				</p>
+				<h4 class="title-principal">Información Bancaria:</h4>
+				<p>Bancolombia cuenta de Ahorros 534-749155-11 Titular Neubs SAS Nit 901032951-5</p>
+				<h4 class="title-principal">Transferencia Electrónica</h4>
+				<p class="text-justify">
+				Las transferencias electrónicas realizadas desde un cajero electrónico o computador no tienen costo, en cuanto a transferencias desde un PAC tienen un incremento el cual debe ser adicionado antes de realizar la transferencia. Cuando se realizan transferencias electrónicas desde otras entidades bancarias, ésta puede demorarse hasta 3 días habieles. Neubs SAS no realizará despachos de mercancia hasta ver reflejada la transacción en la cuenta del titular.</p>
+				<h4 class="title-principal">Consignación Bancaria:</h4>
+				<p>Al realizar una consignación bancara, debe adicional el costo que la entidad cobre por dicha transacción. </p>
+				<h4 class="title-principal">Giros</h4>
+				<p>Realícelo a nombre de Karen Tatiana Ramos Silva C.C 1.075.275.974</p>
+				<hr>
+				<p>Una vez realizada la consignación bancara, transferencia bancaria o el giro, debe enviar un correo a ventas@neubs.com.co con el número e información del pedido y el comprobante de pago (escáner, foto o pantallazo).</p>
+				<h4 class="title-principal">Información de envío</h4>
+				<p></p>
+				<ul style="padding-left: 20px">
+					<li >Una vez realizado el pago de su pedido, ShopNeubs le hará entrega de los productos en la dirección que el usuario tenga especificada en su cuenta. Sí el usuario desea cambiar esta dirección de entrega, debe comunicarselo a un asesor.</li>
+					<li class="text-justify">El tiempo estimado de entrega de los pedidos es entre 1 y 5 días habiles.</li>
+					<li class="text-justify">En algunos casos donde el producto no se encuentre en Stock en la ciudad de recidencia del cliente, éste deberá hacerse cargo de la cancelación de los costos de envío los cuales varian dependiendo de la empresa transportadora</li>
+					<li class="text-justify">Para las ciudades donde ShopNeubs tenga covertura de entrega personalizada, los pedidos serán entregados por personal especializado.</li>
+					<li class="text-justify">En cuanto a ciudades donde no halla covertura de personal de ShopNeubs, los envíos de los pedidos se realizan por medio de las siguientes empresas transportadoras: Servientrega, Envia, TCC, Interrapidisimo o Deprisa. Si el usuario requiere que se envíe su pedido por una de estas empresas en particular, deberá informarlo al asesor, de lo contrario el pedido será despachado por cualquier empresa de estas.<br>
+					Todos los costos de transporte, seguro y comisiones bancarias serán asumidos por el cliente. En caso de pérdida de mercancía, daños o perjuicios que sufra el producto en el transporte serán únicamente bajo y riesgo de responsabilidad del comprador, así como la reclamación ante la transportadora; Neubs SAS solo es responsable hasta el momento en que el producto es entregado a la transportadora, pasando a esta, la responsabilidad según el Código de Comercio Título IV del contrato de transporte Capítulo III "Transporte de Cosas" Artículo 1013 "Entrega de Mercancías y Responsabilidad del Transportador" y Artículo 1030 "Responsabilidad por pérdida total o parcial de la cosa".</li>
+				</ul>
+			</div>
+			
+		</div>
+	</div>
+
+{% endblock %}

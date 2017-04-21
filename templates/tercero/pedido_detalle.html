@@ -1,0 +1,35 @@
+{% load humanize %}
+{% load staticfiles %}
+<div class="modal-dialog modal-lg" role="document">
+	<div class="modal-content">
+	  <div class="modal-header">
+        <p class="modal-title" id="gridSystemModalLabel">
+        	<h3 class="text-center"><b>DETALLE PEDIDO<b></h3>
+	        <p><b>Pedido Venta: N° </b> {{pedidoVenta.numeroPedido}}</p>
+	        <p style="position: absolute; top:70px; left: 403px;"><b>Estado: </b> {{ pedidoVenta.estadoPedidoVenta__descripcion|title }}</p>
+	        <p class="pull-right" style="position: absolute; top:70px; right: 13px;"><b>Fecha: </b>{{ pedidoVenta.fecha|date:"M d, Y H:i:s" }}</p>
+        </p>
+      </div>
+      <div class="modal-body">
+      <table class="table  table-responsive">
+		<thead>
+			<tr>
+				<th><h5>Producto</h5></th>
+				<th><h5>Cantidad</h5></th>
+				<th><h5>Valor Total</h5></th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for posicion in listado_pedido_posicion %}
+				<tr class="cursor-pointer ">
+					<th class="text-left"><p>{{ posicion.producto__numeroProducto|add:' - '|add:posicion.producto__nombre }}</p></th>
+					<th><p>{{ posicion.cantidad }}</p></th>
+					<th><p>{{ posicion.costoTotal|stringformat:"d"|intcomma }}</p></th>
+				</tr>
+      		{% endfor %}
+		</tbody>
+	</table>
+      	
+      </div>
+	</div>
+</div>

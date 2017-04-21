@@ -1,0 +1,30 @@
+{% load staticfiles %}
+{% load thumbnail %}
+{% load humanize %}
+
+{% if listado_producto_relacionado %}
+  <section class="col-lg-12 col-md-12 col-sm-12 col-xs-12 box" style="padding-left: 0px;margin-top: 15px;padding-right: 0px;" >
+    <h4 class="text-center">{{ titulo_producto_relacionado|default:'Productos Destacados'}}</h4>
+    <hr>
+    {% for saldoInventario in listado_producto_relacionado %}
+      <div class="row" style="margin-left: 0px;margin-right: 0px;">
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6" style="margin-bottom: 5px;">
+          <div class="producto-relacionado cursor-pointer box" onclick="redirect('{% url 'item' saldoInventario.producto__categoria__descripcion saldoInventario.producto__marca__descripcion saldoInventario.idSaldoInventario %}')">
+            <figure>
+                <img src="{{ saldoInventario.producto__imagen|thumbnail_url:'producto_relacionado'}}" class="img-responsive group list-group-image center-block" alt="{{ saldoInventario.producto__nombre }}">
+            </figure>
+          </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 " style="padding-left: 0px; padding-right: 8px;" >
+          <h5>{{ saldoInventario.producto__nombre }}</h5>
+          {% if saldoInventario.precioOferta %}
+            <p class="item-precio-relacionados bg-red" style="top: 0px">${{ saldoInventario.precioOferta|stringformat:"d"|intcomma}}</p>
+            <p class="precio-antes" style="padding-top: 0px; top:-7px;  position: relative;">$ {{ saldoInventario.precioVentaUnitario|stringformat:"d"|intcomma }}</p> 
+            {% else %}
+            <p class="item-precio-relacionados bg-red">${{ saldoInventario.precioVentaUnitario|stringformat:"d"|intcomma}}</p>
+          {% endif %}
+        </div>
+      </div> 
+    {% endfor %}
+  </section>
+{% endif %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+Neubs - Error 403
+{% endblock %}
+
+{% block meta_description %}
+403 - Permiso Denegado
+{% endblock %}
+
+{% block script_head %}
+<link rel="stylesheet" href="{% static 'css/font-Aller.css'%}">
+<style type="text/css">
+	.navbar-right, .btn-cart{
+		display: none;
+	}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	<div class="container-fluid text-center" style="padding-top: 30px;"">
+		<h2 class="bg-grey"> Permiso denegado </h2>
+		<h1 class="title-principal" style="font-size:80px;"> ERROR 403 </h1>
+		<h3> Usted no posee permisos a la pagina a la cual desea ingresar.<br>
+		Lo invitamos que ingrese a la página principal 
+		<br><strong>{{ request.session.app_name }}</strong> </h3>
+	</div>
+</div>
+
+{% endblock %}

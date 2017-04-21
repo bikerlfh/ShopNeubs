@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load thumbnail %}
+{% load humanize %}
+{% load tags_extra %}
+
+{% block title %}
+	{{ saldoInventario.producto.nombre }}
+	{{ saldoInventario.precioOferta|default:saldoInventario.precioVentaUnitario|stringformat:"d"|intcomma|add:' en '|add:'ShopNeubs' }}
+{% endblock %}
+
+{% block meta_description %}
+Compra {{ saldoInventario.producto.nombre }} en ShopNeubs
+{% endblock %}
+
+{% block script_head %}
+<link rel="stylesheet" href="{% static 'css/producto-style.min.css'%}">
+<link rel="stylesheet" href="{% static 'css/magnific-popup.css'%}">
+<style type="text/css">
+	.input-group .form-control{
+		z-index: 0;
+	}
+	/* El fondo de las imagenes la pone en blanco cuando son png con fondo transparente*/
+	.mfp-img{
+		background-color: #fff;
+	}
+	.producto-oferta{
+		right: 7px;
+	}
+
+	#imagen-principal{
+		width:85%;
+		float: right;
+	}
+	#gal1{
+		width:15%;
+    	float: left;
+	}
+	#gal1 ul {
+	    list-style:none;
+	    padding: 1px;
+	    
+	}
+	#gal1 li {
+	    padding-bottom: 10px;	    
+	}
+	@media screen and (max-width:750px){
+		#imagen-principal,#gal1{
+			width: 100%;
+		}
+		#gal1 ul {
+		    list-style-type: none;
+		    margin: 0;
+		    padding: 0;
+		    overflow: hidden;
+		}
+		#gal1 li {
+		    float: left;
+		}
+		#gal1 li a {
+		    display: block;
+		    color: white;
+		    text-align: center;
+		    padding: 10px;
+		    text-decoration: none;
+		}
+	}
+</style>
+{% endblock %}
+
+{% block posicion_pagina %}
+
+	{% get_breadcrumb request.get_full_path saldoInventario.producto.nombre %}
+
+{% endblock %} 
+
+{% block content %}
+<div class="row">
+	<div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
+		<div class="col-lg-9 col-md-8 col-sm-8 col-xs-12">
+			<h3 class="title-principal">{{ saldoInventario.producto.nombre|title}}</h3>
+			<hr>
+			<div class="row">
+				<section>
+					<div class="col-lg-7 col-md-6 col-sm-12 col-xs-12">
+						{% if saldoInventario.estado %}
+							{% get_span_new_product saldoInventario.fechaCreacion|date:'Y-m-d' 'producto-nuevo'%}
+							{% else %}
+							<span class="producto-sin-stock"></span>
+						{% endif %} 
+						{% if saldoInventario.precioOferta %}
+						<span class="glyphicon glyphicon-certificate  producto-oferta-estrella" style="float: left; left: 0px"></span>
+						{% endif %}
+						<div id="imagen-principal">
+							<a href="{{ saldoInventario.producto.imagen.url }}" class="gallery-item">
+								<img id="img_01"  src="{{ saldoInventario.producto.imagen|thumbnail_url:'producto_detalle' }}" class="img-responsive center-block" />
+							</a>
+						</div>
+						<div id="gal1">
+							<ul>
+							{% for imagen in saldoInventario.producto.imagenes %}
+								{% if not forloop.first %}
+								<li>
+									<a href="{{ imagen.url }}" class="gallery-item">
+								    	<img src="{{ imagen|thumbnail_url:'galeria' }}" />
+									</a>
+								</li>
+								{% endif %}
+							{% endfor %}
+							</ul>
+						</div>
+					</div>
+					<div class="col-lg-5 col-md-6 col-sm-12 col-xs-12 pull-right" style="padding-left:0px;">
+						<section>
+							<!-- <h3 class="title-principal">{{saldoInventario.producto.nombre}}</h3>
+							<br> -->
+							<h4 class="item-text"><b>Referencia:</b> {{saldoInventario.producto.referencia}}</h4>
+							<h4 class="item-text"><b>Código:</b> {{saldoInventario.producto.numeroProducto}}</h4>
+							<h4 class="item-text"><b>Marca:</b>	 <a href="{% url 'productos_marca' saldoInventario.producto.marca.descripcion %}">{{saldoInventario.producto.marca.descripcion}}</a></h4>
+							{% if saldoInventario.precioOferta %}
+								<h4 class="item-text"><b>Precio:</b><a class="item-precio bg-red ">${{saldoInventario.precioOferta|stringformat:"d"|intcomma }}</a>
+								<a class="precio-antes">$ {{ saldoInventario.precioVentaUnitario|stringformat:"d"|intcomma }}</a>
+								</h4>
+							{% else %}
+								<h4 class="item-text"><b>Precio:</b> <a class="item-precio bg-red">${{saldoInventario.precioVentaUnitario|stringformat:"d"|intcomma }}</a></h4>
+							{% endif %}
+						</section>
+					</div>
+					
+				</section>
+			</div>
+			<div class="row">
+				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+					{% autoescape off %}
+					{% if saldoInventario.producto.descripcion %}
+					
+					<div class="detalle-especifico">
+						<div class="header-detalle">
+							<h3>Descripción</h3>
+						</div>
+						
+						<div class="panel-detalle">
+						  <p>{{ saldoInventario.producto.descripcion|linebreaks}}</p>
+						</div>
+						
+					</div>
+					{% endif %}
+					
+					{% if saldoInventario.producto.especificacion %}
+					<div class="detalle-especifico">
+						<div class="header-detalle">
+							<h3>Especificaciones</h3>
+						</div>
+						<div class="panel-detalle">
+						  <p>{{ saldoInventario.producto.especificacion|linebreaks }}</p>
+						</div>
+					</div>
+					{% endif %}
+					{% if saldoInventario.garantia %}
+					<div class="detalle-especifico">
+						<div class="header-detalle">
+							<h3>Garantía</h3>
+						</div>
+						<div class="panel-detalle">
+						  <p>{{ saldoInventario.garantia.descripcion|linebreaks }}</p>
+						</div>
+					</div>
+					{% endif %}
+					{% if saldoInventario.producto.urldescripcion %}
+					<div class="detalle-especifico">
+						<div class="header-detalle">
+							<h3>Información Detallada</h3>
+						</div>
+						<div class="panel-detalle">
+						  Pagina del fabricante: 
+						  <a class="text-justify" href="{{saldoInventario.producto.urldescripcion}}" target="_blank">{{saldoInventario.producto.urldescripcion}}</a>
+						</div>
+					</div>
+					{% endif %}
+					{% endautoescape %}
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12" >
+			<section class="box center-block">
+				<h4 class="text-center">Agregar al Carrito</h4>
+				<hr>
+				<div class="container-fluid" style="padding-left: 10px;">
+					<div class="row text-center">
+						<form>
+						    <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+								<label for="cantidad">Cant.</label>
+								<span class="cantidad-modificable cursor-pointer">		
+									<i data-role="disminuir" class="disminuir-cantidad glyphicon-minus"></i>
+									<input class="text-center" data-role="cantidad-input" data-target="#valor-total" id="cantidad" type="text"  min="1" max="10" value="{{item_cart.cantidad|default:1}}" required onkeypress="return false">
+									<i data-role="aumentar" class="aumentar-cantidad glyphicon-plus"></i>
+								</span>
+						    </div>
+						    <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12" style="padding-top: 6px; padding-left: 0px;">
+						    	<label for="cantidad" >Precio</label>
+					   	  			<p id="valor-total" class="item-precio-relacionados bg-red" style="display: inline-block;"> ${{ item_cart.valor_total|default:saldoInventario.precioOferta|default:saldoInventario.precioVentaUnitario|stringformat:"d"|intcomma}}</p>
+						    </div>
+						    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							    <button class="btn btn-warning center-block" type="submit" onclick="add_to_cart('/cart/change/{{saldoInventario.pk}}/'+$('#cantidad').val()+'/')">
+									<span class="glyphicon glyphicon-shopping-cart" aria-hidden="true">
+									</span> Agregar al carrito
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</section>
+       	{% include "inventario/productos_relacionados.html" %}
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block script_footer %}
+<script type="text/javascript" src="{% static 'js/jquery.magnific-popup.min.js'%}"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('.gallery-item').magnificPopup({
+		  type: 'image',
+		  gallery:{
+		    enabled:true
+		  }
+		});
+		// Cuando no hay galeria, se elimina y la imagen principal toma el 100% del ancho
+		if($('#gal1 ul').children().length == 0){
+			$('#imagen-principal').attr('style','width:100%');
+			$('#gal1').remove()
+		}
+	});
+</script>
+{% endblock %}

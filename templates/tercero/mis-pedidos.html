@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load humanize %}
+{% block title %}
+Detalles del Producto
+{% endblock %}
+
+{% block meta_description %}
+SU mejor descripción
+{% endblock %}
+
+{% block script_head %}
+	<style type="text/css">
+		thead > tr > th , tbody > tr > th{
+			text-align: center;
+		}
+		thead > tr > th > h5{
+			font-weight: bolder;
+		}
+		p{
+			font-weight: 100;
+			font-size: 14px;
+		}
+    	thead{
+			text-transform:uppercase;
+			color:;
+    	}
+	</style>
+{% endblock %}
+{% block content %}
+<div class="container-fluid" style="margin-right: 4px;">
+	<h2 class="title-principal">Mis Pedidos</h2>
+	<div class="table-responsive">
+		<table class="table">
+			<thead>
+				<tr>
+					<th><h5>Número de Pedido</h5></th>
+					<th><h5>Estado</h5></th>
+					<th><h5>Fecha</h5></th>
+					<th><h5>Número de Productos</h5></th>
+					<th><h5>Valor del pedido</h5></th>
+					<th><h5>Ver Más</h5></th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for pedido in listado_pedido %}
+				<tr>
+					<th><p>{{ pedido.numeroPedido }}</p></th>
+					<th><p>{{ pedido.estadoPedidoVenta__descripcion|title }}</p></th>
+					<th><p>{{ pedido.fecha|date:"M d, Y H:i:s"}}</p></th>
+					<th><p>{{ pedido.cantidad }}</p></th>
+					<th><p>${{ pedido.costoTotal|stringformat:"d"|intcomma }}</p></th>
+					<th class="">
+						<button type="button" class="form-control btn-default" style="width: 40px;margin: 0 auto;" data-toggle="modal" data-target="#myModal" src-url='{% url 'mis_pedido_detalle' pedido.idPedidoVenta %}' >
+							<span class="icon-bar glyphicon glyphicon-search icon"></span>
+						</button>
+					</th>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+	
+	<h5 class="text-center">No hay pedidos registrados. Te invitamos a agregar productos a tu carrito de compra y realizar tu primer pedido.</h5>
+</div>
+<div class="modal fade " id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+</div>
+{% endblock %}

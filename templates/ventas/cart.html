@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load humanize %}
+{% load thumbnail %}
+
+{% block title %}
+Carrito de Compras - ShopNeubs
+{% endblock %}
+
+{% block meta_description %}
+Tu carrito de compras en ShopNeubs
+{% endblock %}
+
+{% block script_head %}
+<link rel="stylesheet" href="{% static 'css/producto-style.min.css'%}">
+<link rel="stylesheet" href="{% static 'css/font-Aller.css'%}">
+<style type="text/css">
+	.row{
+		margin-left: 0px;
+	}
+	.item-heading:hover{
+    	overflow: ellipsis;
+	}
+</style>
+{% endblock %}
+
+{% block posicion_pagina %}
+<ol class="breadcrumb">
+    <li><a  href="{% url 'home' %}">Home</a></li>
+    <li><a class="active" href="{% url 'cart' %}">CART</a></li>
+</ol>
+{% endblock %} 
+{% block content %}
+<div class="row " style="margin-left: 0px">
+{% if  cart.items  %}
+	<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
+		<h3 class="title-principal"> Carro de compras</h3>
+		<hr>
+		<!-- cart 
+				cantidad_total, 
+				valor_total,
+				items []
+	 				saldoInventario,cantidad,valor_total
+	 				
+	 				-->
+		<div class="table-responsive">
+		 	<table class="table">
+				<thead >
+					<tr>
+					  <th><h4 class="text-center">Producto</h4></th>
+					  <th><h4 class="text-center">Codigo</h4></th>
+					  <th><h4 class="text-center">Cantidad</h4></th>
+					  <th><h4 class="text-center">Valor Unidad </h4></th>
+					  <th><h4 class="text-center">Valor Total</h4></th>
+					  <th></th>
+					</tr>
+				</thead>
+				<tbody class="text-center">
+				{% for item in cart.items %}
+					<tr>
+						{% with item.saldoInventario.producto as producto %}
+					  	<td class="cursor-pointer" title="{{ producto.nombre }}" onclick="redirect('{% url 'item' producto.categoria.descripcion producto.marca.descripcion item.saldoInventario.pk %}')" style=" width: 25%">
+							<figure class="imgen-producto pull-left" style="position: relative, top:0px;" >
+								<img src="{{ item.saldoInventario.producto.imagen|thumbnail_url:'galeria'}}" class="img-responsive center-block" >
+							</figure>
+							<h4 class="top-row item-heading-lista-carrito" title="{{ item.saldoInventario.producto.nombre }}" style="left: 9px;position: relative;">{{ item.saldoInventario.producto.nombre }}</h4>
+					  	</td>
+					  	{% endwith %}
+					  	<td>
+					  		<h4 class="top-row text-center">{{ item.saldoInventario.producto.numeroProducto }}</h4>
+					  	</td>
+						<td class="text-center" style="width:17%; ">
+							<span class="cantidad-modificable top-row " style="width: 104%;">
+								<i data-role="disminuir" class="disminuir-cantidad glyphicon-minus cursor-pointer bg-blue"></i>
+								<input type="hidden" id="idSaldoInventario{{item.saldoInventario.pk}}" value="{{item.saldoInventario.pk}}" src-url="{% url 'change_cart' item.saldoInventario.pk -1 %}">
+								<input data-role="cantidad-input" data-target="#valor-total-{{ item.saldoInventario.pk }}" id="cantidad" type="text"  min="1" max="10" value="{{item.cantidad}}" required onkeypress="return false" class="text-center">
+								<i data-role="aumentar" class="aumentar-cantidad glyphicon-plus cursor-pointer bg-blue"></i>
+							</span>
+						</td>
+						<td style="width:20%;">
+							<p class="item-precio bg-orange top-row">${{ item.saldoInventario.precioOferta|default:item.saldoInventario.precioVentaUnitario|stringformat:"d"|intcomma }}</p>
+						</td>
+						<td style="width:20%;">
+							<p id="valor-total-{{ item.saldoInventario.pk }}" class="item-precio  bg-orange top-row" >${{ item.valor_total|stringformat:"d"|intcomma }}</p>
+						</td>
+						<td style="width: 5%">
+							<h4><a href="{% url 'remove_item_cart' item.saldoInventario.pk %}" role="button" style=" font-weight:500; color: green " class="top-row pull-right" title="Eliminar"> <span class="glyphicon glyphicon-trash 
+							"></span></a></h4>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+		<div class="container-fluid">
+			<div class="row text-center box" style="margin-top: 30px; padding-bottom: 10px;">
+				<section class="">
+					<div class="col-lg-12 col-md-12 col-sm-4 col-xs-12">
+						<h3 class="title-principal  ">Total de articulos en carrito de compra</h3>
+						<h4 class="item-text"> <b>Articulos :</b> <b class='cantidad-total-carro'>{{ cart.cantidad_total}}</b></h4>
+					</div>
+					<div class="col-lg-12 col-md-12 col-sm-4 col-xs-12">
+						<h4 class="title-principal" style="margin-bottom: 0px;"><b>Total :</b></h4>
+						<b class='item-precio bg-orange valor-total-carro'>${{ cart.valor_total|stringformat:"d"|intcomma }}</b>
+					</div>
+					<div class="col-lg-12 col-md-12 col-sm-4 col-xs-12">
+						<button type="button" onclick="redirect('{% url 'solicitud_venta' %}')" class="btn btn-warning btn-block">Completar Pedido</button>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	{% else %}
+	<div class="container-principal">
+		<div class="container-fluid">
+			<div class="row">
+				<h3 class="title-principal"> Carro de compras</h3>
+				<hr>
+				<div class="col-lg-5 col-md-5 col-sm-5 col-xs-12 ">
+					<figure>
+						<img src="{% static 'img/emptycart.png' %}" class="img-responsive" style="margin: auto; height: 200px; width: 240px">
+					</figure>
+				</div>
+				<div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 ">
+					<section class=" container-resaltado">
+						<h3 class="title-principal">Tu carro de compra está vacío!</h3>
+						<p class="text-justify">En nuestra tienda encontrarás los mejores productos tecnológicos al mejor precio, puedes agregar diversos artículos al mismo tiempo.</P>
+
+						<h4 class="item-heading">¿Qué estas esperando?</h4>
+
+						<p class="text-justify">Para continuar comprando da clic <a href="{% url 'home' %}" style="font-weight: 600; color: #FF5722">AQUI</a>.</p>
+					</section>
+				</div>
+			</div>
+		</div>
+	</div>
+	{% endif %}
+</div>
+{% endblock %}
+
+{% block script_footer%}
+{% endblock %}

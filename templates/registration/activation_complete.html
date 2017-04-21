@@ -1,0 +1,42 @@
+{% extends "registration/registration_base.html" %}
+{% load i18n %}
+
+{% block title %}Cuenta Activada{% endblock %}
+
+{% block content %}
+<div class="div-container-md">
+    <div class="row box">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<h3 class="title-principal">Cuenta activada</h3>
+			<hr>
+			<p style="font-size: 17px" class="text-justify">
+			    Tu cuenta a sido activada.
+			    {% if not user.is_authenticated %}
+			    Ahora puedes ingresar, da clic en el siguiente enlace <a href="{% url 'auth_login'%}" style="color: #FF5722; font-weight: bold">Ingresar</a>.
+			    {% endif %}
+			</p>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block script_footer %}
+
+{% if user.is_authenticated %}
+<script type="text/javascript">
+	$(document).ready(function(){
+		$(location).attr('href',"{% url 'home'%}?activate-complete=1")
+	})
+</script>
+{% endif %}
+
+{% endblock %}
+
+
+{% comment %}
+**registration/activation_complete.html**
+
+Used after successful account activation. This template has no context
+variables of its own, and should simply inform the user that their
+account is now active.
+{% endcomment %}

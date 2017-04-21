@@ -1,0 +1,36 @@
+{% extends "registration/registration_base.html" %}
+{% load i18n %}
+
+{% block title %}
+	{% trans "Activation email sent" %}
+{% endblock %}
+
+{% block script_head %}
+<style type="text/css">
+    .box{
+    	margin: auto;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="div-container-md">
+	<div class="row box">
+    	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<h3 class="title-principal">Completa tu registro</h3>
+			<hr>
+			<p style="font-size: 17px" class="text-justify"><b>Tu registro se realizó sastifactoriamente</b>, te invitamos a verificar tu  correo electronico para completar el registro y empezar a disfrutar de nuestro servicios.</p>
+		</div>
+	</div>	
+</div>
+{% endblock %}
+
+
+{% comment %}
+**registration/registration_complete.html**
+
+Used after successful completion of the registration form. This
+template has no context variables of its own, and should simply inform
+the user that an email containing account-activation information has
+been sent.
+{% endcomment %}

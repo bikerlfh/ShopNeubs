@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block title %}
+Neubs - Autorización Pedido Venta
+{% endblock %}
+
+{% block meta_description %}
+Autorización Pedido de Venta - solo administradores
+{% endblock %}
+
+{% block script_head %}
+<link rel="stylesheet" href="{% static 'css/style.css'%}">
+
+<style type="text/css">
+	.form-control[disabled]{
+	    opacity: 1;
+	    background-color: #eee;
+	    color:green;
+	    border-color: #eee;
+}
+
+</style>
+{% endblock %}
+
+
+{% block posicion_pagina %}
+<ol class="breadcrumb">
+    <a  href="/">Home /</a></li>
+    <a class="active" href="{{ request.get_absolute_url }}">Solicitud Pedido Venta</a></li>
+</ol>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+			<form class="form-horizontal" id="fromPedido" name="fromPedido" method="POST" action="{% url 'autorizar_venta' %}">
+			{% csrf_token %}
+				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+					<h3 class="item-heading bg-grey"> AUTORIZACIÓN DEL PEDIDO </h3>
+    				<hr>
+					<div class="form-group ">
+						<label for="proveedor" class="col-lg-2 col-md-2 col-sm-2 col-xs-4 control-label">Pedido Venta</label>
+						<div class="col-lg-5 col-md-5 col-sm-5 col-xs-6">
+							<input type="hidden" name="idPedidoVenta" id="idPedidoVenta" required>
+							<input class="form-control" type="text" name="numeroPedido" id="numeroPedido" disabled required onkeypress="return false">
+						</div>
+						<div class="col-lg-2 col-md-4 col-sm-4 col-xs-2">
+							<button type="button" id="btn-busqueda-pedido" class="form-control btn-success" style="width: 50px" data-toggle="modal" data-target="#myModal" src-url="{% url 'busqueda_venta_pedido_modal'%}">
+								<span class="icon-bar glyphicon glyphicon-search icon"></span>
+							</button>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="cliente" class="col-lg-2 col-md-2 col-sm-2 col-xs-4 control-label">Cliente</label>
+						<div class="col-lg-5 col-md-5 col-sm-5 col-xs-6">
+							<input class="form-control" type="text" name="cliente" id="cliente" placeholder="cliente" required onkeypress="return false">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-lg-2 col-md-2 col-sm-2 col-xs-4 control-label">Estado Pedido</label>
+						<div class="col-lg-5 col-md-5 col-sm-5 col-xs-6">
+							<select id="idEstadoPedidoVenta" name="idEstadoPedidoVenta" class="form-control" disabled required>
+								<option>-----</option>
+								{% for estado in listado_estado_pedido %}
+								<option value="{{estado.pk}}">{{estado.descripcion}}</option>
+								{% endfor %}
+							</select>
+						</div>
+					</div>
+				</div>
+				<hr>
+				<div class="col-lg-12">
+					<h3 class="text-center item-heading">ITEMS DEL PEDIDO VENTA</h3>
+					<div class="table-responive">
+						<table id="tabla_pedido" class="table table-striped">
+							<thead>
+								<tr>
+									<th>Producto</th>
+									<th>Proveedor</th>
+									<th>Cantidad</th>
+									<th>Costo Total</th>
+								</tr>
+							</thead>
+							<tbody>
+							</tbody>
+						</table>
+					</div>
+					<button type="button" id="btnEnviar" class="btn btn-success " data-toggle="modal" data-target="#modalSubmit" disabled style="float: right;">Enviar</button>
+				
+					<div id="modalSubmit" class="modal fade" tabindex="-1" role="dialog">
+					  <div class="modal-dialog" role="document">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					        	<span aria-hidden="true">&times;</span>
+					        </button>
+					        <h4 class="modal-title item-heading">Alerta</h4>
+					      </div>
+					      <div class="modal-body">
+					        <p class="item-text">¿Esta seguro de continuar?</p>
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+					        <button type="submit" class="btn btn-primary">Si</button>
+					      </div>
+					    </div><!-- /.modal-content -->
+					  </div><!-- /.modal-dialog -->
+					</div><!-- /.modal -->
+				</div>
+			</form>
+		</div>
+	</div>
+	</div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade " id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  
+</div>
+{% endblock %}
+
+{% block script_footer %} 
+<link rel="stylesheet" href="{% static 'css/jquery.dataTables.min.css'%}">
+<script type="text/javascript" src="{% static  'js/jquery.dataTables.min.js' %}"></script>
+<script type="text/javascript">
+	$('#myModal').on('hidden.bs.modal', function (e) {
+  		$(this).html('')
+
+		// cuando se selecciona un pedido venta, se deben cargar las posiciones de este
+  		if($("#idPedidoVenta").val()>0)
+  		{
+  			// Se remueve el atributo disalbled de los estados
+  			$("#idEstadoPedidoVenta").removeAttr('disabled')
+			tabla = $('#tabla_pedido').DataTable({
+		    	select: false,
+		    	destroy: true,
+		    	paging: false,
+		    	searching: false,
+		        ajax: "/ventas/pedido/posicion/json/"+$("#idPedidoVenta").val()+"/",
+		        columns: [
+		        	{data:"fields.producto"},
+		        	{data:"fields.proveedor"},
+		        	{data:"fields.cantidad"},
+		        	{
+	        			data:"fields.costoTotal",
+		             	render: function ( data, type, row ) {
+				        	return '$'+ data.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+				    	}
+					},
+		        ],
+		        language: lenguage_spanish,
+		    });
+  		}
+  		else
+  			$("#idEstadoPedidoVenta").attr('disabled','disabled')
+	})
+	$(document).ready(function()
+	{
+		$("#idEstadoPedidoVenta").change(function(e)
+		{
+			if($("#idEstadoPedidoVenta").val() > 0)
+			{
+				$("#btn-busqueda-pedido").attr('disabled','disabled')
+				//$("#idEstadoPedidoVenta").attr('disabled','disabled')
+				$("#btnEnviar").removeAttr('disabled')
+			}
+			else
+				$("#btnEnviar").attr('disabled','disabled')
+		})
+	})
+</script>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% load staticfiles %}
+{% load humanize %}
+{% load thumbnail %}
+{% load tags_extra %}
+
+{% block script_head %}
+  <link href="{% static 'css/animate.css'%}" rel="stylesheet" type="text/css"/>
+{% endblock %}
+
+<div id="products" class="list-group row" style="margin-left: 0px;">
+	{% for saldoInventario in listado_saldo_inventario %}
+    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 producto-box box"  style=" padding-right: 0px;padding-left: 0px;">
+      <article>
+        <div class="thumbnail">
+          {% if saldoInventario.estado %}
+              {% get_span_new_product saldoInventario.fechaCreacion|date:'Y-m-d' 'producto-nuevo'%}
+          {% else %}
+            <span class="producto-sin-stock"></span>
+          {% endif %}   
+          {% if saldoInventario.precioOferta %}
+            {# si tienen promocion #}
+            <span class="wow pulse glyphicon glyphicon-certificate producto-oferta-estrella" data-wow-offset="10"  data-wow-iteration="300"></span>
+            <figure onclick="redirect('{% url 'item' saldoInventario.producto__categoria__descripcion saldoInventario.producto__marca__descripcion saldoInventario.idSaldoInventario %}')" class="cursor-pointer">
+                <img src="{{ saldoInventario.producto__imagen|thumbnail_url:'producto'}}" class="img-responsive group list-group-image" alt="">
+            </figure>
+            <div class="caption bg-grey">
+              <h5 class="group inner item-heading" style="margin-bottom: 0px" ><a href="{% url 'item' saldoInventario.producto__categoria__descripcion saldoInventario.producto__marca__descripcion saldoInventario.idSaldoInventario %}">{{ saldoInventario.producto__nombre }}</a></h5>
+
+              <h5 id="descripcion-texto" class="group inner item-text-display text-justify">{{ saldoInventario.producto__especificacion|default:saldoInventario.producto__descripcion}}</h5>
+
+              <p class="group inner item-precio bg-red"  style="margin-bottom: 0px">
+              <b style="color: #333">Ahora:</b>${{saldoInventario.precioOferta|stringformat:"d"|intcomma }}
+              <button class="btn icono-carrito cursor-pointer wow " onclick="add_to_cart('{% url 'add_cart' saldoInventario.idSaldoInventario 1 %}')" title="Agregar al carrito">
+                <span class="glyphicon glyphicon-shopping-cart "></span>
+              </button>
+              <button class="btn btn-responsive btn-warning btn-detalle-producto" onclick="redirect('{% url 'item' saldoInventario.producto__categoria__descripcion saldoInventario.producto__marca__descripcion saldoInventario.idSaldoInventario %}')">
+                Ver más detalle
+              </button>
+              </p>
+              <p style="margin-bottom: 0px; color: grey">
+                Antes:
+                <a class="precio-antes"> $ {{ saldoInventario.precioVentaUnitario|stringformat:"d"|intcomma }}</a>
+              </p>
+            </div>
+          {% else %}
+            {# si no tienen promocion #}
+            <figure onclick="redirect('{% url 'item' saldoInventario.producto__categoria__descripcion saldoInventario.producto__marca__descripcion saldoInventario.idSaldoInventario %}')" class="cursor-pointer">
+                <img src="{{ saldoInventario.producto__imagen|thumbnail_url:'producto'}}" class="img-responsive group list-group-image" alt="">
+            </figure>
+            <div class="caption bg-grey">
+              <h5 class="group inner item-heading"><a href="{% url 'item' saldoInventario.producto__categoria__descripcion saldoInventario.producto__marca__descripcion saldoInventario.idSaldoInventario %}">{{ saldoInventario.producto__nombre }}</a></h5>
+              <h5 id="descripcion-texto" class="group inner item-text-display text-justify">{{ saldoInventario.producto__especificacion|default:saldoInventario.producto__descripcion }}</h5>
+             <p class="group inner item-precio bg-red">$ {{ saldoInventario.precioVentaUnitario|stringformat:"d"|intcomma }}
+              <button class="btn icono-carrito cursor-pointer wow " onclick="add_to_cart('{% url 'add_cart' saldoInventario.idSaldoInventario 1 %}')" title="Agregar al carrito">
+                <span class="glyphicon glyphicon-shopping-cart "></span>
+              </button>
+              <button class="btn btn-responsive btn-warning btn-detalle-producto" onclick="redirect('{% url 'item' saldoInventario.producto__categoria__descripcion saldoInventario.producto__marca__descripcion saldoInventario.idSaldoInventario %}')">
+                Ver más detalle
+              </button>
+              </p>
+            </div>
+          {% endif %}
+          </div>
+      </article>        
+    </div>              
+  {% endfor %} 
+</div>
+
+{% block script_footer %}
+<script type="text/javascript">
+    new WOW().init();
+</script>
+{% endblock %}

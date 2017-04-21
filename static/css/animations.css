@@ -1,0 +1,71 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jan 20, 2017, 9:39:02 AM
+    Author     : Tatiana
+*/
+.reboteOut{  
+    animation: 1s anim-rebote 1;
+    -webkit-animation:1s anim-reboteOut 1;
+    -moz-animation:1s anim-reboteOut 1; 
+   
+}
+@keyframes anim-reboteOut{
+    
+    
+     0% {
+        opacity: 0;
+        -webkit-transform: translateY(70%);
+    } 
+    100% {
+        opacity: 1;
+        -webkit-transform: translate(0%);
+    }
+   
+}
+
+@-moz-keyframes anim-reboteOut{
+    
+    0% {
+        opacity: 0;
+        -moz-transform: translateY(70px);
+    }
+    20%, 50%, 80%, 100% {
+        opacity: 1;
+        -moz-transform: translate(0px);
+    }
+    40%{
+        -moz-transform: translateY(-45px);
+    }
+    60%{
+        -moz-transform: translateY(-25px);
+    }
+    
+    
+}
+.categ:hover{  
+    animation: 0.7s anim-click 1;
+    -webkit-animation:0.7s anim-click 1;
+    -moz-animation:0.7s anim-click 1;
+    cursor: pointer;
+}
+@-keyframes anim-click{
+    25%, 75%{
+        transform:scale(0.8);
+    }
+    50%{
+        transform:scale(1.1);
+    }
+}
+@-moz-keyframes anim-click{
+    25%, 75%{
+        -moz-transform:scale(0.8);
+    }
+    50%{
+        -moz-transform:scale(1.1);
+    }
+}
+
