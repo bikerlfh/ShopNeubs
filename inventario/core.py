@@ -5,17 +5,22 @@ from django.conf import settings
 from django.db.models import Q
 
 
-# consulta las categorias padres y sus hijos y retorna una lista
-def get_categorias(idCategoriaPadre = None):
+def get_menu_categorias():
 	categorias = []
 	if not cache.get('menu_categorias'):
-		listado_categoria_padre = Categoria.objects.filter(categoriaPadre=idCategoriaPadre).values('idCategoria','descripcion').order_by('descripcion')
-		if len(listado_categoria_padre) > 0:
-			for i,categoria in enumerate(listado_categoria_padre):
-				categorias.append({ 'categoriaPadre' : categoria, 'categoriaHijo':  get_categorias(categoria['idCategoria'])})
+		categorias = get_categorias()
 		cache.set('menu_categorias',categorias,getattr(settings,'SESSION_COOKIE_AGE',7200))
 	else:
 		categorias = cache.get('menu_categorias')
+	return categorias
+
+# consulta las categorias padres y sus hijos y retorna una lista
+def get_categorias(idCategoriaPadre = None):
+	categorias = []
+	listado_categoria_padre = Categoria.objects.filter(categoriaPadre=idCategoriaPadre).values('idCategoria','descripcion').order_by('descripcion')
+	if len(listado_categoria_padre) > 0:
+		for i,categoria in enumerate(listado_categoria_padre):
+			categorias.append({ 'categoriaPadre' : categoria, 'categoriaHijo':  get_categorias(categoria['idCategoria'])})
 	return categorias
 # retorna los productos relacionados de otro
 # filtra por categoria, categoria padre y marca

@@ -37,7 +37,7 @@ def productos_categoria(request,descripcion_categoria,descripcion_marca = None):
 		listado_marcas = core.cargar_marcas_desde_listado_saldo_inventario(listado_saldo_inventario)
 	return render(request,"inventario/filtro_producto.html",{ 'listado_saldo_inventario': listado_saldo_inventario,
 															  'listado_marcas': listado_marcas,
-															  'listado_categorias' : core.get_categorias(),
+															  'listado_categorias' : core.get_menu_categorias(),
 															  'page_title': page_title})
 
 
@@ -47,7 +47,7 @@ def productos_marca(request,descripcion_marca):
 	#listado_saldo_inventario = get_list_or_404(SaldoInventario,producto__marca__descripcion = descripcion_marca)
 	listado_saldo_inventario = core.consultar_saldo_inventario_paginado(Q(producto__marca__descripcion = descripcion_marca),order,page)
 	return render(request,"inventario/filtro_producto.html",{ 'listado_saldo_inventario': listado_saldo_inventario , 
-															  'listado_categorias' : core.get_categorias()})	
+															  'listado_categorias' : core.get_menu_categorias()})	
 
 
 
@@ -106,7 +106,7 @@ def search_producto(request):
 		listado_marcas = core.cargar_marcas_desde_listado_saldo_inventario(listado_saldo_inventario)
 	else:
 		listado_marcas = Marca.objects.all()
-	return render(request,"inventario/filtro_producto.html",{'listado_saldo_inventario' : listado_saldo_inventario,'listado_marcas':listado_marcas, 'listado_categorias' : core.get_categorias() })
+	return render(request,"inventario/filtro_producto.html",{'listado_saldo_inventario' : listado_saldo_inventario,'listado_marcas':listado_marcas, 'listado_categorias' : core.get_menu_categorias() })
 	#return render_to_response("inventario/filtrar_producto.html",{'listadoProductos' : list_productos })
 
 def ofertas(request,descripcion_marca = None):
@@ -127,7 +127,7 @@ def ofertas(request,descripcion_marca = None):
 		listado_marcas = core.cargar_marcas_desde_listado_saldo_inventario(listado_saldo_inventario)
 	return render(request,"inventario/filtro_producto.html",{'listado_saldo_inventario' : listado_saldo_inventario,
 															 'listado_marcas':listado_marcas, 
-															 'listado_categorias' : core.get_categorias(),
+															 'listado_categorias' : core.get_menu_categorias(),
 															 'page_title':page_title })
 
 # Esta vista se llama asincronamente
