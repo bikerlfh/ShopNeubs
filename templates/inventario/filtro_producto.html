@@ -14,6 +14,11 @@ Todos los productos al mejor precio
 <link rel="stylesheet" href="{% static 'css/producto-style.min.css'%}">
 <link href="{% static 'css/animate.css'%}" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="{% static 'js/wow.min.js'%}"></script>
+<style type="text/css">
+    .active{
+      color:#FF5722
+  }
+</style>
 
 {% endblock %}
 
@@ -284,11 +289,15 @@ $(document).ready(function()
 
   //Cuando el usuario da click en el boton de visualualización como Lista
   $('#list').click(function(){
-    cambiarVisualizacionProductos(true)
+    cambiarVisualizacionProductos(true);
+    $(this).css("color","#FF5722");
+    $(".active").css("color","#303841");
   });
   //Cuando el usuario da click en el boton de visualualización como Mosaico
   $('#grid').click(function(){
-    cambiarVisualizacionProductos(false)
+    cambiarVisualizacionProductos(false);
+    $('.active').css("color","#FF5722");
+    $('#list').css("color","#303841");
   });
 
   /* Selecciona la categoria donde el usuario esta */
