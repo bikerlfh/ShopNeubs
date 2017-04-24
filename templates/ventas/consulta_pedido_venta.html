@@ -40,7 +40,7 @@ Consulta pedido venta - Solo Administradores
 			{% csrf_token %}
 				<div class="form-group">
 					<label class="col-lg-2 col-md-2 col-sm-2 col-xs-3 control-label" for="numeroPedido">{{form.numeroPedido.label}}</label>
-					<div class="col-lg-7 col-md-7 col-sm-7 Col-xs-7">
+					<div class="col-lg-3 col-md-7 col-sm-7 Col-xs-7">
 						{{form.numeroPedido}}
 					</div>
 				</div>
@@ -83,11 +83,13 @@ Consulta pedido venta - Solo Administradores
 							<th>N° Productos</th>
 							<th>Valor Total</th>
 							<th>Estado</th>
+							<th>Ver más</th>
+							<th>Orden Pedido</th>
 						</tr>
 					</thead>
 					<tbody>
 						{% for pedido in listado_pedido_venta %}
-						<tr style="cursor:pointer;" onclick="mostrarPosicionPedido({{pedido.pk}},{{pedido.numeroPedido}})" data-toggle="modal" data-target="#modal-pedido-posicion">
+						<tr style="cursor:pointer;">
 							<td>{{pedido.numeroPedido}}</td>
 							<td>{{pedido.cliente}}</td>
 							<td>{{pedido.fecha|date:"d/m/Y H:m:s"}}</td>
@@ -95,6 +97,16 @@ Consulta pedido venta - Solo Administradores
 							<td>{{pedido.get_cantidad_total|stringformat:"d"|intcomma}}</td>
 							<td>${{pedido.get_valor_total|stringformat:"d"|intcomma}}</td>
 							<td>{{pedido.estadoPedidoVenta.descripcion}}</td>
+							<td>
+								<button type="button" class="form-control btn-success center-block" title="Ver detalle" style="width:40px" onclick="mostrarPosicionPedido({{pedido.pk}},{{pedido.numeroPedido}})" data-toggle="modal" data-target="#modal-pedido-posicion">
+									<span class="icon-bar glyphicon glyphicon-search icon"></span>
+								</button>
+							</td>
+							<td>
+								<a class="form-control btn-success center-block" style="width:40px" href="{% url 'reporte_orden_pedido' pedido.pk%}" target="_blanck" title="Generar Orden Pedido">
+									<span class="icon-bar glyphicon glyphicon-save-file"></span>
+								</a>
+							</td>
 						</tr>
 						{% endfor %}
 					</tbody>

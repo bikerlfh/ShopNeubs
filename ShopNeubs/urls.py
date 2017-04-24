@@ -25,7 +25,7 @@ from division_territorial import views as views_dt
 from inventario import views
 from tercero import views as views_tercero
 from ventas import views as views_ventas
-
+#from django_pdfkit import PDFView
 
 
 urlpatterns = [
@@ -51,6 +51,8 @@ urlpatterns = [
     url(r'^compras/', include('compras.urls')),
     # Division territorial
     url(r'^dt/', include('division_territorial.urls')),
+    # Reportes
+    url(r'^reportes/', include('reportes.urls')),
     # Tercero
     url(r'^tercero/', include('tercero.urls')),
     # Ventas

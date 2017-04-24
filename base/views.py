@@ -7,6 +7,7 @@ from django.views import View
 from inventario.models  import Categoria,Marca,SaldoInventario,ProductoReview
 from .models import Carousel
 
+
 # Create your views here.
 def index(request):
 	request.session.clear_expired()

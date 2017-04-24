@@ -162,13 +162,6 @@ class consulta_pedido(View):
 def consulta_avanzada_pedido(request):
 		return render(request,'ventas/consulta_avanzada_pedido.html')
 
-# class PedidoLista(ListView):
-# 	model = PedidoVenta
-# 	context_object_name = 'listado_pedido_venta'
-# 	template_name = 'ventas/listado_pedido.html'
-
-
-
 # Retorna un json con los pedidos ventas con estado 01 - Solicitado si no se envía el código
 def pedido_venta_json(request):
 	# serializamos en json todos los pedidos

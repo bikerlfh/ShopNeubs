@@ -73,7 +73,8 @@ class PedidoVenta(models.Model):
 		db_table = 'PedidoVenta'
 		permissions = (
 			("autorizar_pedido","Puede autorizar pedidos de venta"),
-			("consultar_pedido","Puede consultar los pedidos de venta")
+			("consultar_pedido","Puede consultar los pedidos de venta"),
+			("reportes","Puede generar reportes"),
 		)
 
 # PedidoVentaPosicion

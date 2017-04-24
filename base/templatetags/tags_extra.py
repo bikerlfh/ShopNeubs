@@ -2,7 +2,7 @@ from datetime import datetime,timedelta
 from django import template
 from django.utils.safestring import mark_safe
 from django.urls import reverse
-from inventario.models import Categoria
+from inventario.models import Categoria,SaldoInventario
 from ventas.cart import Cart
 import urllib
 import re
@@ -82,3 +82,10 @@ def get_span_new_product(date,clase):
 def get_porcentaje_oferta(saldoInventario):
 	porcentaje = (100*(1-(saldoInventario.precioOferta/saldoInventario.precioVentaUnitario)))
 	return ("%.1f" % porcentaje )
+
+@register.simple_tag()
+def get_garantia(idProducto,idProveedor):
+	saldoInventario = SaldoInventario.objects.get(producto=idProducto,proveedor=idProveedor)
+	if saldoInventario.garantia:
+		return saldoInventario.garantia.descripcion
+	return ''
