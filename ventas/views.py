@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.core import serializers
-from django.shortcuts import render,HttpResponse,HttpResponseRedirect,Http404,get_list_or_404
+from django.shortcuts import render,HttpResponse,HttpResponseRedirect,Http404,get_list_or_404,get_object_or_404
 from django.urls import reverse
 from django.views import View
 from django.views.generic import ListView
@@ -99,15 +99,17 @@ def solicitud_pedido(request):
 	if pedidoVenta.save():
 		# se elimina el carro
 		del request.session['shop_cart']
-		messages.success(request,"Tu pedido ha sido enviado satisfactoriamente, muy pronto nos comunicaremos contigo.")
-		return HttpResponseRedirect(reverse('home'))
+		#messages.success(request,"Tu pedido ha sido enviado satisfactoriamente, muy pronto nos comunicaremos contigo.")
+		return HttpResponseRedirect(reverse('pedido_enviado',kwargs={'numeroPedido': pedidoVenta.get_numero_pedido()}))
 	else:
-		messages.info(request,"No se ha podido enviar tu pedido. Te pedimos disculpas.")
+		#messages.info(request,"No se ha podido enviar tu pedido. Te pedimos disculpas.")
 		#return HttpResponse(pedidoVenta.error)
-		return HttpResponseRedirect(reverse('cart'))
+		return HttpResponseRedirect(reverse('pedido_no_generado'))
 
 def pedido_enviado(request,numeroPedido):
 	return render(request,'ventas/pedido_enviado.html',{ 'numeroPedido':numeroPedido })
+def pedido_no_generado(request,numeroPedido):
+	return render(request,'ventas/pedido_no_generado.html',{ 'numeroPedido':numeroPedido })
 
 class autorizar_pedido(View):
 	#@permission_required('PedidoVenta.autorizar_pedido')
@@ -126,7 +128,6 @@ class autorizar_pedido(View):
 			messages.error(request,pedidoVenta.error)
 		return HttpResponseRedirect(reverse('autorizar_venta'))
 
-	
 	#@method_decorator(permission_required('ventas.autorizar_pedido',login_url='/'))
 	#def dispatch(self, *args, **kwargs):
 	#	return super(autorizar_pedido, self).dispatch(*args, **kwargs)
@@ -161,6 +162,35 @@ class consulta_pedido(View):
 
 def consulta_avanzada_pedido(request):
 		return render(request,'ventas/consulta_avanzada_pedido.html')
+
+# Solo para solicitados
+def modificar_pedido(request):
+	pedidoVenta = None
+	if request.GET.get('idPedidoVenta',None):
+		pedidoVenta = get_object_or_404(PedidoVenta,pk=request.GET.get('idPedidoVenta'))
+		# Solo los pedidos con estado solicitado se pueden modificar
+		if pedidoVenta.estadoPedidoVenta.codigo != "01":
+			messages.warning(request,'El pedido no se puede modificar porque esta con estado %s' % estadoPedidoVenta.descripcion)
+			pedidoVenta = None
+		else:
+			pedidoVenta.listadoPedidoVentaPosicion = PedidoVentaPosicion.objects.filter(pedidoVenta = pedidoVenta.pk)
+			print(len(pedidoVenta.listadoPedidoVentaPosicion))
+	return render(request,"ventas/modificar_pedido.html",{ 'pedidoVenta': pedidoVenta })
+
+# Permite modificar la posicion de un pedido devolviendo True o False
+def modificar_pedido_posicion(request,idPedidoVentaPosicion,cantidad,costoTotal):
+	respuesta = {'resultado':'True','cantidad':cantidad,'costoTotal':costoTotal}
+	try:
+		pedidoVentaPosicion = PedidoVentaPosicion.objects.get(pk=idPedidoVentaPosicion)
+		pedidoVentaPosicion.cantidad = cantidad
+		pedidoVentaPosicion.costoTotal = costoTotal
+		pedidoVentaPosicion.save()
+
+	except Exception as e:
+		print("ERROROR")
+		respuesta['resultado']='False'
+	return HttpResponse(json.dumps(respuesta),content_type='application/json')
+	
 
 # Retorna un json con los pedidos ventas con estado 01 - Solicitado si no se envía el código
 def pedido_venta_json(request):

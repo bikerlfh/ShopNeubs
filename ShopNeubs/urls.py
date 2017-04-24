@@ -20,9 +20,6 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 #from django.contrib.auth.decorators import login_required,permission_required
 from base import views as view_base
-from compras import views as views_compras
-from division_territorial import views as views_dt
-from inventario import views
 from tercero import views as views_tercero
 from ventas import views as views_ventas
 #from django_pdfkit import PDFView
@@ -57,6 +54,10 @@ urlpatterns = [
     url(r'^tercero/', include('tercero.urls')),
     # Ventas
     url(r'^ventas/', include('ventas.urls')),
+    
+    url(r'^pedido-enviado/(?P<numeroPedido>[\d]{1,10})/$', views_ventas.pedido_enviado, name = 'pedido_enviado'),
+    url(r'^pedido-no-generado/$', views_ventas.pedido_no_generado, name = 'pedido_no_generado'),
+    
     # Inventario
     url(r'^', include('inventario.urls')),
 ]

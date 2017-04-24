@@ -54,6 +54,9 @@ class PedidoVentaManager:
 			transaction.set_autocommit(True)
 		return True
 
+	def get_numero_pedido(self):
+		return self.__pedidoVenta.numeroPedido
+
 	def guardar_posicion_venta_compra(self,pedidoVentaPosicion,pedidoCompraPoscion,cantidad):
 		try:
 			poscionVentaCompra = PosicionVentaCompra(pedidoVentaPosicion = pedidoVentaPosicion,

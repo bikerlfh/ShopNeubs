@@ -74,6 +74,7 @@ class PedidoVenta(models.Model):
 		permissions = (
 			("autorizar_pedido","Puede autorizar pedidos de venta"),
 			("consultar_pedido","Puede consultar los pedidos de venta"),
+			("modificar_pedido","Puede modificar los pedidos"),
 			("reportes","Puede generar reportes"),
 		)
 
