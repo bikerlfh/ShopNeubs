@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block script_head %}
+<style type="text/css">
+	p{
+		font-size: 17px;
+		font-weight: 100;
+	}
+</style>
+{% endblock%}
+
+{% block content %}
+	<div class="container-fluid">
+		<h2 class="text-center">¡Desafortunamente tu pedido no ha podido ser generado!</h2>
+		<hr>
+		<p class="text-justify">
+		Te pedimos disculpas y te invitamos a comunicarte con nosotros a traves de los  números telefonicos <b>3222709439 - 3202331893 </b> o envíanos un correo eléctronico a <b style="color: #FF5722; font-weight: bold">ventas@shopneubs.com.co</b>.</p>
+	</div>
+{% endblock %}
