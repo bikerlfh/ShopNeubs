@@ -50,6 +50,7 @@ class PedidoVenta(models.Model):
 	fecha = models.DateTimeField(auto_now_add = True)
 	fechaAutorizacion = models.DateTimeField(null = True,blank = True,db_column = 'fechaAutorizacion')
 	urlFactura = FilerFileField(blank = True,null = True,max_length=250, verbose_name = 'Url Factura')
+	motivoCancelacionPedidoVenta = models.ForeignKey("MotivoCancelacionPedidoVenta",db_column = 'idMotivoCancelacionPedidoVenta',blank = True,null=True, default = None,on_delete = models.PROTECT,verbose_name = 'Motivo Cancelación')
 	idUsuarioCreacion =  models.IntegerField()
 	# listado de pedidos posicion
 	listadoPedidoVentaPosicion = []
@@ -86,12 +87,16 @@ class PedidoVentaPosicion(models.Model):
 	proveedor = models.ForeignKey("tercero.Proveedor",db_column = 'idProveedor', on_delete = models.PROTECT)
 	cantidad = models.IntegerField()
 	costoTotal = models.DecimalField(db_column = 'costoTotal',max_digits=10, decimal_places=2)
+	cancelado = models.BooleanField(default = False)
+	motivoCancelacionPedidoVenta = models.ForeignKey("MotivoCancelacionPedidoVenta",db_column = 'idMotivoCancelacionPedidoVenta',blank = True,null=True, default = None,on_delete = models.PROTECT,verbose_name = 'Motivo Cancelación')
 
 	def __str__(self):
-		return '%s / %s' % (pedidoVenta,producto)
+		return '%s / %s / %s' % (self.pedidoVenta,self.producto,self.proveedor)
 	class Meta:
 		db_table = 'PedidoVentaPosicion'
-		#managed = False
+		permissions = (
+			("cancelar_pedido_venta_posicion","Puede cancelar pedidos de venta"),
+		)
 
 class PosicionVentaCompra(models.Model):
 	idPosicionVentacompra = models.BigAutoField(primary_key = True)
@@ -118,3 +123,13 @@ class ParametroImpuesto(models.Model):
 
 	class Meta:
 		db_table = 'ParametroImpuesto'
+
+class MotivoCancelacionPedidoVenta(models.Model):
+	idMotivoCancelacionPedidoVenta = models.AutoField(primary_key=True)
+	codigo = models.CharField(max_length = 2,unique = True)
+	descripcion = models.CharField(max_length = 25)
+	def __str__(self):
+		return '%s - %s' % (self.codigo,self.descripcion)
+
+	class Meta:
+		db_table = 'MotivoCancelacionPedidoVenta'

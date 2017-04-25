@@ -7,7 +7,7 @@ from django.views.generic import ListView
 from .cart import Cart
 from .forms import ConsultaPedidoVentaForm
 from .pedidoventamanager import PedidoVentaManager
-from .models import EstadoPedidoVenta,PedidoVenta,PedidoVentaPosicion,PosicionVentaCompra
+from .models import EstadoPedidoVenta,PedidoVenta,PedidoVentaPosicion,PosicionVentaCompra,MotivoCancelacionPedidoVenta
 from tercero.models import Cliente
 from compras.models import PedidoCompra
 
@@ -174,20 +174,33 @@ def modificar_pedido(request):
 			pedidoVenta = None
 		else:
 			pedidoVenta.listadoPedidoVentaPosicion = PedidoVentaPosicion.objects.filter(pedidoVenta = pedidoVenta.pk)
-			print(len(pedidoVenta.listadoPedidoVentaPosicion))
-	return render(request,"ventas/modificar_pedido.html",{ 'pedidoVenta': pedidoVenta })
+	listado_motivo_cancelacion = MotivoCancelacionPedidoVenta.objects.all()
+	return render(request,"ventas/modificar_pedido.html",{ 'pedidoVenta': pedidoVenta,'listado_motivo_cancelacion':listado_motivo_cancelacion })
 
 # Permite modificar la posicion de un pedido devolviendo True o False
-def modificar_pedido_posicion(request,idPedidoVentaPosicion,cantidad,costoTotal):
-	respuesta = {'resultado':'True','cantidad':cantidad,'costoTotal':costoTotal}
+def modificar_pedido_posicion(request,idPedidoVentaPosicion):
+	cantidad = request.GET.get('cantidad',None)
+	costoTotal = request.GET.get('costoTotal',None)
+	cancelado = request.GET.get('cancelado',None)
+	idMotivoCancelacion = request.GET.get('idMotivoCancelacion',None)
+
+	respuesta = {'resultado':'True','cantidad':cantidad,'costoTotal':costoTotal,'cancelado':cancelado,'motivoCancelacion':idMotivoCancelacion}
+	print(respuesta)
 	try:
 		pedidoVentaPosicion = PedidoVentaPosicion.objects.get(pk=idPedidoVentaPosicion)
-		pedidoVentaPosicion.cantidad = cantidad
-		pedidoVentaPosicion.costoTotal = costoTotal
+		if cancelado != None and pedidoVentaPosicion != cancelado:
+			pedidoVentaPosicion.cancelado = cancelado
+			if idMotivoCancelacion != None:
+				motivoCancelacion = MotivoCancelacionPedidoVenta.objects.get(pk=int(idMotivoCancelacion))
+				pedidoVentaPosicion.MotivoCancelacionPedidoVenta = motivoCancelacion
+			else:
+				pedidoVentaPosicion.MotivoCancelacionPedidoVenta = None
+		elif cantidad != None and costoTotal != None:
+			pedidoVentaPosicion.cantidad = cantidad
+			pedidoVentaPosicion.costoTotal = costoTotal
 		pedidoVentaPosicion.save()
-
 	except Exception as e:
-		print("ERROROR")
+		raise
 		respuesta['resultado']='False'
 	return HttpResponse(json.dumps(respuesta),content_type='application/json')
 	

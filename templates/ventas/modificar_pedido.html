@@ -56,7 +56,6 @@ Autorización Pedido de Venta - solo administradores
 						<input class="form-control" type="text" name="cliente" id="cliente" placeholder="cliente" required onkeypress="return false" value="{{pedidoVenta.cliente}}">
 					</div>
 				</div>
-				
 			</div>
 			<hr>
 			<div class="col-lg-12">
@@ -86,9 +85,17 @@ Autorización Pedido de Venta - solo administradores
 										</button>
 									</td>
 									<td>
-										<button type="button" class="form-control btn-danger center-block cursor-pointer" style="width:40px" title="dehabilitar"  data-toggle="modal" data-target="#modalSubmit" data-whatever="Esta segur@ de deshabilitar la posición del pedido?" data-fercho="hoa">
+										{% if not posicion.cancelado %}
+										{# se deshabilita #}
+										<button id="btn-deshabilitar{{posicion.pk}}" type="button" class="form-control btn-danger center-block cursor-pointer" style="width:40px" title="dehabilitar"  data-toggle="modal" data-target="#modal-cancelar-posicion" data-idposicion='{{ posicion.pk}}'>
 											<span class="glyphicon glyphicon-remove-sign"></span>
-										</button	>
+										</button>
+										{% else %}
+										{# se habilita #}
+										<button id="btn-deshabilitar{{posicion.pk}}" type="button" class="form-control btn-success center-block cursor-pointer" style="width:40px" title="Habilitar" data-toggle="modal"  onclick="habilitar_deshabilitar_posicion(this,{{posicion.pk}},0)">
+											<span class="glyphicon glyphicon-ok-circle"></span>
+										</button>
+										{% endif %}
 									</td>
 								</tr>
 							{% endfor %}
@@ -96,7 +103,7 @@ Autorización Pedido de Venta - solo administradores
 					</table>
 				</div>
 			
-				<div id="modalSubmit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modalSubmitLabel">
+				<div id="modal-cancelar-posicion" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-cancelar-posicionLabel">
 				  <div class="modal-dialog" role="document">
 				    <div class="modal-content">
 				      <div class="modal-header">
@@ -106,11 +113,23 @@ Autorización Pedido de Venta - solo administradores
 				        <h4 class="modal-title item-heading">Alerta</h4>
 				      </div>
 				      <div class="modal-body">
-				        <p class="item-text">¿Esta seguro de eliminar la posición del pedidó?</p>
+				        <p class="item-text">¿Esta seguro de cancelar la posición del pedidó?</p>
+				        <div class="form-group">
+				        	<input type="hidden" id="idPedidoVentaPoscionCancelada">
+							<label class="col-lg-4 col-md-2 col-sm-2 col-xs-4 control-label">Motivo Cancelación</label>
+							<div class="col-lg-8 col-md-5 col-sm-5 col-xs-6">
+								<select id="idMotivoCancelacionPedidoVenta" name="idMotivoCancelacionPedidoVenta" class="form-control" required>
+									<option value="">-----</option>
+									{% for motivo in listado_motivo_cancelacion %}
+									<option value="{{motivo.pk}}">{{motivo.descripcion}}</option>
+									{% endfor %}
+								</select>
+							</div>
+						</div>
 				      </div>
 				      <div class="modal-footer">
 				        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-				        <button type="submit" class="btn btn-primary">Si</button>
+				        <button type="button" class="btn btn-primary" onclick="habilitar_deshabilitar_posicion(this,$('#idPedidoVentaPoscionCancelada').val(),1)">Si</button>
 				      </div>
 				    </div><!-- /.modal-content -->
 				  </div><!-- /.modal-dialog -->
@@ -138,9 +157,19 @@ Autorización Pedido de Venta - solo administradores
 		  event.preventDefault();
 		});
 	})
+	// Evento para la cancelación de las posiciones
+	$('#modal-cancelar-posicion').on('show.bs.modal', function (event) {
+	  var button = $(event.relatedTarget) // Button that triggered the modal
+	  var idPedidoVentaPosicion = button.data('idposicion')
+
+	  var modal = $(this)
+	  modal.find("#idPedidoVentaPoscionCancelada").val(idPedidoVentaPosicion)
+
+	})
+	// Evento cuando se esconde el modal de la busqueda de los pedidos
 	$('#myModal').on('hidden.bs.modal', function (e) {
   		$(this).html('')
-		// cuando se selecciona un pedido venta, se deben cargar las posiciones de este
+		// cuando se selecciona un pedido venta, se recarga la pagina enviando por GET el idPedidoVenta
   		if($("#idPedidoVenta").val()>0)
 			redirect('{% url 'modificar_pedido_venta'%}?idPedidoVenta='+$("#idPedidoVenta").val())
 	})
@@ -158,6 +187,7 @@ Autorización Pedido de Venta - solo administradores
 		// Se cambia la función onClick
 		$(btn).attr('onclick',"modificar_posicion(this,"+idPedidoPosicion+")")
 	}
+	// Modifica el vlaor del campo Costo Total
 	function modificar_valores(input,campoCostoTotal,cantidad,costoUnitario){
 		if(cantidad == 0){
 			toastr.error('Ingrese un numero mayor a 0','ShopNeubs')
@@ -165,6 +195,7 @@ Autorización Pedido de Venta - solo administradores
 		}
 		$(campoCostoTotal).val(cantidad*costoUnitario)
 	}
+	// Realiza la modificación de la posición mediante ajax
 	function modificar_posicion(btn,idPedidoPosicion){
 
 		td_cantidad = $(btn).parent().siblings('td[id^=td-cantidad]')
@@ -175,7 +206,7 @@ Autorización Pedido de Venta - solo administradores
 
 		$.ajax({
 		    dataType: "json",
-		    url: '/ventas/pedido/posicion/modificar/'+idPedidoPosicion+"/"+cantidad+"/"+costoTotal+"/",
+		    url: '/ventas/pedido/posicion/modificar/'+idPedidoPosicion+"/?cantidad="+cantidad+"&costoTotal="+parseFloat(costoTotal),
 		    //data: data,
 		    success: function(data){
 		      if (data.resultado == "True") {
@@ -185,6 +216,43 @@ Autorización Pedido de Venta - solo administradores
 				$(btn).attr('onclick',"visualizar_campo_cantidad(this,"+idPedidoPosicion+")")
 
 				toastr.success('Se ha modificado la posición con exito','ShopNeubs')
+		      }
+		      else
+		      	toastr.error('No se ha logrado modificar la posición del pedido','ShopNeubs')	
+		    },
+		    error: function(jqXHR,estado,error){
+		      console.log(error);
+		      console.log(estado);
+		    },
+		  }); 	
+	}
+	function habilitar_deshabilitar_posicion(btn,idPedidoPosicion,cancelado){
+		url = '/ventas/pedido/posicion/modificar/'+idPedidoPosicion+"/?cancelado="+cancelado
+		if (cancelado == 1 ) 
+			url+="&idMotivoCancelacion="+$('#idMotivoCancelacionPedidoVenta').val()
+		$.ajax({
+		    dataType: "json",
+		    url:url,
+		    //data: data,
+		    success: function(data){
+		      if (data.resultado == "True") {
+		      	if (cancelado == 0){
+					$(btn).children('span').attr('class','glyphicon glyphicon-remove-sign')
+					$(btn).removeClass('btn-success').addClass('btn-danger')
+					$(btn).attr('data-idposicion',idPedidoPosicion)
+					$(btn).attr('data-target',"#modal-cancelar-posicion")
+					$(btn).removeAttr('onclick')
+		      	}
+				else{
+					$("#btn-deshabilitar"+idPedidoPosicion).children('span').attr('class','glyphicon glyphicon-ok-circle')
+					$("#btn-deshabilitar"+idPedidoPosicion).removeClass('btn-danger').addClass('btn-success')
+					$("#btn-deshabilitar"+idPedidoPosicion).removeAttr('data-target')
+					$("#btn-deshabilitar"+idPedidoPosicion).attr('onclick',"habilitar_deshabilitar_posicion(this,"+idPedidoPosicion+",0)")
+					
+				}
+				toastr.success('Se ha modificado la posición con exito','ShopNeubs')
+				$('#idMotivoCancelacionPedidoVenta').val(null)
+				$('#modal-cancelar-posicion').modal('hide');
 		      }
 		      else
 		      	toastr.error('No se ha logrado modificar la posición del pedido','ShopNeubs')	
