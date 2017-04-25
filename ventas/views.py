@@ -185,16 +185,13 @@ def modificar_pedido_posicion(request,idPedidoVentaPosicion):
 	idMotivoCancelacion = request.GET.get('idMotivoCancelacion',None)
 
 	respuesta = {'resultado':'True','cantidad':cantidad,'costoTotal':costoTotal,'cancelado':cancelado,'motivoCancelacion':idMotivoCancelacion}
-	print(respuesta)
 	try:
 		pedidoVentaPosicion = PedidoVentaPosicion.objects.get(pk=idPedidoVentaPosicion)
-		if cancelado != None and pedidoVentaPosicion != cancelado:
+		if cancelado != None:
+			cancelado = bool(int(cancelado))
 			pedidoVentaPosicion.cancelado = cancelado
 			if idMotivoCancelacion != None:
-				motivoCancelacion = MotivoCancelacionPedidoVenta.objects.get(pk=int(idMotivoCancelacion))
-				pedidoVentaPosicion.MotivoCancelacionPedidoVenta = motivoCancelacion
-			else:
-				pedidoVentaPosicion.MotivoCancelacionPedidoVenta = None
+				pedidoVentaPosicion.motivoCancelacionPedidoVenta = MotivoCancelacionPedidoVenta.objects.get(pk=idMotivoCancelacion)
 		elif cantidad != None and costoTotal != None:
 			pedidoVentaPosicion.cantidad = cantidad
 			pedidoVentaPosicion.costoTotal = costoTotal

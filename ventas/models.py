@@ -75,7 +75,6 @@ class PedidoVenta(models.Model):
 		permissions = (
 			("autorizar_pedido","Puede autorizar pedidos de venta"),
 			("consultar_pedido","Puede consultar los pedidos de venta"),
-			("modificar_pedido","Puede modificar los pedidos"),
 			("reportes","Puede generar reportes"),
 		)
 
@@ -89,6 +88,12 @@ class PedidoVentaPosicion(models.Model):
 	costoTotal = models.DecimalField(db_column = 'costoTotal',max_digits=10, decimal_places=2)
 	cancelado = models.BooleanField(default = False)
 	motivoCancelacionPedidoVenta = models.ForeignKey("MotivoCancelacionPedidoVenta",db_column = 'idMotivoCancelacionPedidoVenta',blank = True,null=True, default = None,on_delete = models.PROTECT,verbose_name = 'Motivo Cancelación')
+
+	def save(self, *args, **kwargs):
+		# Cuando no ha sido cancelado no se debe tener motivo de cancelación
+		if not self.cancelado:
+			self.motivoCancelacionPedidoVenta = None
+		super(PedidoVentaPosicion, self).save(*args, **kwargs)
 
 	def __str__(self):
 		return '%s / %s / %s' % (self.pedidoVenta,self.producto,self.proveedor)

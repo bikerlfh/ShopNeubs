@@ -68,8 +68,13 @@ Autorización Pedido de Venta - solo administradores
 								<th>Proveedor</th>
 								<th>Cantidad</th>
 								<th>Costo Total</th>
+								<th>Motivo Cancelación</th>
+								{% if perms.ventas.change_pedidoventaposicion %}
 								<th>Modificar</th>
+								{% endif%}
+								{% if perms.ventas.cancelar_pedido_venta_posicion %}
 								<th>Habilitar/Deshabilitar</th>
+								{% endif %}
 							</tr>
 						</thead>
 						<tbody>
@@ -79,11 +84,15 @@ Autorización Pedido de Venta - solo administradores
 									<td>{{ posicion.proveedor }}</td>
 									<td id="td-cantidad{{ forloop.counter }}">{{ posicion.cantidad }}</td>
 									<td id="td-costo{{ forloop.counter }}">{{ posicion.costoTotal}}</td>
+									<td id="td-motivo-cancelacion{{posicion.pk}}">{{ posicion.motivoCancelacionPedidoVenta.descripcion }}</td>
+									{% if perms.ventas.change_pedidoventaposicion %}
 									<td>
 										<button type="button" class="form-control btn-success center-block cursor-pointer" style="width:40px" title="Modificar" onclick="visualizar_campo_cantidad(this,{{posicion.pk}})">
 											<span class="glyphicon glyphicon-edit"></span>
 										</button>
 									</td>
+									{% endif %}
+									{% if perms.ventas.cancelar_pedido_venta_posicion %}
 									<td>
 										{% if not posicion.cancelado %}
 										{# se deshabilita #}
@@ -97,6 +106,7 @@ Autorización Pedido de Venta - solo administradores
 										</button>
 										{% endif %}
 									</td>
+									{% endif %}
 								</tr>
 							{% endfor %}
 						</tbody>
@@ -195,7 +205,7 @@ Autorización Pedido de Venta - solo administradores
 		}
 		$(campoCostoTotal).val(cantidad*costoUnitario)
 	}
-	// Realiza la modificación de la posición mediante ajax
+	// Realiza la modificación de cantidad y precio de la posición mediante ajax
 	function modificar_posicion(btn,idPedidoPosicion){
 
 		td_cantidad = $(btn).parent().siblings('td[id^=td-cantidad]')
@@ -226,6 +236,7 @@ Autorización Pedido de Venta - solo administradores
 		    },
 		  }); 	
 	}
+	// Habilita o deshabilita las posiciones
 	function habilitar_deshabilitar_posicion(btn,idPedidoPosicion,cancelado){
 		url = '/ventas/pedido/posicion/modificar/'+idPedidoPosicion+"/?cancelado="+cancelado
 		if (cancelado == 1 ) 
@@ -242,12 +253,17 @@ Autorización Pedido de Venta - solo administradores
 					$(btn).attr('data-idposicion',idPedidoPosicion)
 					$(btn).attr('data-target',"#modal-cancelar-posicion")
 					$(btn).removeAttr('onclick')
+					// Se elimina el motivo de cancelación
+					$("#td-motivo-cancelacion"+idPedidoPosicion).html("")
 		      	}
 				else{
-					$("#btn-deshabilitar"+idPedidoPosicion).children('span').attr('class','glyphicon glyphicon-ok-circle')
-					$("#btn-deshabilitar"+idPedidoPosicion).removeClass('btn-danger').addClass('btn-success')
-					$("#btn-deshabilitar"+idPedidoPosicion).removeAttr('data-target')
-					$("#btn-deshabilitar"+idPedidoPosicion).attr('onclick',"habilitar_deshabilitar_posicion(this,"+idPedidoPosicion+",0)")
+					var btn_deshabilitar= $("#btn-deshabilitar"+idPedidoPosicion)
+					btn_deshabilitar.children('span').attr('class','glyphicon glyphicon-ok-circle')
+					btn_deshabilitar.removeClass('btn-danger').addClass('btn-success')
+					btn_deshabilitar.removeAttr('data-target')
+					btn_deshabilitar.attr('onclick',"habilitar_deshabilitar_posicion(this,"+idPedidoPosicion+",0)")
+					// Se visualiza el motivo de cancelación
+					$("#td-motivo-cancelacion"+idPedidoPosicion).html($('#idMotivoCancelacionPedidoVenta option:eq('+$('#idMotivoCancelacionPedidoVenta').val()+')').html())
 					
 				}
 				toastr.success('Se ha modificado la posición con exito','ShopNeubs')
