@@ -208,6 +208,9 @@ class SaldoInventario(models.Model):
 		verbose_name = 'Saldo Inventario'
 		verbose_name_plural = 'Saldo Inventario'
 		unique_together = (("producto", "proveedor"),)
+		permissions = (
+			("consultar_saldo_inventario","Puede consultar los saldos de inventario"),
+		)
 		#managed = False
 
 class Garantia(models.Model):

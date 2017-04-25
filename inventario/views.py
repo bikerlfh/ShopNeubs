@@ -153,6 +153,34 @@ def busqueda_asincrona_producto(request):
 		return render(request,'inventario/div_producto.html',{'listado_saldo_inventario':listado_saldo_inventario})
 	return HttpResponse("")
 
+def busqueda_saldo_inventario(request):
+	# objeto donde se almacenará el PK del registro seleccionado
+	objectPk = '#idSaldoInventario'
+	if request.GET.get("objectPk",None) is not None:
+		objectPk = "#"+request.GET.get("objectPk")
+		
+	# objeto donde se visualizará el registro seleccionado
+	# { 'objeto','columna' }
+	objectShow = {'#producto':'fields.producto','#proveedor':'fields.proveedor','#precioVentaUnitario':'fields.precioVentaUnitario'}
+
+	return render_to_response("inventario/busqueda_saldo_inventario.html",{'objectPk':objectPk, 'objectShow':objectShow})
+
+"""Carga en json el saldo inventario filtrado por producto y/o proveedor"""
+def saldo_inventario_json(request):
+	idProducto = request.GET.get('idProducto',None)
+	idProveedor = request.GET.get('idProveedor',None)
+	estado = request.GET.get('estado',None)
+	filtro_Q = Q()
+	if idProducto != None:
+		filtro_Q = filtro_Q & Q(producto = idProducto)
+	if idProveedor != None:
+		filtro_Q = filtro_Q & Q(proveedor = idProveedor)
+	if estado != None:
+		filtro_Q = filtro_Q & Q(estado = bool(int(estado)))
+	datos = json.loads(serializers.serialize('json',SaldoInventario.objects.filter(filtro_Q),fields=('producto','proveedor','referenciaProveedor','cantidad','precioVentaUnitario','precioOferta','estado'),use_natural_foreign_keys=True))
+	dic = {'data': datos}
+	return HttpResponse(json.dumps(dic),content_type='application/json')
+	
 def producto_json(request):
 	# serializamos en json todos los productos e usamos los natural_key de las llaves foraneas
 	datos = json.loads(serializers.serialize('json',Producto.objects.all(),fields=('numeroProducto','nombre','referencia')))
@@ -178,7 +206,7 @@ def busqueda_producto_modal(request):
 	return render(request,"base/tabla-dinamica-modal.html",{ 'title': 'Busqueda de Productos','url':"/producto/json/", 
 															 'columns': columns, 'objectPk':objectPk, 'objectShow':objectShow })
 
-def saldo_inventario_json(request):
+def get_precioCompraUnitario_saldo_inventario(request):
 	if request.GET.get('idProducto',None) != None and request.GET.get('idProveedor',None):
 		if SaldoInventario.objects.filter(producto=request.GET.get('idProducto'),proveedor=request.GET.get('idProveedor')).exists():
 			return HttpResponse(SaldoInventario.objects.get(producto=request.GET.get('idProducto'),proveedor=request.GET.get('idProveedor')).precioCompraUnitario)

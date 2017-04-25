@@ -48,7 +48,7 @@ $(document).ready(function() {
 				{% endfor %}
 			{% endif %}
 			{# Se esconde el modal #}
-			$('.modal').modal('hide')
+			$(this).parents('.modal').first().modal('hide')
 		}
 	});
 });

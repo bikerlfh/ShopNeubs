@@ -37,7 +37,7 @@ Autorización Pedido de Venta - solo administradores
 				<h3 class="item-heading bg-grey">MODIFICAR PEDIDO VENTA</h3>
 				<hr>
 				<div class="form-group ">
-					<label for="proveedor" class="col-lg-2 col-md-2 col-sm-2 col-xs-4 control-label">Pedido Venta</label>
+					<label for="pedidoventa" class="col-lg-2 col-md-2 col-sm-2 col-xs-4 control-label">Pedido Venta</label>
 					<div class="col-lg-5 col-md-5 col-sm-5 col-xs-6">
 						<input type="hidden" name="idPedidoVenta" id="idPedidoVenta" required value="{{pedidoVenta.pk}}">
 						<input class="form-control" type="text" name="numeroPedido" id="numeroPedido" disabled required onkeypress="return false" value="{{pedidoVenta.numeroPedido}}">
@@ -58,7 +58,7 @@ Autorización Pedido de Venta - solo administradores
 				</div>
 			</div>
 			<hr>
-			<div class="col-lg-12">
+			<div class="col-lg-12  col-md-12 col-sm-12 col-xs-12">
 				<h3 class="text-center item-heading">ITEMS DEL PEDIDO VENTA</h3>
 				<div class="table-responive">
 					<table id="tabla_pedido" class="table table-striped">
@@ -82,8 +82,8 @@ Autorización Pedido de Venta - solo administradores
 								<tr>
 									<td>{{ posicion.producto }}</td>
 									<td>{{ posicion.proveedor }}</td>
-									<td id="td-cantidad{{ forloop.counter }}">{{ posicion.cantidad }}</td>
-									<td id="td-costo{{ forloop.counter }}">{{ posicion.costoTotal}}</td>
+									<td id="td-cantidad{{posicion.pk}}">{{ posicion.cantidad }}</td>
+									<td id="td-costo{{posicion.pk}}">{{ posicion.costoTotal}}</td>
 									<td id="td-motivo-cancelacion{{posicion.pk}}">{{ posicion.motivoCancelacionPedidoVenta.descripcion }}</td>
 									{% if perms.ventas.change_pedidoventaposicion %}
 									<td>
@@ -111,6 +111,10 @@ Autorización Pedido de Venta - solo administradores
 							{% endfor %}
 						</tbody>
 					</table>
+					<br>
+					<button type="button" class="form-control btn-warning center-block cursor-pointer"  data-toggle="modal" data-target="#modal-agregar-posicion" src-url="{% url 'busqueda_saldo_inventario'%}">
+						Agregar nuevo
+					</button>
 				</div>
 			
 				<div id="modal-cancelar-posicion" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-cancelar-posicionLabel">
@@ -151,7 +155,8 @@ Autorización Pedido de Venta - solo administradores
 
 <!-- Modal -->
 <div class="modal fade " id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  
+</div>
+<div class="modal fade " id="modal-agregar-posicion" tabindex="-1" role="dialog" aria-labelledby="modal-agregar-posicionLabel">
 </div>
 {% endblock %}
 
@@ -167,6 +172,32 @@ Autorización Pedido de Venta - solo administradores
 		  event.preventDefault();
 		});
 	})
+	// Evento cuando se esconde el modal de la busqueda de los pedidos
+	$('#myModal').on('hidden.bs.modal', function (e) {
+  		$(this).html('')
+		// cuando se selecciona un pedido venta, se recarga la pagina enviando por GET el idPedidoVenta
+  		if($("#idPedidoVenta").val()>0)
+			redirect('{% url 'modificar_pedido_venta'%}?idPedidoVenta='+$("#idPedidoVenta").val())
+	})
+
+	// Cuando se selecciona el Saldo Inventario
+	// Se crea la nueva posición del pedido venta
+	$('#modal-agregar-posicion').on('hidden.bs.modal', function (e) {
+		$(this).html('')
+		if (data != null) {
+	  		var row = "<tr><input type='hidden' id='idSaldoInventario"+data.pk+"' value='"+data.pk+"'>"
+			row += "<td>"+data.fields.producto+"</td>"
+			row += "<td>"+data.fields.proveedor+"</td>"
+			row += "<td><input type='text' id='cantidadSa"+data.pk+"' class='form-control' value='1' onkeyup='modificar_valores(this,\"#costoTotalSa"+data.pk+"\",value,"+data.fields.precioVentaUnitario+")'></td>"
+			row += "<td><input type='text' id='costoTotalSa"+data.pk+"' class='form-control' disabled value='"+data.fields.precioVentaUnitario+"'></td>"
+			row += "<td></td>"
+			row += "<td colspan='2'><button type='button' class='form-control btn-success center-block cursor-pointer'><span class='glyphicon glyphicon-floppy-disk'></span></button></td></tr>"
+			$("#tabla_pedido tbody").append(row)
+		}
+	})
+	function agregar_posicion(){
+		
+	}
 	// Evento para la cancelación de las posiciones
 	$('#modal-cancelar-posicion').on('show.bs.modal', function (event) {
 	  var button = $(event.relatedTarget) // Button that triggered the modal
@@ -176,13 +207,7 @@ Autorización Pedido de Venta - solo administradores
 	  modal.find("#idPedidoVentaPoscionCancelada").val(idPedidoVentaPosicion)
 
 	})
-	// Evento cuando se esconde el modal de la busqueda de los pedidos
-	$('#myModal').on('hidden.bs.modal', function (e) {
-  		$(this).html('')
-		// cuando se selecciona un pedido venta, se recarga la pagina enviando por GET el idPedidoVenta
-  		if($("#idPedidoVenta").val()>0)
-			redirect('{% url 'modificar_pedido_venta'%}?idPedidoVenta='+$("#idPedidoVenta").val())
-	})
+	// combierte las columnas cantidad y costo total en texto, para que pueda ser modificada
 	function visualizar_campo_cantidad(btn,idPedidoPosicion){
 		// Se consulta el td de la cantidad
 		td_cantidad = $(btn).parent().siblings('td[id^=td-cantidad]')

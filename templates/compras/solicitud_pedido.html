@@ -196,7 +196,7 @@ $('#modal-producto').on('hidden.bs.modal', function (e) {
 		$.ajax({
 	      async: true,
 	      type: "get",
-	      url: "{% url 'saldo_inventario_json' %}",
+	      url: "{% url 'get_precioCompraUnitario_saldo_inventario' %}",
 	      data: 'idProducto='+idProducto+"&idProveedor="+$("#idProveedor").val(),
 	      success: function(data){
 		 	$("input[id^='precio_unitario']").last().val(data) 
