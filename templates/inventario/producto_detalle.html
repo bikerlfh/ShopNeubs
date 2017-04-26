@@ -84,12 +84,14 @@ Compra {{ saldoInventario.producto.nombre }} en ShopNeubs
 				<section>
 					<div class="col-lg-7 col-md-6 col-sm-12 col-xs-12">
 						{% if saldoInventario.estado %}
-							{% get_span_new_product saldoInventario.fechaCreacion|date:'Y-m-d' 'producto-nuevo'%}
+							<div style="float: left; left:200px;top:6px;position: absolute;">
+								{% get_span_new_product saldoInventario.fechaCreacion|date:'Y-m-d' 'producto-nuevo'%}
+							</div>
 							{% else %}
-							<span class="producto-sin-stock"></span>
+							<span class="producto-sin-stock" style="float: center; left: 350px; top:166px"></span>
 						{% endif %} 
 						{% if saldoInventario.precioOferta %}
-						<span class="glyphicon glyphicon-certificate  producto-oferta-estrella" style="float: left; left: 0px"></span>
+						<span class="glyphicon glyphicon-certificate  producto-oferta-estrella" style="float: right; left: 380px"></span>
 						{% endif %}
 						<div id="imagen-principal">
 							<a href="{{ saldoInventario.producto.imagen.url }}" class="gallery-item">
