@@ -1,3 +1,4 @@
+{% load staticfiles %}
 <header> 
    <nav class="navbar navbar-default">
         <div class="navbar-header">
@@ -7,7 +8,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{% url 'home'%}" style="color: white;padding: 9px 40px;"><img src="static/img/logo.png" style="width: 150px;height: 40px;padding-top: 0px;"></a>
+            <a class="navbar-brand" href="{% url 'home'%}" style="color: white;padding: 9px 40px;"><img src="{% static 'img/logo.png'%}" style="width: 150px;height: 40px;padding-top: 0px;"></a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse">
             <ul class="nav navbar-nav navbar-right" >
