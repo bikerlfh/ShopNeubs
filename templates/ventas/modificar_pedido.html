@@ -101,7 +101,7 @@ Autorización Pedido de Venta - solo administradores
 					</table>
 					<br>
 					{% if pedidoVenta %}
-					<button type="button" class="form-control btn-warning center-block cursor-pointer"  data-toggle="modal" data-target="#modal-agregar-posicion" src-url="{% url 'busqueda_saldo_inventario'%}">
+					<button type="button" id="btn-agregar-poscion" class="form-control btn-warning center-block cursor-pointer"  data-toggle="modal" data-target="#modal-agregar-posicion" src-url="{% url 'busqueda_saldo_inventario'%}">
 						Agregar nueva posición
 					</button>
 					{% endif %}
@@ -181,8 +181,11 @@ Autorización Pedido de Venta - solo administradores
 			row += "<td><input type='text' id='cantidadSa"+data.pk+"' class='form-control' value='1' onkeyup='modificar_valores(this,\"#costoTotalSa"+data.pk+"\",value,"+data.fields.precioVentaUnitario+")'></td>"
 			row += "<td><input type='text' id='costoTotalSa"+data.pk+"' class='form-control' disabled value='"+data.fields.precioVentaUnitario+"'></td>"
 			row += "<td></td>"
-			row += "<td colspan='2'><button type='button' class='form-control btn-success center-block cursor-pointer' onclick=\"agregar_posicion("+data.pk+")\"><span class='glyphicon glyphicon-floppy-disk'></span></button></td></tr>"
+			row += "<td><button type='button' class='form-control btn-success center-block cursor-pointer' style='width:50px' onclick=\"agregar_posicion("+data.pk+")\"><span class='glyphicon glyphicon-cloud-upload'></span></button></td>"
+			row += "<td><button type='button' class='form-control btn-danger center-block cursor-pointer' style='width:50px' title='Cancelar' onclick=\"$(this).parents('tr').first().remove();$('#btn-agregar-poscion').removeAttr('disabled')\"><span class='glyphicon glyphicon-ban-circle'></span></button></td></tr>"
 			$("#tabla_pedido tbody").append(row)
+			$("#cantidadSa"+data.pk).validarCampo({ type:'upper',length: 2})
+			$("#btn-agregar-poscion").attr('disabled','disabled')
 		}
 	})
 	// guarda la nueva posición en el pedido
@@ -191,7 +194,8 @@ Autorización Pedido de Venta - solo administradores
 		cantidad = $('#cantidadSa'+idSaldoInventario).val()
 		// Se valida que tenga cantidad
 		if (cantidad <= 0 || cantidad == null) {
-			toastr.warning("Ingresa la cantidad de productos","ShopNeubs")
+			toastr.warning("Ingresa la cantidad del producto","ShopNeubs")
+			$('#cantidadSa'+idSaldoInventario).focus()
 			return;
 		}
 		costoTotal = $('#costoTotalSa'+idSaldoInventario).val()
@@ -232,6 +236,7 @@ Autorización Pedido de Venta - solo administradores
 		$(btn).children('span').attr('class','glyphicon glyphicon-floppy-saved')
 		// Se cambia la función onClick
 		$(btn).attr('onclick',"modificar_posicion(this,"+idPedidoPosicion+")")
+		$("#cantidad"+idPedidoPosicion).validarCampo({ type:'upper',length: 2})
 	}
 	// Modifica el vlaor del campo Costo Total
 	function modificar_valores(input,campoCostoTotal,cantidad,costoUnitario){
