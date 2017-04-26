@@ -6,6 +6,7 @@ urlpatterns = [
     url(r'^solicitud/$', login_required(views.solicitud_pedido), name = 'solicitud_venta'),
     url(r'^autorizar/$', login_required(permission_required('ventas.autorizar_pedido',login_url='/')(views.autorizar_pedido.as_view())), name = 'autorizar_venta'),
     url(r'^pedido/modificar/$', login_required(permission_required('ventas.change_pedidoventa',login_url='/')(views.modificar_pedido)), name = 'modificar_pedido_venta'),
+    url(r'^pedido/posicion/agregar/$', login_required(permission_required('ventas.add_pedidoventaposicion',login_url='/')(views.agregar_pedido_posicion)), name = 'agregar_pedido_venta_posicion'),
     url(r'^pedido/posicion/modificar/(?P<idPedidoVentaPosicion>[\d]{1,9})/$', login_required(permission_required('ventas.modificar_pedido',login_url='/')(views.modificar_pedido_posicion)), name = 'modificar_pedido_venta_posicion'),
     url(r'^pedido-enviado/(?P<numeroPedido>[\d])/$', login_required(views.pedido_enviado), name = 'pedido_venta_enviado'),
     url(r'^pedido/json/$', login_required(permission_required('ventas.consultar_pedido',login_url='/')(views.pedido_venta_json)),name='pedido_venta_json'),

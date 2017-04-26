@@ -17,16 +17,16 @@ if(campo_saldo.length>0){var campo_saldo=$(this).siblings("input[type=hidden][id
 var idSaldoInventario=$(campo_saldo).val()
 add_to_cart($(campo_saldo).attr('src-url').replace('-1',cantidad))}});$(document).on('click',"button[data-toggle='modal'][src-url]",function()
 {$($(this).attr('data-target')).load($(this).attr('src-url'),$(this).attr('data'))});function load_options_select(url,objeto,value=null)
-{getJSON(url,function(data){var options="<option value='0'>---</option>"
+{$.ajax({dataType:"json",url:url,success:function(data){var options="<option value='0'>---</option>"
 $.each(data.items,function(i,option)
 {options+="<option value='"+option.value+"'>"+option.description+"</option>"})
 $(objeto).html(options)
 if(value!=null)
-$(objeto).val(value)})}
+$(objeto).val(value)
+console.log("success ")},error:function(jqXHR,estado,error){console.log(error);console.log(estado)},})}
 function redirect(url){$(location).attr('href',url)}
-function add_to_cart(url){getJSON(url,function(data){$(".cantidad-total-carro").html(data.cart.cantidad_total)
-$(".valor-total-carro").html(format_currency(data.cart.valor_total))})}
-function getJSON(url,success,options=null){return $.ajax({dataType:"json",url:url,data:options!=null?options.data||null:null,beforeSend:options!=null?options.beforeSend||null:null,success:success,error:function(jqXHR,estado,error){console.log(error);console.log(estado)},})}
+function add_to_cart(url){$.ajax({dataType:"json",url:url,success:function(data){console.log("success "+data.cart.cantidad_total+" $"+data.cart.valor_total);$(".cantidad-total-carro").html(data.cart.cantidad_total)
+$(".valor-total-carro").html(format_currency(data.cart.valor_total))},error:function(jqXHR,estado,error){console.log(error);console.log(estado)},})}
 function cargar_productos_asincrono(URL,objeto,datos){$.ajax({async:!0,type:"get",url:URL,data:datos,success:function(resp){if(resp.length>0){$(objeto).append(resp)}
 else $(objeto).remove()},error:function(jqXHR,estado,error){console.log(error);console.log(estado)},timeout:10000})}
 function usar_ajax(URL,objeto,datos,method="POST")

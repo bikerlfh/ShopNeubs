@@ -83,11 +83,7 @@ function load_options_select(url,objeto,value = null)
     // .fail(function( e ) {
     //     console.log( "error: " + e );
     // });
-    $.ajax({
-      dataType: "json",
-      url: url,
-      //data: data,
-      success: function(data){
+    getJSON(url,function(data){
         var options = "<option value='0'>---</option>"
         $.each(data.items,function(i,option)
         {
@@ -97,13 +93,28 @@ function load_options_select(url,objeto,value = null)
         // Se asigna el valor al select
         if(value != null)
             $(objeto).val(value)
-        console.log( "success ");
-      },
-      error: function(jqXHR,estado,error){
-        console.log(error);
-        console.log(estado);
-      },
-    }); 
+    });
+    // $.ajax({
+    //   dataType: "json",
+    //   url: url,
+    //   //data: data,
+    //   success: function(data){
+    //     var options = "<option value='0'>---</option>"
+    //     $.each(data.items,function(i,option)
+    //     {
+    //         options += "<option value='"+option.value+"'>"+option.description+"</option>"
+    //     })
+    //     $(objeto).html(options)
+    //     // Se asigna el valor al select
+    //     if(value != null)
+    //         $(objeto).val(value)
+    //     console.log( "success ");
+    //   },
+    //   error: function(jqXHR,estado,error){
+    //     console.log(error);
+    //     console.log(estado);
+    //   },
+    // }); 
 }
 // Redireccionamiento
 function redirect(url){
@@ -124,23 +135,44 @@ function add_to_cart(url){
   // }).fail(function( e ) {
   //   console.log( "error: " + e );
   // });
-  $.ajax({
-    dataType: "json",
-    url: url,
-    //data: data,
-    success: function(data){
-      console.log( "success " + data.cart.cantidad_total + " $" + data.cart.valor_total);
-      /* se carga la cantidad total en los elementos 
-         que tengan como clase cantidad-total-carro
-         y el valor total en los elementros con clase valor-total-carro */
-      $(".cantidad-total-carro").html(data.cart.cantidad_total)
-      $(".valor-total-carro").html(format_currency(data.cart.valor_total))
-    },
-    error: function(jqXHR,estado,error){
-      console.log(error);
-      console.log(estado);
-    },
-  }); 
+  getJSON(url,function(data){
+    /* se carga la cantidad total en los elementos 
+       que tengan como clase cantidad-total-carro
+       y el valor total en los elementros con clase valor-total-carro */
+    $(".cantidad-total-carro").html(data.cart.cantidad_total)
+    $(".valor-total-carro").html(format_currency(data.cart.valor_total))
+  })
+  // $.ajax({
+  //   dataType: "json",
+  //   url: url,
+  //   //data: data,
+  //   success: function(data){
+  //     console.log( "success " + data.cart.cantidad_total + " $" + data.cart.valor_total);
+  //     // se carga la cantidad total en los elementos 
+  //     // que tengan como clase cantidad-total-carro
+  //     // y el valor total en los elementros con clase valor-total-carro 
+  //     $(".cantidad-total-carro").html(data.cart.cantidad_total)
+  //     $(".valor-total-carro").html(format_currency(data.cart.valor_total))
+  //   },
+  //   error: function(jqXHR,estado,error){
+  //     console.log(error);
+  //     console.log(estado);
+  //   },
+  // }); 
+}
+function getJSON(url,success,options=null){
+  return $.ajax({
+            dataType: "json",
+            url: url,
+            data: options!=null? options.data || null: null,
+            method: options != null? options.method || "GET":"GET",
+            beforeSend:options!=null? options.beforeSend || null: null,
+            success: success,
+            error: function(jqXHR,estado,error){
+              console.log(error);
+              console.log(estado);
+            },
+          });
 }
 // Se usa en el index
 // agregan asincronamente los productos a un objeto

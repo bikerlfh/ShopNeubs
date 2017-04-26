@@ -9,19 +9,6 @@ Neubs - Autorización Pedido Venta
 Autorización Pedido de Venta - solo administradores
 {% endblock %}
 
-{% block script_head %}
-<style type="text/css">
-	.form-control[disabled]{
-	    opacity: 1;
-	    background-color: #eee;
-	    color:green;
-	    border-color: #eee;
-}
-
-</style>
-{% endblock %}
-
-
 {% block posicion_pagina %}
 <ol class="breadcrumb">
     <a  href="/">Home /</a></li>
@@ -80,6 +67,7 @@ Autorización Pedido de Venta - solo administradores
 						<tbody>
 							{% for posicion in pedidoVenta.listadoPedidoVentaPosicion %}
 								<tr>
+									<input type="hidden" id="idProducto{{posicion.producto.pk}}" value="{{posicion.pk}}">
 									<td>{{ posicion.producto }}</td>
 									<td>{{ posicion.proveedor }}</td>
 									<td id="td-cantidad{{posicion.pk}}">{{ posicion.cantidad }}</td>
@@ -112,9 +100,11 @@ Autorización Pedido de Venta - solo administradores
 						</tbody>
 					</table>
 					<br>
+					{% if pedidoVenta %}
 					<button type="button" class="form-control btn-warning center-block cursor-pointer"  data-toggle="modal" data-target="#modal-agregar-posicion" src-url="{% url 'busqueda_saldo_inventario'%}">
-						Agregar nuevo
+						Agregar nueva posición
 					</button>
+					{% endif %}
 				</div>
 			
 				<div id="modal-cancelar-posicion" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-cancelar-posicionLabel">
@@ -191,12 +181,33 @@ Autorización Pedido de Venta - solo administradores
 			row += "<td><input type='text' id='cantidadSa"+data.pk+"' class='form-control' value='1' onkeyup='modificar_valores(this,\"#costoTotalSa"+data.pk+"\",value,"+data.fields.precioVentaUnitario+")'></td>"
 			row += "<td><input type='text' id='costoTotalSa"+data.pk+"' class='form-control' disabled value='"+data.fields.precioVentaUnitario+"'></td>"
 			row += "<td></td>"
-			row += "<td colspan='2'><button type='button' class='form-control btn-success center-block cursor-pointer'><span class='glyphicon glyphicon-floppy-disk'></span></button></td></tr>"
+			row += "<td colspan='2'><button type='button' class='form-control btn-success center-block cursor-pointer' onclick=\"agregar_posicion("+data.pk+")\"><span class='glyphicon glyphicon-floppy-disk'></span></button></td></tr>"
 			$("#tabla_pedido tbody").append(row)
 		}
 	})
-	function agregar_posicion(){
-		
+	// guarda la nueva posición en el pedido
+	function agregar_posicion(idSaldoInventario){
+		idPedidoVenta = $("#idPedidoVenta").val()
+		cantidad = $('#cantidadSa'+idSaldoInventario).val()
+		// Se valida que tenga cantidad
+		if (cantidad <= 0 || cantidad == null) {
+			toastr.warning("Ingresa la cantidad de productos","ShopNeubs")
+			return;
+		}
+		costoTotal = $('#costoTotalSa'+idSaldoInventario).val()
+
+		var params = "idPedidoVenta="+idPedidoVenta+"&idSaldoInventario="+idSaldoInventario+"&cantidad="+cantidad+"&costoTotal="+costoTotal
+
+		getJSON('{% url 'agregar_pedido_venta_posicion'%}',function(data){
+			if (data.resultado == 'True') {
+				toastr.success('Se ha agregado con exito la posición del pedido','ShopNeubs')	
+				redirect("{{request.get_absolute_url}}")
+			}
+			else
+				toastr.error(data.resultado,'ShopNeubs')	
+
+		},{ data:params})
+
 	}
 	// Evento para la cancelación de las posiciones
 	$('#modal-cancelar-posicion').on('show.bs.modal', function (event) {
@@ -230,47 +241,35 @@ Autorización Pedido de Venta - solo administradores
 		}
 		$(campoCostoTotal).val(cantidad*costoUnitario)
 	}
+
 	// Realiza la modificación de cantidad y precio de la posición mediante ajax
 	function modificar_posicion(btn,idPedidoPosicion){
-
 		td_cantidad = $(btn).parent().siblings('td[id^=td-cantidad]')
 		// Se consulta el td del costo
 		td_costo= $(btn).parent().siblings('td[id^=td-costo]')
 		cantidad = $(td_cantidad).children('input').val()
 		costoTotal = $(td_costo).children('input').val()
+		url = '/ventas/pedido/posicion/modificar/'+idPedidoPosicion+"/?cantidad="+cantidad+"&costoTotal="+parseFloat(costoTotal)
+		getJSON(url,function(data){
+				if (data.resultado == "True") {
+			      	$(td_cantidad).html(cantidad)
+					$(td_costo).html(costoTotal)
+					$(btn).children('span').attr('class','glyphicon glyphicon-edit')
+					$(btn).attr('onclick',"visualizar_campo_cantidad(this,"+idPedidoPosicion+")")
 
-		$.ajax({
-		    dataType: "json",
-		    url: '/ventas/pedido/posicion/modificar/'+idPedidoPosicion+"/?cantidad="+cantidad+"&costoTotal="+parseFloat(costoTotal),
-		    //data: data,
-		    success: function(data){
-		      if (data.resultado == "True") {
-		      	$(td_cantidad).html(cantidad)
-				$(td_costo).html(costoTotal)
-				$(btn).children('span').attr('class','glyphicon glyphicon-edit')
-				$(btn).attr('onclick',"visualizar_campo_cantidad(this,"+idPedidoPosicion+")")
-
-				toastr.success('Se ha modificado la posición con exito','ShopNeubs')
-		      }
-		      else
-		      	toastr.error('No se ha logrado modificar la posición del pedido','ShopNeubs')	
-		    },
-		    error: function(jqXHR,estado,error){
-		      console.log(error);
-		      console.log(estado);
-		    },
-		  }); 	
+					toastr.success('Se ha modificado la posición con exito','ShopNeubs')
+			      }
+			      else
+			      	toastr.error('No se ha logrado modificar la posición del pedido','ShopNeubs')	
+    	});
 	}
 	// Habilita o deshabilita las posiciones
 	function habilitar_deshabilitar_posicion(btn,idPedidoPosicion,cancelado){
 		url = '/ventas/pedido/posicion/modificar/'+idPedidoPosicion+"/?cancelado="+cancelado
 		if (cancelado == 1 ) 
 			url+="&idMotivoCancelacion="+$('#idMotivoCancelacionPedidoVenta').val()
-		$.ajax({
-		    dataType: "json",
-		    url:url,
-		    //data: data,
-		    success: function(data){
+
+		getJSON(url,function(data){
 		      if (data.resultado == "True") {
 		      	if (cancelado == 0){
 					$(btn).children('span').attr('class','glyphicon glyphicon-remove-sign')
@@ -297,12 +296,7 @@ Autorización Pedido de Venta - solo administradores
 		      }
 		      else
 		      	toastr.error('No se ha logrado modificar la posición del pedido','ShopNeubs')	
-		    },
-		    error: function(jqXHR,estado,error){
-		      console.log(error);
-		      console.log(estado);
-		    },
-		  }); 	
+		    })
 	}
 </script>
 {% endblock %}

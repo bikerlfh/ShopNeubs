@@ -8,6 +8,7 @@ from .cart import Cart
 from .forms import ConsultaPedidoVentaForm
 from .pedidoventamanager import PedidoVentaManager
 from .models import EstadoPedidoVenta,PedidoVenta,PedidoVentaPosicion,PosicionVentaCompra,MotivoCancelacionPedidoVenta
+from inventario.models import SaldoInventario
 from tercero.models import Cliente
 from compras.models import PedidoCompra
 
@@ -177,6 +178,35 @@ def modificar_pedido(request):
 	listado_motivo_cancelacion = MotivoCancelacionPedidoVenta.objects.all()
 	return render(request,"ventas/modificar_pedido.html",{ 'pedidoVenta': pedidoVenta,'listado_motivo_cancelacion':listado_motivo_cancelacion })
 
+
+def agregar_pedido_posicion(request):
+	idPedidoVenta = request.GET.get('idPedidoVenta',None)
+	idSaldoInventario = request.GET.get('idSaldoInventario',None)
+	cantidad = request.GET.get('cantidad',None)
+	costoTotal = request.GET.get('costoTotal',None)
+
+	respuesta = {'resultado':'True','cantidad':cantidad,'costoTotal':costoTotal}
+	
+	if idPedidoVenta and idSaldoInventario and cantidad and costoTotal:
+		try:
+			pedidoVenta = get_object_or_404(PedidoVenta,pk=idPedidoVenta)
+			saldoInventario = get_object_or_404(SaldoInventario,pk=idSaldoInventario)
+			pedidoVentaPosicion = PedidoVentaPosicion(pedidoVenta = pedidoVenta,producto = saldoInventario.producto,
+													  proveedor = saldoInventario.proveedor,cantidad = cantidad,costoTotal = costoTotal)
+			# Se valida que no exista el producto en la lista con el mismo proveedor
+			if PedidoVentaPosicion.objects.filter(pedidoVenta = pedidoVenta,producto = saldoInventario.producto,proveedor = saldoInventario.proveedor).exists():
+				respuesta['resultado'] = "El pedido ya tiene el producto %s del proveedor %s" % (saldoInventario.producto,saldoInventario.proveedor)
+			else:
+				pedidoVentaPosicion.save()
+				respuesta['pedidoVenta'] = idPedidoVenta
+				respuesta['saldoInventario'] = idSaldoInventario
+		except Exception as e:
+			raise
+			respuesta['resultado'] = 'False'
+	else:
+		respuesta['resultado'] = 'False'
+	return HttpResponse(json.dumps(respuesta),content_type='application/json')
+	
 # Permite modificar la posicion de un pedido devolviendo True o False
 def modificar_pedido_posicion(request,idPedidoVentaPosicion):
 	cantidad = request.GET.get('cantidad',None)
