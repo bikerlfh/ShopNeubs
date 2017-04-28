@@ -20,9 +20,11 @@
           {% if saldoInventario.precioOferta %}
             {# si tienen promocion #}
             <span class="wow pulse glyphicon glyphicon-certificate producto-oferta-estrella" data-wow-offset="10"  data-wow-iteration="300"></span>
-            <figure onclick="redirect('{% url 'item' saldoInventario.producto__categoria__descripcion saldoInventario.producto__marca__descripcion saldoInventario.idSaldoInventario %}')" class="cursor-pointer">
-                <img src="{{ saldoInventario.producto__imagen|thumbnail_url:'producto'}}" class="img-responsive group list-group-image" alt="">
-            </figure>
+            <a href='{% url 'item' saldoInventario.producto__categoria__descripcion saldoInventario.producto__marca__descripcion saldoInventario.idSaldoInventario %}'>
+              <figure>
+                  <img src="{{ saldoInventario.producto__imagen|thumbnail_url:'producto'}}" class="img-responsive group list-group-image" alt="">
+              </figure>
+            </a>
             <div class="caption bg-grey">
               <h5 class="group inner item-heading" style="margin-bottom: 0px" ><a href="{% url 'item' saldoInventario.producto__categoria__descripcion saldoInventario.producto__marca__descripcion saldoInventario.idSaldoInventario %}">{{ saldoInventario.producto__nombre }}</a></h5>
 
@@ -30,9 +32,11 @@
 
               <p class="group inner item-precio bg-red"  style="margin-bottom: 0px">
               <b style="color: #333">Ahora:</b>${{saldoInventario.precioOferta|stringformat:"d"|intcomma }}
+              {% if saldoInventario.estado %}
               <button class="btn icono-carrito cursor-pointer wow " onclick="add_to_cart('{% url 'add_cart' saldoInventario.idSaldoInventario 1 %}')" title="Agregar al carrito">
                 <span class="glyphicon glyphicon-shopping-cart "></span>
               </button>
+              {% endif %}
               <button class="btn btn-responsive btn-warning btn-detalle-producto" onclick="redirect('{% url 'item' saldoInventario.producto__categoria__descripcion saldoInventario.producto__marca__descripcion saldoInventario.idSaldoInventario %}')">
                 Ver más detalle
               </button>
@@ -44,16 +48,20 @@
             </div>
           {% else %}
             {# si no tienen promocion #}
-            <figure onclick="redirect('{% url 'item' saldoInventario.producto__categoria__descripcion saldoInventario.producto__marca__descripcion saldoInventario.idSaldoInventario %}')" class="cursor-pointer">
-                <img src="{{ saldoInventario.producto__imagen|thumbnail_url:'producto'}}" class="img-responsive group list-group-image" alt="">
-            </figure>
+            <a href='{% url 'item' saldoInventario.producto__categoria__descripcion saldoInventario.producto__marca__descripcion saldoInventario.idSaldoInventario %}'>
+              <figure>
+                  <img src="{{ saldoInventario.producto__imagen|thumbnail_url:'producto'}}" class="img-responsive group list-group-image" alt="">
+              </figure>
+            </a>
             <div class="caption bg-grey">
               <h5 class="group inner item-heading"><a href="{% url 'item' saldoInventario.producto__categoria__descripcion saldoInventario.producto__marca__descripcion saldoInventario.idSaldoInventario %}">{{ saldoInventario.producto__nombre }}</a></h5>
               <h5 id="descripcion-texto" class="group inner item-text-display text-justify">{{ saldoInventario.producto__especificacion|default:saldoInventario.producto__descripcion }}</h5>
              <p class="group inner item-precio bg-red">$ {{ saldoInventario.precioVentaUnitario|stringformat:"d"|intcomma }}
+              {% if saldoInventario.estado %}
               <button class="btn icono-carrito cursor-pointer wow " onclick="add_to_cart('{% url 'add_cart' saldoInventario.idSaldoInventario 1 %}')" title="Agregar al carrito">
                 <span class="glyphicon glyphicon-shopping-cart "></span>
               </button>
+              {% endif %}
               <button class="btn btn-responsive btn-warning btn-detalle-producto" onclick="redirect('{% url 'item' saldoInventario.producto__categoria__descripcion saldoInventario.producto__marca__descripcion saldoInventario.idSaldoInventario %}')">
                 Ver más detalle
               </button>
