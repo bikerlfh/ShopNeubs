@@ -106,7 +106,10 @@ def search_producto(request):
 		listado_marcas = core.cargar_marcas_desde_listado_saldo_inventario(listado_saldo_inventario)
 	else:
 		listado_marcas = Marca.objects.all()
-	return render(request,"inventario/filtro_producto.html",{'listado_saldo_inventario' : listado_saldo_inventario,'listado_marcas':listado_marcas, 'listado_categorias' : core.get_menu_categorias() })
+	return render(request,"inventario/filtro_producto.html",{'listado_saldo_inventario' : listado_saldo_inventario,
+															 'listado_marcas':listado_marcas, 
+															 'page_title': 'Búsqueda (%s)' % request.GET.get('filtro'),
+															 'listado_categorias' : core.get_menu_categorias() })
 	#return render_to_response("inventario/filtrar_producto.html",{'listadoProductos' : list_productos })
 
 def ofertas(request,descripcion_marca = None):

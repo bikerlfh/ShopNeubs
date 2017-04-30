@@ -29,14 +29,16 @@ def add_cart(request,idSaldoInventario,cantidad):
 		carrito = Cart()
 	else:
 		carrito =  request.session.get('shop_cart')
-	try:
-		carrito.add_item(int(idSaldoInventario),int(cantidad))
-	except Exception as e:
-		# Si la excepción es en la consulta de un modelo
-		if e.__class__.__name__ is "DoesNotExist":
-			raise Http404('Upps! No se encontró el producto')
-	
-	request.session['shop_cart'] = carrito
+	saldoInventario = SaldoInventario.objects.get(pk = idSaldoInventario)
+	if saldoInventario.estado:
+		try:
+			carrito.add_item(int(idSaldoInventario),int(cantidad))
+		except Exception as e:
+			# Si la excepción es en la consulta de un modelo
+			if e.__class__.__name__ is "DoesNotExist":
+				raise Http404('Upps! No se encontró el producto')
+		
+		request.session['shop_cart'] = carrito
 	dic_carro = { 'cart' : {'cantidad_total':str(carrito.cantidad_total),'valor_total':str(carrito.valor_total)} }
 	return HttpResponse(json.dumps(dic_carro),content_type='application/json')
 
@@ -46,15 +48,16 @@ def ajustar_cantidad_cart(request,idSaldoInventario,cantidad):
 		carrito = Cart()
 	else:
 		carrito =  request.session.get('shop_cart')
-
-	try:
-		carrito.ajustar_cantidad(int(idSaldoInventario),int(cantidad))
-	except Exception as e:
-		# Si la excepción es en la consulta de un modelo
-		if e.__class__.__name__ is "DoesNotExist":
-			raise Http404('Upps! No se encontró el producto')
-	
-	request.session['shop_cart'] = carrito
+	saldoInventario = SaldoInventario.objects.get(pk = idSaldoInventario)
+	if saldoInventario.estado:
+		try:
+			carrito.ajustar_cantidad(int(idSaldoInventario),int(cantidad))
+		except Exception as e:
+			# Si la excepción es en la consulta de un modelo
+			if e.__class__.__name__ is "DoesNotExist":
+				raise Http404('Upps! No se encontró el producto')
+		
+		request.session['shop_cart'] = carrito
 	dic_carro = { 'cart' : {'cantidad_total':str(carrito.cantidad_total),'valor_total':str(carrito.valor_total)} }
 	return HttpResponse(json.dumps(dic_carro),content_type='application/json')
 

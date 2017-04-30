@@ -246,10 +246,12 @@ Compra {{ saldoInventario.producto.nombre }} en ShopNeubs
 					   	  			<p id="valor-total" class="item-precio-relacionados bg-red" style="display: inline-block;"> ${{ item_cart.valor_total|default:saldoInventario.precioOferta|default:saldoInventario.precioVentaUnitario|stringformat:"d"|intcomma}}</p>
 						    </div>
 						    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+						    {% if saldoInventario.estado %}
 							    <button class="btn btn-warning center-block" type="submit" onclick="add_to_cart('/cart/change/{{saldoInventario.pk}}/'+$('#cantidad').val()+'/')">
 									<span class="glyphicon glyphicon-shopping-cart" aria-hidden="true">
 									</span> Agregar al carrito
 								</button>
+							{% endif %}
 							</div>
 						</form>
 					</div>
