@@ -83,6 +83,12 @@
                 width: 33.33333%;   
             }
         }
+        @media screen and (max-width: 800px) {
+            .wow{
+                animation-name: none !important;
+                visibility: visible !important;
+            }
+        }
     </style>
 {% endblock %}
 
@@ -195,6 +201,8 @@
         }
     )
     wow.init();
+
+
 $(document).ready(function(){
     cargar_productos_asincrono("{% url 'busqueda_asincrona_producto'%}",'#section-promocion','promocion=True')
     cargar_productos_asincrono("{% url 'busqueda_asincrona_producto'%}",'#section-mas-vistos','mas_vistos=True')

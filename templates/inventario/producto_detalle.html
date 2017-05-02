@@ -45,10 +45,13 @@ Compra {{ saldoInventario.producto.nombre }} en ShopNeubs
 	    padding-bottom: 10px;	    
 	}
 	#nuevo{
-		position: absolute;left:60px;
+		position: absolute;
+		left:160px;
 	}
 	.producto-oferta-estrella{
-		position: absolute; left:350px;
+		position: absolute;
+		left:350px;
+		top: -10px;
 	}
 	.producto-sin-stock{
 		position: absolute;
@@ -93,21 +96,34 @@ Compra {{ saldoInventario.producto.nombre }} en ShopNeubs
 			top: 159px;
 		}
 	}
+	@media screen and (min-width:800px) and (max-width:970px) {
+		#oferta{
+			position: absolute;
+			left:440px;
+			top: -10px;
+		}
+	}
 	@media screen and (min-width:992px) and (max-width:1200px) {
 		#oferta{
 			position: absolute;
 			left:250px;
+			top: -10px;
+		}
+		#nuevo{
+			position: absolute;
+			left: 159px;
 		}
 	}
 	@media screen and (max-width:420px){
 		#oferta{
 			position: absolute;
-			left:230px;
+			left:190px;
+			top: -10px;
 		}
 		.producto-sin-stock{
 			position: absolute;
-			left: 120px;
-			top: 129px;
+			left: 90px;
+			top: 105px;
 		}
 	}
 </style>
