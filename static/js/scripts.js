@@ -1,3 +1,4 @@
+var timeout_ajax = 20000
 /* Evento click en el boton compuesto de cantidad item
  * Este boton sirve para aumentar y disminuir las cantidades de un item
  * De manera automatica actualiza el input sumando o restando una unidad y
@@ -68,53 +69,17 @@ $(document).on('click',"button[data-toggle='modal'][src-url]",function()
 // value: el valor que se le debe asignar al select (solo si es necesario)
 function load_options_select(url,objeto,value = null)
 {
-    // $.getJSON( url, function(data) {
-    //     var options = "<option value='0'>---</option>"
-    //     $.each(data.items,function(i,option)
-    //     {
-    //         options += "<option value='"+option.value+"'>"+option.description+"</option>"
-    //     })
-    //     $(objeto).html(options)
-    //     // Se asigna el valor al select
-    //     if(value != null)
-    //         $(objeto).val(value)
-    //     console.log( "success ");
-    // })
-    // .fail(function( e ) {
-    //     console.log( "error: " + e );
-    // });
-    getJSON(url,function(data){
-        var options = "<option value='0'>---</option>"
-        $.each(data.items,function(i,option)
-        {
-            options += "<option value='"+option.value+"'>"+option.description+"</option>"
-        })
-        $(objeto).html(options)
-        // Se asigna el valor al select
-        if(value != null)
-            $(objeto).val(value)
-    });
-    // $.ajax({
-    //   dataType: "json",
-    //   url: url,
-    //   //data: data,
-    //   success: function(data){
-    //     var options = "<option value='0'>---</option>"
-    //     $.each(data.items,function(i,option)
-    //     {
-    //         options += "<option value='"+option.value+"'>"+option.description+"</option>"
-    //     })
-    //     $(objeto).html(options)
-    //     // Se asigna el valor al select
-    //     if(value != null)
-    //         $(objeto).val(value)
-    //     console.log( "success ");
-    //   },
-    //   error: function(jqXHR,estado,error){
-    //     console.log(error);
-    //     console.log(estado);
-    //   },
-    // }); 
+  getJSON(url,function(data){
+    var options = "<option value='0'>---</option>"
+    $.each(data.items,function(i,option)
+    {
+        options += "<option value='"+option.value+"'>"+option.description+"</option>"
+    })
+    $(objeto).html(options)
+    // Se asigna el valor al select
+    if(value != null)
+        $(objeto).val(value)
+  });
 }
 // Redireccionamiento
 function redirect(url){
@@ -125,16 +90,6 @@ function redirect(url){
 // url: es la url de la vista de adicion al carro, esta debe
 //      proporcionarse desde la vista con el parametro de id y cantidad "/cart/add/id/cantidad/" 
 function add_to_cart(url){
-  // $.getJSON( url, function(data) {
-  //   console.log( "success " + data.cart.cantidad_total + " $" + data.cart.valor_total);
-  ///*    se carga la cantidad total en los elementos 
-  //      que tengan como clase cantidad-total-carro
-  //      y el valor total en los elementros con clase valor-total-carro */
-  //   $(".cantidad-total-carro").html(data.cart.cantidad_total)
-  //   $(".valor-total-carro").html(format_currency(data.cart.valor_total))
-  // }).fail(function( e ) {
-  //   console.log( "error: " + e );
-  // });
   getJSON(url,function(data){
     /* se carga la cantidad total en los elementos 
        que tengan como clase cantidad-total-carro
@@ -142,23 +97,6 @@ function add_to_cart(url){
     $(".cantidad-total-carro").html(data.cart.cantidad_total)
     $(".valor-total-carro").html(format_currency(data.cart.valor_total))
   })
-  // $.ajax({
-  //   dataType: "json",
-  //   url: url,
-  //   //data: data,
-  //   success: function(data){
-  //     console.log( "success " + data.cart.cantidad_total + " $" + data.cart.valor_total);
-  //     // se carga la cantidad total en los elementos 
-  //     // que tengan como clase cantidad-total-carro
-  //     // y el valor total en los elementros con clase valor-total-carro 
-  //     $(".cantidad-total-carro").html(data.cart.cantidad_total)
-  //     $(".valor-total-carro").html(format_currency(data.cart.valor_total))
-  //   },
-  //   error: function(jqXHR,estado,error){
-  //     console.log(error);
-  //     console.log(estado);
-  //   },
-  // }); 
 }
 function getJSON(url,success,options=null){
   return $.ajax({
@@ -172,6 +110,7 @@ function getJSON(url,success,options=null){
               console.log(error);
               console.log(estado);
             },
+            timeout:timeout_ajax //tiempo maximo de espera
           });
 }
 // Se usa en el index
@@ -180,7 +119,7 @@ function cargar_productos_asincrono(URL,objeto,datos){
     $.ajax(
     {
         async: true,
-        type: "get",
+        type: "GET",
         url: URL,
         data: datos,
         success: function(resp){
@@ -194,7 +133,7 @@ function cargar_productos_asincrono(URL,objeto,datos){
             console.log(error);
             console.log(estado);
         },
-        timeout:10000 //tiempo maximo de espera
+        timeout:timeout_ajax //tiempo maximo de espera
     });
 }
 // funcion para usar ajax
@@ -227,7 +166,7 @@ function usar_ajax(URL,objeto,datos,method = "POST")
             //se ejecuta despues de succes o error
             console.log(estado);
         },
-        timeout:10000 //tiempo maximo de espera
+        timeout:timeout_ajax //tiempo maximo de espera
     });
 }
 // Configuración los mensajes toastr

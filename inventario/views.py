@@ -135,14 +135,15 @@ def ofertas(request,descripcion_marca = None):
 
 # Esta vista se llama asincronamente
 def busqueda_asincrona_producto(request):
+	top = getattr(settings,'SELECT_TOP_MAX_INDEX_ITEM',10)
 	# filas a consultar
 	fields =['idSaldoInventario','estado','producto','fechaCreacion','producto__nombre',
 			'precioOferta','precioVentaUnitario','producto__categoria__descripcion','producto__marca__descripcion']
 	listado_saldo_inventario = None
 	if request.GET.get("promocion",False):
-		listado_saldo_inventario = SaldoInventario.objects.filter(precioOferta__isnull=False).values(*fields)[:getattr(settings,'SELECT_TOP_MAX_INDEX_ITEM',10)]
+		listado_saldo_inventario = SaldoInventario.objects.filter_products(precioOferta__isnull=False).values(*fields)[:top]
 	elif request.GET.get("mas_vistos",False):
-		listado_saldo_inventario = SaldoInventario.objects.filter_products(estado=True,producto__in = ProductoReview.objects.all().order_by('numeroVista').values_list('producto',flat=True)).values(*fields)[:getattr(settings,'SELECT_TOP_MAX_INDEX_ITEM',10)]
+		listado_saldo_inventario = SaldoInventario.objects.filter_products(estado=True,producto__in = ProductoReview.objects.all().order_by('-numeroVista')[:top].values_list('producto',flat=True)).values(*fields)[:top]
 	# si existe inventario
 	if listado_saldo_inventario:
 		for saldo in listado_saldo_inventario:

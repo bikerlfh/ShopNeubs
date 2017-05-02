@@ -1,26 +1,26 @@
 <div class="container-principal" style="padding-top: 0px;">
-<ul class="nav nav-tabs">
-  <li><a href="/admin/" target="_blank">Administrador</a></li>
-  <li role="presentation" class="dropdown">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-      Compras <span class="caret"></span>
-    </a>
-    <ul class="dropdown-menu">
-      <li><a href="{% url 'solicitud_compra'%}">Solicitud de Pedido</a></li>
-      <li><a href="{% url 'consulta_pedido_compra'%}">Consulta Pedidos</a></li>
-       
-    </ul>
-  </li>
-   <li role="presentation" class="dropdown">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
-      Ventas <span class="caret"></span>
-    </a>
-    <ul class="dropdown-menu">
-      <li><a href="{% url 'autorizar_venta' %}">Autorizar Pedido</a></li>
-      <li><a href="{% url 'consulta_pedido_venta'%}">Consulta Pedido</a></li>
-      <li><a href="{% url 'consulta_avanzada_pedido_venta'%}">Consulta Pedido Avanzado</a></li>
-      <li><a href="{% url 'modificar_pedido_venta'%}">Modificar Pedido Venta</a></li>
-    </ul>
-  </li>
-</ul>
+  <ul class="nav nav-tabs" >
+    <li><a href="/admin/" target="_blank">Administrador</a></li>
+    <li role="presentation" class="dropdown">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        Compras <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+        <li><a href="{% url 'solicitud_compra'%}">Solicitud de Pedido</a></li>
+        <li><a href="{% url 'consulta_pedido_compra'%}">Consulta Pedidos</a></li>
+         
+      </ul>
+    </li>
+     <li role="presentation" class="dropdown">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        Ventas <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+        <li><a href="{% url 'autorizar_venta' %}">Autorizar Pedido</a></li>
+        <li><a href="{% url 'consulta_pedido_venta'%}">Consulta Pedido</a></li>
+        <li><a href="{% url 'consulta_avanzada_pedido_venta'%}">Consulta Pedido Avanzado</a></li>
+        <li><a href="{% url 'modificar_pedido_venta'%}">Modificar Pedido Venta</a></li>
+      </ul>
+    </li>
+  </ul>
 </div>

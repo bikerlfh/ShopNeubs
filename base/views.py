@@ -4,6 +4,7 @@ from django.core.cache import cache
 from django.shortcuts import render
 from django.urls import reverse
 from django.views import View
+from django.views.decorators.cache import cache_page
 from inventario.models  import Categoria,Marca,SaldoInventario,ProductoReview
 from .models import Carousel
 
@@ -41,11 +42,12 @@ def index(request):
 	
 	return render(request,"base/index.html",{ 'listado_categoria' : categorias,'listado_marcas':marcas ,'carousel':carousel})
 
+@cache_page(60 * 60 * 24 * 3)
 def politica_privacidad(request):
 	return render(request,"base/politica-privacidad.html",{ })
-
+@cache_page(60 * 60 * 24 * 3)
 def terminos_condiciones(request):
 	return render(request,"base/terminos-y-condiciones.html",{ })
-
+@cache_page(60 * 60 * 24 * 3)
 def como_comprar(request):
 	return render(request,"base/como-comprar.html",{})
