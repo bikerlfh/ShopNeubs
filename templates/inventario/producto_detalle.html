@@ -44,20 +44,6 @@ Compra {{ saldoInventario.producto.nombre }} en ShopNeubs
 	#gal1 li {
 	    padding-bottom: 10px;	    
 	}
-	#nuevo{
-		position: absolute;
-		left:160px;
-	}
-	.producto-oferta-estrella{
-		position: absolute;
-		left:350px;
-		top: -10px;
-	}
-	.producto-sin-stock{
-		position: absolute;
-		left: 200px;
-		top: 159px;
-	}
 	
 	@media screen and (max-width:750px){
 		#imagen-principal,#gal1{
@@ -79,52 +65,7 @@ Compra {{ saldoInventario.producto.nombre }} en ShopNeubs
 		    padding: 10px;
 		    text-decoration: none;
 		}
-		#nuevo{
-			width: 90px;
-			height: 40px;
-			padding-left: 19px;
-			position: absolute;
-			left:0px;
-		}
-		#oferta{
-			position: absolute;
-			left:310px;
-		}
-		.producto-sin-stock{
-			position: absolute;
-			left: 170px;
-			top: 159px;
-		}
-	}
-	@media screen and (min-width:800px) and (max-width:970px) {
-		#oferta{
-			position: absolute;
-			left:440px;
-			top: -10px;
-		}
-	}
-	@media screen and (min-width:992px) and (max-width:1200px) {
-		#oferta{
-			position: absolute;
-			left:250px;
-			top: -10px;
-		}
-		#nuevo{
-			position: absolute;
-			left: 159px;
-		}
-	}
-	@media screen and (max-width:420px){
-		#oferta{
-			position: absolute;
-			left:190px;
-			top: -10px;
-		}
-		.producto-sin-stock{
-			position: absolute;
-			left: 90px;
-			top: 105px;
-		}
+
 	}
 </style>
 {% endblock %}
@@ -142,16 +83,20 @@ Compra {{ saldoInventario.producto.nombre }} en ShopNeubs
 			<hr>
 			<div class="row">
 				<section>
-					<div class="col-lg-7 col-md-6 col-sm-12 col-xs-12">
+					<div class="col-lg-7 col-md-6 col-sm-12 col-xs-12" >
 						{% if saldoInventario.estado %}
 							<div id="nuevo">
 								{% get_span_new_product saldoInventario.fechaCreacion|date:'Y-m-d' 'producto-nuevo'%}
 							</div>
 							{% else %}
-							<span class="producto-sin-stock"></span>
+							<div style="position: relative;">
+								<span class="producto-sin-stock" style="clear: right;"></span>
+							</div>
 						{% endif %} 
 						{% if saldoInventario.precioOferta %}
-						<span id="oferta" class="glyphicon glyphicon-certificate  producto-oferta-estrella"></span>
+						<div>
+							<span id="oferta" class="glyphicon glyphicon-certificate  producto-oferta-estrella pull-right"></span>
+						</div>
 						{% endif %}
 						<div id="imagen-principal">
 							<a href="{{ saldoInventario.producto.imagen.url }}" class="gallery-item">
@@ -186,6 +131,9 @@ Compra {{ saldoInventario.producto.nombre }} en ShopNeubs
 							{% else %}
 								<h4 class="item-text"><b>Precio:</b> <a class="item-precio bg-red">${{saldoInventario.precioVentaUnitario|stringformat:"d"|intcomma }}</a></h4>
 							{% endif %}
+							{% if saldoInventario.estado %}
+							{% endif %}
+
 						</section>
 					</div>	
 				</section>
