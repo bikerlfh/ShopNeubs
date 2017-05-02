@@ -1,0 +1,17 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }} | Administración de ShopNeubs{% endblock %}
+
+{% block extrastyle %}
+<style type="text/css">
+	#header{
+		background-color: #303841;		
+	}
+	
+</style>
+{% endblock %}
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">Administración de ShopNeubs</a></h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
