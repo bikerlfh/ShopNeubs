@@ -83,16 +83,7 @@ Compra {{ saldoInventario.producto.nombre }} en ShopNeubs
 			<hr>
 			<div class="row">
 				<section>
-					<div class="col-lg-7 col-md-6 col-sm-12 col-xs-12" >
-						{% if saldoInventario.estado %}
-							<div id="nuevo">
-								{% get_span_new_product saldoInventario.fechaCreacion|date:'Y-m-d' 'producto-nuevo'%}
-							</div>
-							{% else %}
-							<div style="position: relative;">
-								<span class="producto-sin-stock" style="clear: right;"></span>
-							</div>
-						{% endif %} 
+					<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" > 
 						{% if saldoInventario.precioOferta %}
 						<div>
 							<span id="oferta" class="glyphicon glyphicon-certificate  producto-oferta-estrella pull-right"></span>
@@ -117,7 +108,7 @@ Compra {{ saldoInventario.producto.nombre }} en ShopNeubs
 							</ul>
 						</div>
 					</div>
-					<div class="col-lg-5 col-md-6 col-sm-12 col-xs-12 pull-right" style="padding-left:0px;">
+					<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 pull-right" style="padding-left:0px;">
 						<section>
 							<!-- <h3 class="title-principal">{{saldoInventario.producto.nombre}}</h3>
 							<br> -->
@@ -131,7 +122,11 @@ Compra {{ saldoInventario.producto.nombre }} en ShopNeubs
 							{% else %}
 								<h4 class="item-text"><b>Precio:</b> <a class="item-precio bg-red">${{saldoInventario.precioVentaUnitario|stringformat:"d"|intcomma }}</a></h4>
 							{% endif %}
+
 							{% if saldoInventario.estado %}
+								{% get_span_new_product saldoInventario.fechaCreacion|date:'Y-m-d' 'producto-nuevo'%}
+							{% else %}
+								<span class="producto-sin-stock" style="clear: right;"></span>
 							{% endif %}
 
 						</section>
