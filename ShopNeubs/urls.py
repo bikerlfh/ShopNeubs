@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^informacion-envio/$', view_base.informacion_envio, name = 'informacion_envio'),
     url(r'^terminos-y-condiciones/$', view_base.terminos_condiciones, name = 'terminos_y_condiciones'),
     url(r'^como-comprar/$', view_base.como_comprar, name = 'como_comprar'),
+    url(r'^garantia/$', view_base.garantia, name = 'garantia'),
     
     # Cart
     url(r'^cart/$', views_ventas.cart, name = 'cart'),

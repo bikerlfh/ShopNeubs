@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load tags_extra %}
+
+{% block title %}
+ShopNeubs | Información de Envío
+{% endblock %}
+
+{% block script_head %}
+	<style type="text/css">
+		p {
+			text-align: justify;
+		}
+		.btn-cart{
+			display: none;
+		}
+		
+		h3{
+       		color:#FF5722;
+       	}
+    </style>
+{% endblock %}
+
+{% block posicion_pagina %}
+<ol class="breadcrumb">
+	<li><a href="{% url 'home'%}">Inicio</a></li>
+	<li><a class="active" href="{% url 'garantia'%}">Garantías</a></li>
+</ol>
+{% endblock %} 
+
+{% block content %}
+<div class="container-fluid bg-grey">
+	<div class="page-header">
+		<h2 class="title-principal text-center">Garantías</h2>
+	</div>
+
+	<h4 class="title-principal">Tiempos de Garantía</h4>
+	<p>El tiempo de garantía está sujeto a la marca y el producto y puede variar dependiendo las condiciones de venta realizadas por los fabricantes, consulte con su asesor comercial el tiempo de garantía del producto antes de realizar cualquier transacción, verifique que el tiempo de garantía este escrito en el recibo de compra, pues es la única vía de reclamación Neubs SAS no acepta tiempos de garantía “verbales”.</p>
+	<p>Estos son los tiempos de garantía más comunes: board, memorias, procesadores, discos duros, accesorios etc.,  tienen un tiempo de garantía de 6 (seis) meses. Los productos marca GIGABYTE, Unidades SSD KINGSTON HYPERX, BITFENIX, RAZER tienen un tiempo de garantía de 12 (doce) meses, impresoras y portátiles tienen garantía directamente con su fabricante de 1 (un) año, monitores tienen un tiempo de garantía directamente con su fabricante de 3 (tres) años. Consulte con su asesor el tiempo de garantía de un producto en específico.</p>
+
+	<h4 class="title-principal">Condiciones para realizar su garantía</h4>
+	<p>
+		<ul>
+			<li>Para todas las garantías se necesitan el recibo de compra original y la parte y/o equipo con todos sus accesorios y empaques completos ya sean icopores, cables, cajas de cartón, bolsas, manuales o cualquier otro accesorio que incluya.</li>
+			<li>Si al momento de hacer efectiva una garantía se hace necesario reemplazar una parte, esta continuara con el mismo tiempo de garantía que le resta al producto.</li>
+			<li>Los monitores LCD - LED solo tienen garantía después de 6 pixeles quemados.</li>
+			<li>El servicio técnico, software, programas o sistema operativo NO TIENEN GARANTÍA porque el manejo depende exclusivamente del usuario, pudo haber realizado actualizaciones de cualquier programa, permitió el recibo de correos con archivos adjuntos, introdujo cd´s o dvd´s no originales, manipuló memorias USB o reproductores que contenían virus, apagó mal el computador, y demás acciones que se pueden realizar mal las cuales, no tienen garantía porque son de manejo y responsabilidad absoluta y exclusiva del usuario.</li>
+			<li>No se responde por golpes averías quemaduras ni sobre voltajes por el mal manejo de las partes o equipo o por el vencimiento, ruptura, manipulación, remarcación de los sellos de garantía.</li>
+			<li>No se responde por Daños presentados por presencia de elementos nocivos (líquidos, ácido, polvo, cuerpos orgánicos, inorgánicos, sustancias químicas) que no forman parte del diseño de los equipos. Ni por daño físico presentado de algún tipo, revise muy bien la mercancía antes de salir del almacén, una vez retirada no se aceptan reclamos por faltantes o daños.</li>
+		</ul>
+	</p>
+	<h4 class="title-principal">Productos con garantía directa con su fabricante</h4>
+	<p>Las políticas y condiciones de garantía de estos productos están sujetas a cada fabricante</p>
+	<div class="table-responsive">
+		<table class="table table-striped">
+			<thead>
+				<th class="text-center">Marca</th>
+				<th class="text-center">Ciudad</th>
+				<th class="text-center">Contacto</th>
+			</thead>
+			<tbody>
+				<tr>
+					<td>ACER  ASUS  APPLE  MSI TOSHIBA LENOVO</td>
+					<td>Bogotá</td>
+					<td>Carrera 49 No 93 12
+	 	 				PBX: (+571) 6102119 | 256 7254 | 256 7261 | 256 7233 | 256 7236 | 256 7228 </td>
+				</tr>
+				<tr>
+					<td>ACER  ASUS  APPLE  MSI TOSHIBA LENOVO</td>
+					<td>Medellín</td>
+					<td>Calle 33 B Sur Numero 47 - 66 El Portal, Envigado
+	 	 				TEL: (+574) 448 0445</td>
+				</tr>
+				<tr>
+					<td>ACER  ASUS  APPLE  MSI TOSHIBA LENOVO</td>
+					<td>Barranquilla</td>
+					<td>Carrera 50 No. 76 - 19 Local 14
+				 		Centro Comercial Del Norte
+				 	 	PBX: (+575) 360 3116 | 345 1096</td>
+				</tr>
+				<tr>
+					<td>ACER  ASUS  APPLE  MSI TOSHIBA LENOVO</td>
+					<td>Bucaramanga</td>
+					<td>Calle 36 No. 17-52 Piso rojo, Local 2-7
+				 		Centro Comercial Omnicentro
+				 	 	TEL: (+577) 680 0988 | (+57) 311 211 3625</td>
+				</tr>
+				<tr>
+					<td>ACER  ASUS  APPLE  MSI TOSHIBA LENOVO</td>
+					<td>Cali</td>
+					<td>Calle 22 N # 6A - 05 Piso 2
+	 	 				TEL: (+572) 396 5203 | (+57) 320 800 7427 </td>
+				</tr>
+				<tr>
+					<td>ACER  ASUS  APPLE  MSI TOSHIBA LENOVO</td>
+					<td>Duitama</td>
+					<td>Carrera 17 No. 10 – 107 Local 2 – 03
+	 	 				TEL: (+578) 760 5217 | (+57) 320 321 7747</td>
+				</tr>
+				<tr>
+					<td>LG</td>
+					<td>Nacional</td>
+					<td>1800910683</td>
+				</tr>
+				<tr>
+					<td>EPSON</td>
+					<td>Bogotá</td>
+					<td>5235000</td>
+				</tr>
+				<tr>
+					<td>BENQ</td>
+					<td>Bogotá</td>
+					<td>5235000, 6513939</td>
+				</tr>
+				<tr>
+					<td>SAMSUNG</td>
+					<td>Bogotá</td>
+					<td>Av. Calle 116 No. 70C - 28 PBX: 2715011</td>
+				</tr>
+				<tr>
+					<td>SAMSUNG</td>
+					<td>Nacional</td>
+					<td>18000112112</td>
+				</tr>
+				<tr>
+					<td>DELL</td>
+					<td>Nacional</td>
+					<td>3164444 Bogotá</td>
+				</tr>
+				<tr>
+					<td>TOSHIBA</td>
+					<td>Nacional</td>
+					<td>18009120539</td>
+				</tr>
+				<tr>
+					<td>HEWLETT PACKARD (hp)</td>
+					<td>Bogotá</td>
+					<td>6029191</td>
+				</tr>
+				<tr>
+					<td>HEWLETT PACKARD (hp)</td>
+					<td>Nacional</td>
+					<td>18000514746</td>
+				</tr>
+				<tr>
+					<td>MICROSOFT</td>
+					<td>Bogotá</td>
+					<td>5870300</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock %}

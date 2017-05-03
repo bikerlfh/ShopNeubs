@@ -42,12 +42,15 @@ def index(request):
 	
 	return render(request,"base/index.html",{ 'listado_categoria' : categorias,'listado_marcas':marcas ,'carousel':carousel})
 
-#@cache_page(60 * 60 * 24 * 3)
+@cache_page(60 * 60 * 24 * 3)
 def informacion_envio(request):
 	return render(request,"base/informacion-envio.html",{ })
 @cache_page(60 * 60 * 24 * 3)
 def terminos_condiciones(request):
 	return render(request,"base/terminos-y-condiciones.html",{ })
-#@cache_page(60 * 60 * 24 * 3)
+@cache_page(60 * 60 * 24 * 3)
 def como_comprar(request):
 	return render(request,"base/como-comprar.html",{})
+@cache_page(60 * 60 * 24 * 3)
+def garantia(request):
+	return render(request,"base/garantia.html",{})
