@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load tags_extra %}
+
+{% block title %}
+ShopNeubs | Información de Envío
+{% endblock %}
+
+{% block script_head %}
+	<style type="text/css">
+		p {
+			text-align: justify;
+		}
+		.btn-cart{
+			display: none;
+		}
+		
+		h3{
+       		color:#FF5722;
+       	}
+    </style>
+{% endblock %}
+
+{% block posicion_pagina %}
+<ol class="breadcrumb">
+	<li><a href="{% url 'home'%}">Inicio</a></li>
+	<li><a class="active" href="{% url 'informacion_envio'%}">Información de Envío</a></li>
+</ol>
+{% endblock %} 
+
+{% block content %}
+<div class="container-fluid bg-grey">
+	<div class="page-header">
+		<h2 class="title-principal text-center">INFORMACIÓN DE ENVÍO</h2>
+	</div>
+
+	<p>Recuerde que el costo de envío <strong>No</strong> está incluido en los precios de los productos.</p>
+	<p>Siempre realizamos nuestro mejor esfuerzo para despachar los productos el mismo día del pago, sin embargo de acuerdo con el volumen de venta diario, las compras realizadas de Lunes a Viernes de 7:00 AM a 5:00 PM y Sábados de 8:00 AM a 12:00 PM serán despachadas el mismo día, las compras realizadas fuera de ese horario se despacharan el día hábil siguiente, los días Domingos y Festivos no hacemos despachos.</p>
+
+	<h3 class="title-principal">Entregas personalizadas por ShopNeubs</h3>
+	<p>Es un servicio adicional que proporciona Neubs SAS a sus clientes para realizar la entrega de sus productos por parte de personal calificado de ShopNeubs. Este servicio le brinda a los clientes mayor tranquilidad en la adquisición de sus productos ya que el personal de ShopNeubs constatará el estado de la mercancía al momento de la entrega, evitando posibles devoluciones por mal estado o defecto por parte del cliente. También se hará una breve explicación de las funcionalidades de los productos adquiridos (no valido para partes y componentes electrónicos).
+	</p>
+	<p>Este servicio solo está disponible en las ciudades donde ShopNeubs tenga personal. Al momento de realizar el pedido, el vendedor le preguntará si desea el servicio o usted podrá solicitárselo. En caso de no tener disponibilidad del servicio en su zona, el vendedor le informará los medios de envío.</p>
+
+	<h3 class="title-principal">Envíos por parte de Transportadoras</h3>
+	<p>A continuación resolvemos las dudas más comunes sobre el envío de la mercancía, tenga presente que nos caracterizamos por brindar una asesoría personal y de calidad, si tiene alguna duda, o se le presentó algún inconveniente, no dude en contactarnos siempre estamos dispuestos a solucionar y acompañar a nuestros clientes en todo momento.</p>
+
+	<h4 class="title-principal">¿Por dónde me envían la mercancía?</h4>
+	<p>Los envíos de mercancía se realizan a través de las siguientes empresas:</p>
+	<ul>
+		<li>COORDINADORA</li>
+		<li>DEPRISA</li>
+		<li>ENVIA</li>
+		<li>INTERRAPIDISIMO</li>
+		<li>SERVIENTREGA</li>
+		<li>TCC</li>
+	</ul>
+	<p>Al momento de concretar la compra, usted deberá proporcinar al vendedor la empresa preferida para recibir la mercancia, recuerde que el costo del envío <b>NO</b> está incluido en el precios que se cancela, sin embargo es posible que por factores externos y en prioridad de realizar el envío lo más rápido posible Neubs S.A.S. tome la determinación de enviarlo por el servicio que se encuentre disponible en ese momento.</p>
+
+	<h4 class="title-principal">¿Qué pasa si se pierde mi mercancía en la transportadora?</h4>
+	<p>El cliente asume la responsabilidad de  reclamación ante la transportadora en caso de pérdida referenciado esto en el Código de Comercio en el Capítulo I Artículo 994. Neubs SAS solo es responsable hasta el momento en que el producto es entregado a la transportadora, pasando a esta, la responsabilidad según el Código de Comercio Título IV del contrato de transporte Capítulo III "Transporte de Cosas" Artículo 1013 "Entrega de Mercancías y Responsabilidad del Transportador" y Artículo 1030 "Responsabilidad por pérdida total o parcial de la cosa".</p>
+
+ 	<h4 class="title-principal">¿Qué pasa si llega mi producto y está defectuoso o por garantía?</h4>
+ 	<p>Neubs SAS asumirá totalmente los costos por devolución de un producto defectuoso de acuerdo con los términos y condiciones de garantía únicamente dentro de los primeros 3 (Tres) días después de recibida la mercancía, una vez pasados estos tres días el valor de ambos fletes para devolución de un producto de garantía será asumido en su totalidad por el cliente, para saber el tiempo de garantía de cada producto visite la sección de Garantía.</p>
+
+ 	<h4 class="title-principal">¿Cómo sé que ya enviaron mi mercancía?</h4>
+ 	<p>Una vez confirmado el pago por el sistema, y realizado el envío enviaremos a su correo electrónico el número de guía y el nombre de la transportadora para que pueda rastrear el envío a través de la página web de la transportadora. De igual manera, en la sección <a href="{% url 'mis_pedidos'%}" style="color: #FF5722;">Mis Pedidos</a> podrá verificar el estado de estos.</p>
+
+	    <h4 class="title-principal">¿Qué hago si aún no ha llegado mi mercancía?</h4>
+	    <p>El primer paso a seguir es rastrear la mercancía en la página de la transportadora con el número de guía suministrado, tener en cuenta que el envío puede demorar de 1 a 3 días hábiles en cualquier transportadora dependiendo del estado de la carretera u otros factores que pueden afectar el transporte terrestre o aéreo, Segundo comunicarse con la transportadora al PBX que suministran en la página web de la misma para obtener una respuesta verbal, tercero si en la transportadora no localizan el paquete es responsabilidad del cliente generar la respectiva reclamación ante la transportadora para hacer valido el seguro de transporte de la mercancía. Neubs SAS no responde por demoras en la entrega del producto una vez puesto en la transportadora estas son responsabilidad del tercero el cuál presta el servicio.</p>
+
+	    <h4 class="title-principal">Me llego un producto que no solicite</h4>
+	    <p>Neubs SAS asumirá totalmente los costos por devolución de un producto mal enviado siempre y cuando sea demostrable que el error es de la empresa, dentro de los primeros 3 (Tres) días después de recibida la mercancía, una vez pasados estos tres días el valor de ambos fletes para devolución de un producto enviado por error será asumido en su totalidad por el cliente.</p>
+
+	    <h4 class="title-principal">Los productos tiene apariencia de haber sido destapados ¿Qué hago?</h4>
+	    <p>Los envíos realizados se empacan correctamente en cajas de cartón y se envuelven con vinipel negro, en la parte superior debe encontrar un rotulo con sus datos personales, y en adentro el respectivo articulo con su Factura de venta, si al recibir la mercancía evidencia síntomas de haber sido violada por favor verifíquela delante de la transportadora y confirme que su pedido llega completo y en perfectas condiciones, tenga en cuenta que una vez la transportadora se retire con su firma en la guía dará por entendido que usted recibió todo a satisfacción y no podrá reclamar. Neubs SAS no se hace responsable por los daños físicos o daños por mal manejo ocasionados por la transportadora.</p>
+	    <br>
+	    <br>
+	    <br>
+	    <p>Para mayor información sobre los envíos contactenos:
+ 	   	<ul>
+ 	    <li>Celular Whatsapp: 3222709439 - 3222331893</li>
+ 	    <li>Correo electrónico: shop@neubs.com.co</li>
+ 	    </ul>
+	    </p>
+</div>
+{% endblock %}

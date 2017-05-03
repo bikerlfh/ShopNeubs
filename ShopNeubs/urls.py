@@ -32,8 +32,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('registration.backends.default.urls')),
     
-    url(r'^politica/$', view_base.politica_privacidad, name = 'politica_privacidad'),
-    url(r'^terminos-y-condiciones/$', view_base.terminos_condiciones, name = 'terminos-y-condiciones'),
+    url(r'^informacion-envio/$', view_base.informacion_envio, name = 'informacion_envio'),
+    url(r'^terminos-y-condiciones/$', view_base.terminos_condiciones, name = 'terminos_y_condiciones'),
     url(r'^como-comprar/$', view_base.como_comprar, name = 'como_comprar'),
     
     # Cart

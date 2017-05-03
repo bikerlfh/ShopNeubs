@@ -33,7 +33,7 @@ def get_breadcrumb(value,display_name_page = None):
 	value = filter_url_absolute(value)
 	url_home = reverse('home')
 	value = value.replace(url_home,'/')
-	breadcrumb = "<ol class='breadcrumb'><li><a  href='%s'>Home</a></li>" % url_home
+	breadcrumb = "<ol class='breadcrumb'><li><a  href='%s'>Inicio</a></li>" % url_home
 	val = value.split('/',1)[1].split('/')
 	# Se limina la ultima posición
 	val_deleted = val.pop()
