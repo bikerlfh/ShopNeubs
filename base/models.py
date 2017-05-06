@@ -4,6 +4,7 @@ from filer.fields.image import FilerImageField
 class Carousel(models.Model):
 	idCarousel = models.AutoField(primary_key = True)
 	imagen = FilerImageField(null=False, blank=False)
+	url = models.CharField(max_length = 256,null=True,blank=True,default = None)
 	order = models.SmallIntegerField(default=0,blank=False,null=False)
 	estado  = models.BooleanField(default = True)
 

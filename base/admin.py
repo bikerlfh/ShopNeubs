@@ -16,7 +16,7 @@ class DefaultAdmin(admin.ModelAdmin):
 	search_fields = ['codigo','descripcion']
 
 class CarouselAdmin(admin.ModelAdmin):
-	list_display = ['imagen', 'order','estado']
+	list_display = ['imagen','url','order','estado']
 	ordering = ['order','estado']
 	search_fields = ['order','estado']
 

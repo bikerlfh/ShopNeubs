@@ -110,13 +110,17 @@
             {% for item in carousel%}
                 {% if forloop.first %}
                     <div class="item active">
-                        <img class="img-responsive" src="{{ item.imagen|thumbnail_url:'carousel'}}">
+                        <a {% if item.url %} href="{{item.url}}" {% endif%}>
+                            <img class="img-responsive" src="{{ item.imagen|thumbnail_url:'carousel'}}">
+                        </a>
                         <div class="carousel-caption">
                         </div>
                     </div>
                 {% else %}
                     <div class="item">
-                        <img  class="img-responsive" src="{{ item.imagen|thumbnail_url:'carousel'}}">
+                        <a {% if item.url %} href="{{item.url}}" {% endif%}>
+                            <img  class="img-responsive" src="{{ item.imagen|thumbnail_url:'carousel'}}">
+                        </a>
                     </div>
                 {% endif%}
             {% endfor%}

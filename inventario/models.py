@@ -90,7 +90,7 @@ class Producto(models.Model):
 	def imagenes(self):
 		lista_imagenes = []
 		try:
-			for producto_imagen in ProductoImagen.objects.filter(producto = self.idProducto):
+			for producto_imagen in ProductoImagen.objects.filter(producto = self.idProducto).order_by('order'):
 				lista_imagenes.append(producto_imagen.imagen)
 		except ProductoImagen.DoesNotExist:
 			pass
