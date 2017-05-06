@@ -172,9 +172,52 @@ Todos los productos al mejor precio
       {% endif %}
 
     </div>
+    {# MENU CATEGORIAS #}
     <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12" style=" padding-right: 0px;padding-left: 0px;">
-       {% include "inventario/nav_categorias.html" %}
+      <nav>
+        <ul id="nav-categorias" class="nav-vertical-right box">
+        <li><h5 class="text-center">CATEGORIAS</h5></li>
+        <hr style="margin-bottom:0px;">
+         {% if listado_categorias %}
+            {% for categoria_padre in listado_categorias%}
+              <li>
+                <a href="{% url 'productos_categoria' categoria_padre.categoriaPadre.descripcion  %}">{{categoria_padre.categoriaPadre.descripcion}}
+              {% if categoria_padre.categoriaHijo %}
+                <spam id="chevron" class="glyphicon glyphicon-chevron-down " style=" float:right;font-size:19px"></spam>
+                </a>
+                <ul>
+                    {% for categoria_hijo in categoria_padre.categoriaHijo%}
+                      <li>
+                        <a href="{% url 'productos_categoria' categoria_hijo.categoriaPadre.descripcion %}">{{categoria_hijo.categoriaPadre.descripcion}}</a>
+                      </li>
+                    {% endfor %}
+                 </ul>
+               {% else %}
+                </a>
+               {% endif %} 
+               </li>     
+            {% endfor %}
+          {% endif %}
+        </ul>
+      </nav>
     </div>
+    {# MENU MARCAS#}
+    {% if listado_marcas %}
+      <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12" style=" padding-right: 0px;padding-left: 0px;float: right;">
+         <nav>
+          <ul class="nav-vertical-right box">
+          <li><h5 class="text-center">MARCAS</h5></li>
+          <hr style="margin-bottom:0px;">
+            {% for marca in listado_marcas %}
+              <li>
+                <a href="{{ request.get_full_path|filter_url_absolute|add:marca.descripcion|add:'/' }}">{{marca.descripcion}}
+                </a>
+              </li>     
+            {% endfor %}
+          </ul>
+        </nav>
+      </div>
+    {% endif %}
   </div>
 </div>
 
