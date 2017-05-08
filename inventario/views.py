@@ -47,7 +47,8 @@ def productos_marca(request,descripcion_marca):
 	#listado_saldo_inventario = get_list_or_404(SaldoInventario,producto__marca__descripcion = descripcion_marca)
 	listado_saldo_inventario = core.consultar_saldo_inventario_paginado(Q(producto__marca__descripcion = descripcion_marca),order,page)
 	return render(request,"inventario/filtro_producto.html",{ 'listado_saldo_inventario': listado_saldo_inventario , 
-															  'listado_categorias' : core.get_menu_categorias()})	
+															  'listado_categorias' : core.get_menu_categorias(),
+															  'page_title':descripcion_marca})	
 
 
 
@@ -143,7 +144,16 @@ def busqueda_asincrona_producto(request):
 	if request.GET.get("promocion",False):
 		listado_saldo_inventario = SaldoInventario.objects.filter_products(precioOferta__isnull=False).values(*fields)[:top]
 	elif request.GET.get("mas_vistos",False):
-		listado_saldo_inventario = SaldoInventario.objects.filter_products(estado=True,producto__in = ProductoReview.objects.all().order_by('-numeroVista')[:top].values_list('producto',flat=True)).values(*fields)[:top]
+		review = ProductoReview.objects.all().order_by('-numeroVista')[:top*2].values_list('producto',flat=True)
+		listado_idSaldoInventario = []
+		for idProducto in review:
+			if SaldoInventario.objects.filter_products(estado=True,producto=idProducto).exists():
+				listado_idSaldoInventario.append(SaldoInventario.objects.filter_products(estado=True,producto=idProducto).only('pk').first().pk)
+			if len(listado_idSaldoInventario) >= top:
+				break
+		#listado_saldo_inventario = SaldoInventario.objects.filter_products(estado=True,producto__in = ProductoReview.objects.all().order_by('-numeroVista')[:top].values_list('producto',flat=True)).values(*fields)[:top]
+		listado_saldo_inventario = SaldoInventario.objects.filter_products(estado=True,pk__in = listado_idSaldoInventario).values(*fields)
+		
 	# si existe inventario
 	if listado_saldo_inventario:
 		for saldo in listado_saldo_inventario:

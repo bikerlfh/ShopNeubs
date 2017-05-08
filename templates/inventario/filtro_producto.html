@@ -39,7 +39,7 @@ Todos los productos al mejor precio
           {% if listado_categorias %}
             {% for categoria_padre in listado_categorias%}
               <li>
-                <a href="{% url 'productos_categoria' categoria_padre.categoriaPadre.descripcion %}" class="text-left">                                                              
+                <a href="{% url 'productos_categoria' categoria_padre.categoriaPadre.descripcion %}" class="text-left">
                   {{categoria_padre.categoriaPadre.descripcion}}
                   {% if categoria_padre.categoriaHijo %}
                       <spam id="chevron" class="glyphicon glyphicon-chevron-down pull-right" style=" font-size:19px">
