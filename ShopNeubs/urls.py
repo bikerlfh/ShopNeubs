@@ -29,7 +29,7 @@ urlpatterns = [
     url(r'^$', view_base.index, name = 'home'),
     url(r'^filer/', include('filer.urls')),
     
-    #url(r'^admin/', admin.site.urls),
+    url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('registration.backends.default.urls')),
     
     url(r'^informacion-envio/$', view_base.informacion_envio, name = 'informacion_envio'),

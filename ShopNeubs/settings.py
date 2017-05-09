@@ -162,11 +162,15 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, use a different value.
 REGISTRATION_AUTO_LOGIN = True # Automatically log the user in.
 
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'xxxxxxxxxxxxxx@gmail.com'
-EMAIL_HOST_PASSWORD = 'xxxxxxxxxxxxxxxxxx'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.mi.com.co'
+DEFAULT_FROM_EMAIL = 'ventas@neubs.com.co'
+SERVER_EMAIL = 'ventas@neubs.com.co'
+EMAIL_HOST_USER = 'ventas@neubs.com.co'
+EMAIL_HOST_PASSWORD = 'xxxxxxxxxxxxxxx'
+EMAIL_PORT = 465
+#EMAIL_USE_TLS = True
+EMAIL_USE_SSL = True
+EMAIL_TIMEOUT = 60
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
