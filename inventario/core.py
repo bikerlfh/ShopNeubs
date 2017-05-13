@@ -27,12 +27,12 @@ def get_categorias(idCategoriaPadre = None):
 def get_productos_relacionados(saldoInventario):
 	filtro_Q = Q(producto__categoria = saldoInventario.producto.categoria.pk) | Q(producto__categoria__categoriaPadre = saldoInventario.producto.categoria.pk)
 	filtro_Q |= Q(producto__categoria = saldoInventario.producto.categoria.categoriaPadre)
-	filtro_Q |= Q(producto__marca = saldoInventario.producto.marca.pk)
+	filtro_Q |= Q(producto__marca = saldoInventario.producto.marca_id)
 	# Se filtran solo los que esten con estado True y tengan cantidades
 	filtro_Q = filtro_Q & Q(estado=True) & Q(cantidad__gte = 1)
 	try:
 		fields=['idSaldoInventario','producto','producto__nombre','precioOferta','precioVentaUnitario','producto__categoria__descripcion','producto__marca__descripcion']
-		listado_saldo = SaldoInventario.objects.filter_products(filtro_Q).exclude(producto = saldoInventario.producto).distinct().values(*fields)[:getattr(settings,'SELECT_TOP_MIN',5)]
+		listado_saldo = SaldoInventario.objects.filter_products(filtro_Q).exclude(producto = saldoInventario.producto_id).distinct().values(*fields)[:getattr(settings,'SELECT_TOP_MIN',5)]
 		cargar_producto_imagen_principal(listado_saldo)
 		return listado_saldo
 	except SaldoInventario.DoesNotExist:

@@ -54,7 +54,7 @@ class ProductoImagen(models.Model):
 		return '%s - %s' % (self.producto ,str(self.imagen))
 	def save(self, *args, **kwargs):
 		if self.idProductoImagen is None:
-			ordenamiento = ProductoImagen.objects.filter(producto = self.producto).aggregate(Max('order'))
+			ordenamiento = ProductoImagen.objects.filter(producto = self.producto_id).aggregate(Max('order'))
 			if ordenamiento['order__max'] == None:
 				self.order = 0
 			else:
@@ -129,13 +129,13 @@ class SaldoInventarioManager(models.Manager):
 		listado_saldo_inventario = self.filter(*args,**kwargs).order_by('precioVentaUnitario')
 		for sa in listado_saldo_inventario:
 			# Si existe mas de un saldo inventario con el mismo producto
-			if listado_saldo_inventario.filter(producto = sa.producto).count()>1:
+			if listado_saldo_inventario.filter(producto = sa.producto_id).count()>1:
 				# Si el saldo inventario actual esta con estado False, se debe excluir
 				if listado_saldo_inventario.filter(pk=sa.pk,estado = False):
 					listado_saldo_inventario = listado_saldo_inventario.exclude(pk=sa.pk)
 				else:
 					# Se filtran los saldos inventarios a excluir (dejando el actual en la lista)
-					listado_exclude = listado_saldo_inventario.filter(producto = sa.producto).exclude(pk=sa.pk)
+					listado_exclude = listado_saldo_inventario.filter(producto = sa.producto_id).exclude(pk=sa.pk)
 					# Se excluyen los saldos inventarios del listado
 					listado_saldo_inventario = listado_saldo_inventario.exclude(pk__in = listado_exclude.values_list('pk',flat = True))
 		return listado_saldo_inventario
@@ -170,7 +170,7 @@ class SaldoInventario(models.Model):
 		if self.idSaldoInventario is None and self.precioVentaUnitario <= 0:
 			try:
 				# Se consulta el porcentajeGanancia por idProducto o idCategoria
-				porcentajeGanancia = PorcentajeGanancia.objects.filter(Q(producto = self.producto) | Q(categoria = self.producto.categoria)).order_by('producto')
+				porcentajeGanancia = PorcentajeGanancia.objects.filter(Q(producto = self.producto_id) | Q(categoria = self.producto.categoria_id)).order_by('producto')
 				if len(porcentajeGanancia) > 0:
 					porcentajeGanancia = porcentajeGanancia[0]
 				else:
@@ -317,7 +317,7 @@ class MovimientoInventarioPosicion(models.Model):
 		# Si se va a guardar el movimiento inventario posicion, ajusta o se genera el Saldo Inventario
 		if self.idMovimientoInventarioPosicion is None or self.idMovimientoInventarioPosicion <=0:
 			try:
-				saldoInventario = SaldoInventario.objects.get(proveedor = self.proveedor,producto = self.producto)
+				saldoInventario = SaldoInventario.objects.get(proveedor = self.proveedor_id,producto = self.producto_id)
 				# si es una entrada se suma al inventario de lo contrario se resta
 				if self.entradaSalida == 1:
 					saldoInventario.cantidad += self.cantidadMovimiento
@@ -367,7 +367,7 @@ class ProductoReview(models.Model):
 	def save(self, *args, **kwargs):
 		if self.idProductoReview == None:
 			try:
-				review = ProductoReview.objects.get(producto = self.producto)
+				review = ProductoReview.objects.get(producto = self.producto_id)
 				if review != None:
 					review.numeroVista += self.numeroVista
 					review.numeroVenta += self.numeroVenta

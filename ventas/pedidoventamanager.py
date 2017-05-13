@@ -82,7 +82,7 @@ class PedidoVentaManager:
 			# Se consultan las posiciones de la venta que no esten Canceladas
 			for posicionVenta in PedidoVentaPosicion.objects.filter(pedidoVenta = self.__pedidoVenta,cancelado = False):
 				# Se consultan las posiciones del movimiento de entrada que tengan cantidad disponibles para realizar la salida
-				listadoMovimientoInventarioPosicionCompra = MovimientoInventarioPosicion.objects.filter(producto = posicionVenta.producto,proveedor = posicionVenta.proveedor,
+				listadoMovimientoInventarioPosicionCompra = MovimientoInventarioPosicion.objects.filter(producto = posicionVenta.producto_id,proveedor = posicionVenta.proveedor_id,
 																									    entradaSalida = 1,cantidad__gt = 0).order_by('idMovimientoInventarioPosicion')
 				# Se valida que halla movimiento para realizar la salida por el método PEPS
 				if posicionVenta.cantidad > sum(p.cantidad for p in listadoMovimientoInventarioPosicionCompra):
@@ -94,8 +94,8 @@ class PedidoVentaManager:
 					if cantidad <= 0:
 						break
 					# Se consulta la posicion del pedido compra
-					posicionCompra = PedidoCompraPosicion.objects.get(pedidoCompra=posicionMovimientoCompra.movimientoInventario.pedidoCompra,
-																	  producto = posicionMovimientoCompra.producto)
+					posicionCompra = PedidoCompraPosicion.objects.get(pedidoCompra=posicionMovimientoCompra.movimientoInventario.pedidoCompra_id,
+																	  producto = posicionMovimientoCompra.producto_id)
 
 					if cantidad <= posicionMovimientoCompra.cantidad:
 						posicionMovimientoCompra.cantidad -= cantidad
