@@ -24,7 +24,7 @@ class SaldoInventarioForm(forms.ModelForm):
 
 	def clean_precioOferta(self):
 		data = self.cleaned_data
-		if data['cantidad'] > 0 and data['precioOferta'] > 0 and data['precioVentaUnitario'] >= data['precioOferta']:
+		if data['cantidad'] > 0 and data['precioOferta'] is not None and data['precioVentaUnitario'] >= data['precioOferta']:
 			raise ValidationError("El precio Oferta debe ser mayor al precio Venta Unitario")
 		return data['precioOferta']
 
