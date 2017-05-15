@@ -22,8 +22,6 @@ SECRET_KEY = '#v=%ja&h4m06$yx&o7dukkeyl_nvlt%2sh%ek5*d2kk3=h444f'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-# Nombre de la aplicación. Se usa en los titulos y descripciónes de las paginas
-APP_NAME = 'Shop Neubs'
 
 # Application definition
 

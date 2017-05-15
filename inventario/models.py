@@ -127,18 +127,24 @@ class SaldoInventarioManager(models.Manager):
 	def filter_products(self,*args,**kwargs):
 		# Se consulta el saldo inventario ordenandolo por precioVentaUnitario (para mostrar siempre el de menor precio)
 		listado_saldo_inventario = self.filter(*args,**kwargs).order_by('precioVentaUnitario')
+		listado_pk_exclude = []
 		for sa in listado_saldo_inventario:
 			# Si existe mas de un saldo inventario con el mismo producto
-			if listado_saldo_inventario.filter(producto = sa.producto_id).count()>1:
+			if listado_saldo_inventario.filter(producto = sa.producto_id).count()>1 and not sa.pk in listado_pk_exclude:
 				# Si el saldo inventario actual esta con estado False, se debe excluir
-				if listado_saldo_inventario.filter(pk=sa.pk,estado = False):
-					listado_saldo_inventario = listado_saldo_inventario.exclude(pk=sa.pk)
+				if listado_saldo_inventario.filter(pk=sa.pk,estado = False).exists():
+					listado_pk_exclude.append(sa.pk)
+					#listado_saldo_inventario = listado_saldo_inventario.exclude(pk=sa.pk)
 				else:
 					# Se filtran los saldos inventarios a excluir (dejando el actual en la lista)
-					listado_exclude = listado_saldo_inventario.filter(producto = sa.producto_id).exclude(pk=sa.pk)
+					#listado_exclude = listado_saldo_inventario.filter(producto = sa.producto_id).exclude(pk=sa.pk)
 					# Se excluyen los saldos inventarios del listado
-					listado_saldo_inventario = listado_saldo_inventario.exclude(pk__in = listado_exclude.values_list('pk',flat = True))
-		return listado_saldo_inventario
+					#listado_saldo_inventario = listado_saldo_inventario.exclude(pk__in = listado_exclude.values_list('pk',flat = True))
+
+					for exclude in listado_saldo_inventario.filter(producto = sa.producto_id).exclude(pk=sa.pk).values_list('pk',flat = True):
+						listado_pk_exclude.append(exclude)
+
+		return listado_saldo_inventario.exclude(pk__in = listado_pk_exclude)
 
 
 class SaldoInventario(models.Model):
