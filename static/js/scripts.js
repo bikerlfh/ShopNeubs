@@ -270,7 +270,7 @@ $(document).ready(function(){
   //al darle click a button search
   if (screen.width<991) 
   {
-    $('#buttonsearch').click(function(){
+    $('body').on("click","#buttonsearch",function(){
       //se le aplica a forms de search un metodo llamado slideToogle que es una animacion que permite que el elemento suba y baja.
       $('#formsearch').slideToggle("fast",function(){
           $('#buttonsearch').hide("fast");
