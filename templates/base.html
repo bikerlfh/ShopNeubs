@@ -71,6 +71,13 @@ and open the template in the editor.
         <script type="text/javascript" src="{% static  'js/toastr.min.js' %}"></script>
         <script type="text/javascript" src="{% static 'js/slick.min.js'%}"></script>
         <script type="text/javascript" src="{% static 'js/scripts.min.js'%}"></script>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                getJSON("{% url 'get_cantidad_cart'%}",function(data){
+                    $(".cantidad-total-carro").html(data.cantidad_total)
+                })
+            })
+        </script>
         {% block script_footer %} {% endblock %}
     </body>
 </html>

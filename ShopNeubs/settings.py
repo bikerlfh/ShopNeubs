@@ -115,12 +115,12 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
+SESSION_CACHE_TIEMOUT = 60 * 60 * 24 * 3
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
         'LOCATION': '/var/tmp/shopneubs_cache',
-        'TIMEOUT': 7200,
+        'TIMEOUT': SESSION_CACHE_TIEMOUT,
     }
 }
 # Internationalization

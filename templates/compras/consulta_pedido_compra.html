@@ -27,36 +27,36 @@ Consulta Pedido Compra - Solo Administradores
 			<h3 class="item-heading bg-grey">CONSULTA PEDIDO COMPRA </h3>
 			<form id='form-pedido' class="form-horizontal"  method="POST" action="">
 				{% csrf_token %}
-					<div class="form-group">
-						<label class="col-lg-2 col-md-2 col-sm-3 col-xs-4 control-label" for="numeroPedido">{{form.numeroPedido.label}}</label>
-						<div class="col-lg-2 col-md-2 col-sm-2 col-xs-4">
-							{{form.numeroPedido}}
-						</div>
+				<div class="form-group">
+					<label class="col-lg-2 col-md-2 col-sm-3 col-xs-4 control-label" for="numeroPedido">{{form.numeroPedido.label}}</label>
+					<div class="col-lg-2 col-md-2 col-sm-2 col-xs-4">
+						{{form.numeroPedido}}
 					</div>
-			  		<div class="form-group">
-						<label class="col-lg-2 col-md-2 col-sm-3 col-xs-4 control-label" for="Cliente">{{form.proveedor.label}}</label>
-						{{form.idProveedor}}
-						<div class="col-lg-5 col-md-5 col-sm-4 col-xs-6">
-							{{form.proveedor}}
-						</div>
-						<div class="col-lg-2 col-md-2 col-sm-5">
-							<button type="button" id="btn-busqueda-pedido" class="form-control btn-success" style="width: 50px" data-toggle="modal" data-target="#myModal" src-url="{% url 'busqueda_proveedor_modal'%}">
-								<span class="icon-bar glyphicon glyphicon-search icon"></span>
-							</button>
-						</div>
+				</div>
+		  		<div class="form-group">
+					<label class="col-lg-2 col-md-2 col-sm-3 col-xs-4 control-label" for="Cliente">{{form.proveedor.label}}</label>
+					{{form.idProveedor}}
+					<div class="col-lg-5 col-md-5 col-sm-4 col-xs-6">
+						{{form.proveedor}}
 					</div>
-					<div class="form-group">
-						<label class="col-lg-2 col-md-2 col-sm-3 col-xs-4 control-label" for="estadoPedidoVenta">{{form.estadoPedidoCompra.label}}</label>
-						<div class="col-lg-5 col-md-5 col-sm-4 col-xs-6">
-							{{form.estadoPedidoCompra}}
-						</div>
+					<div class="col-lg-2 col-md-2 col-sm-5">
+						<button type="button" id="btn-busqueda-pedido" class="form-control btn-success" style="width: 50px" data-toggle="modal" data-target="#myModal" src-url="{% url 'busqueda_proveedor_modal'%}">
+							<span class="icon-bar glyphicon glyphicon-search icon"></span>
+						</button>
 					</div>
-					<div class="form-group">
-					    <div class="col-sm-offset-1 col-sm-10">
-					      <button type="submit" class="btn btn-success">Buscar</button>
-					      <button type="reset" class="btn btn-danger" onclick="redirect('{% url 'consulta_pedido_compra' %}')">Limpiar</button>
-					    </div>
-					  </div>
+				</div>
+				<div class="form-group">
+					<label class="col-lg-2 col-md-2 col-sm-3 col-xs-4 control-label" for="estadoPedidoVenta">{{form.estadoPedidoCompra.label}}</label>
+					<div class="col-lg-5 col-md-5 col-sm-4 col-xs-6">
+						{{form.estadoPedidoCompra}}
+					</div>
+				</div>
+				<div class="form-group">
+				    <div class="col-sm-offset-1 col-sm-10">
+				      <button type="submit" class="btn btn-success">Buscar</button>
+				      <button type="reset" class="btn btn-danger" onclick="redirect('{% url 'consulta_pedido_compra' %}')">Limpiar</button>
+				    </div>
+			  	</div>
 			</form>
 			<h3 class="text-center">LISTADO PEDIDO COMPRA</h3>
 			<div class="table-responive">

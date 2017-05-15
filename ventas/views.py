@@ -23,6 +23,12 @@ def cart(request):
 		del request.session['shop_cart']
 	return render(request,"ventas/cart.html",{ 'cart' : cart})
 
+def get_cantidad_cart(request):
+	cantidad_total = 0
+	if 'shop_cart' in request.session:
+		cantidad_total = request.session.get('shop_cart').cantidad_total
+	return HttpResponse(json.dumps({'cantidad_total':cantidad_total}))
+
 def add_cart(request,idSaldoInventario,cantidad):
 	carrito = None
 	if not 'shop_cart' in request.session:
@@ -165,7 +171,7 @@ class consulta_pedido(View):
 		return render(request,'ventas/consulta_pedido_venta.html',{'form':form,'listado_pedido_venta':listado_pedido})
 
 def consulta_avanzada_pedido(request):
-		return render(request,'ventas/consulta_avanzada_pedido.html')
+	return render(request,'ventas/consulta_avanzada_pedido.html')
 
 # Solo para solicitados
 def modificar_pedido(request):

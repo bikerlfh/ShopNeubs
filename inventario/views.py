@@ -1,4 +1,5 @@
 from django.core import serializers
+from django.core.cache import cache
 from django.conf import settings
 from django.db.models import Q
 from django.shortcuts import render,render_to_response,HttpResponse,get_object_or_404,get_list_or_404,Http404
@@ -9,14 +10,23 @@ import operator
 from functools import reduce
 import json
 
-
+SESSION_CACHE_TIEMOUT = getattr(settings,'SESSION_CACHE_TIEMOUT',7200)
 # vista de marcas registradas
-@cache_page(60*60*24)
+@cache_page(SESSION_CACHE_TIEMOUT)
 def marcas(request):
-	return render(request,"inventario/marcas.html",{'listado_marcas': get_list_or_404(Marca)})
+	if not cache.get('marcas'):
+		marcas = Marca.objects.all().order_by('descripcion')
+		cache.set('marcas',marcas,SESSION_CACHE_TIEMOUT)
+	else:
+		marcas = cache.get('marcas')
+	return render(request,"inventario/marcas.html",{'listado_marcas': marcas})
 
+@cache_page(SESSION_CACHE_TIEMOUT)
 def productos_categoria(request,descripcion_categoria,descripcion_marca = None):
 	page_title = descripcion_categoria
+	order = request.GET.get('order','rel')
+	page = request.GET.get('page', 1)
+
 	categoria = get_object_or_404(Categoria,descripcion = descripcion_categoria)
 	filtro_Q = Q(producto__categoria = categoria.pk) | Q(producto__categoria__categoriaPadre = categoria.pk)
 	if descripcion_marca is not None:
@@ -24,23 +34,21 @@ def productos_categoria(request,descripcion_categoria,descripcion_marca = None):
 		filtro_Q = Q(producto__marca = marca.pk) & (filtro_Q)
 		page_title = "%s (%s)" % (descripcion_categoria,descripcion_marca)
 
-	order = request.GET.get('order','rel')
-	page = request.GET.get('page', 1)
 	# Se consulta el inventario
 	#listado_saldo_inventario = SaldoInventario.objects.filter(filtro_Q).order_by(order)
 	listado_saldo_inventario = core.consultar_saldo_inventario_paginado(filtro_Q,order,page)
-	
 	listado_marcas = None
 	# se consultan las marcas de los productos del inventario siempre y cuando no se halla filtrado por marca
 	if descripcion_marca == None:
 		# se consultan las marcas de los productos del inventario
 		listado_marcas = core.cargar_marcas_desde_listado_saldo_inventario(listado_saldo_inventario)
+
 	return render(request,"inventario/filtro_producto.html",{ 'listado_saldo_inventario': listado_saldo_inventario,
 															  'listado_marcas': listado_marcas,
 															  'listado_categorias' : core.get_menu_categorias(),
 															  'page_title': page_title})
 
-
+@cache_page(SESSION_CACHE_TIEMOUT)
 def productos_marca(request,descripcion_marca):
 	order = request.GET.get('order','rel')
 	page = request.GET.get('page', 1)
@@ -50,8 +58,7 @@ def productos_marca(request,descripcion_marca):
 															  'listado_categorias' : core.get_menu_categorias(),
 															  'page_title':descripcion_marca})	
 
-
-
+@cache_page(SESSION_CACHE_TIEMOUT)
 def producto_detalle(request,descripcion_categoria,descripcion_marca,idSaldoInventario):
 	# Solo se consulta con la categoria y marca para evitar que el usuario ponga cualquier
 	saldoInventario = get_object_or_404(SaldoInventario,
@@ -76,6 +83,7 @@ def producto_detalle(request,descripcion_categoria,descripcion_marca,idSaldoInve
 
 
 # realiza una busqueda por el filtro que escriba el usuario
+@cache_page(SESSION_CACHE_TIEMOUT)
 def search_producto(request):
 	if not request.GET.get('filtro'):
 		raise Http404
@@ -113,13 +121,14 @@ def search_producto(request):
 															 'listado_categorias' : core.get_menu_categorias() })
 	#return render_to_response("inventario/filtrar_producto.html",{'listadoProductos' : list_productos })
 
+@cache_page(SESSION_CACHE_TIEMOUT)
 def ofertas(request,descripcion_marca = None):
 	page_title = "Ofertas"
 
 	order = request.GET.get('order','rel')
 	page = request.GET.get('page', 1)
 
-	filtro_Q = Q(precioOferta__isnull=False,estado = True)
+	filtro_Q = Q(precioOferta__isnull=False,precioOferta__gt=0,estado = True)
 	listado_marcas = None
 	if descripcion_marca != None:
 		marca = get_object_or_404(Marca,descripcion__iexact = descripcion_marca)
@@ -135,6 +144,7 @@ def ofertas(request,descripcion_marca = None):
 															 'page_title':page_title })
 
 # Esta vista se llama asincronamente
+
 def busqueda_asincrona_producto(request):
 	top = getattr(settings,'SELECT_TOP_MAX_INDEX_ITEM',10)
 	# filas a consultar
@@ -142,18 +152,25 @@ def busqueda_asincrona_producto(request):
 			'precioOferta','precioVentaUnitario','producto__categoria__descripcion','producto__marca__descripcion']
 	listado_saldo_inventario = None
 	if request.GET.get("promocion",False):
-		listado_saldo_inventario = SaldoInventario.objects.filter_products(precioOferta__isnull=False).values(*fields)[:top]
+		if not cache.get('index_promocion'):
+			listado_saldo_inventario = SaldoInventario.objects.filter_products(precioOferta__gt=0,estado=True).values(*fields)[:top]
+			cache.set('index_promocion',listado_saldo_inventario,SESSION_CACHE_TIEMOUT)
+		else:
+			listado_saldo_inventario = cache.get('index_promocion')
 	elif request.GET.get("mas_vistos",False):
-		review = ProductoReview.objects.all().order_by('-numeroVista')[:top*2].values_list('producto',flat=True)
-		listado_idSaldoInventario = []
-		for idProducto in review:
-			if SaldoInventario.objects.filter_products(estado=True,producto=idProducto).exists():
-				listado_idSaldoInventario.append(SaldoInventario.objects.filter_products(estado=True,producto=idProducto).only('pk').first().pk)
-			if len(listado_idSaldoInventario) >= top:
-				break
-		#listado_saldo_inventario = SaldoInventario.objects.filter_products(estado=True,producto__in = ProductoReview.objects.all().order_by('-numeroVista')[:top].values_list('producto',flat=True)).values(*fields)[:top]
-		listado_saldo_inventario = SaldoInventario.objects.filter_products(estado=True,pk__in = listado_idSaldoInventario).values(*fields)
-		
+		if not cache.get('index_mas_vistos'):
+			review = ProductoReview.objects.all().order_by('-numeroVista')[:top*2].values_list('producto',flat=True)
+			listado_idSaldoInventario = []
+			for idProducto in review:
+				if SaldoInventario.objects.filter_products(estado=True,producto=idProducto).exists():
+					listado_idSaldoInventario.append(SaldoInventario.objects.filter_products(estado=True,producto=idProducto).only('pk').first().pk)
+				if len(listado_idSaldoInventario) >= top:
+					break
+			#listado_saldo_inventario = SaldoInventario.objects.filter_products(estado=True,producto__in = ProductoReview.objects.all().order_by('-numeroVista')[:top].values_list('producto',flat=True)).values(*fields)[:top]
+			listado_saldo_inventario = SaldoInventario.objects.filter_products(estado=True,pk__in = listado_idSaldoInventario).values(*fields)
+			cache.set('index_mas_vistos',listado_saldo_inventario,SESSION_CACHE_TIEMOUT)
+		else:
+			listado_saldo_inventario = cache.get('index_mas_vistos')
 	# si existe inventario
 	if listado_saldo_inventario:
 		for saldo in listado_saldo_inventario:

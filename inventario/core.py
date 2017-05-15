@@ -4,12 +4,13 @@ from django.core.cache import cache
 from django.conf import settings
 from django.db.models import Q
 
+SESSION_CACHE_TIEMOUT = getattr(settings,'SESSION_CACHE_TIEMOUT',7200)
 
 def get_menu_categorias():
 	categorias = []
 	if not cache.get('menu_categorias'):
 		categorias = get_categorias()
-		cache.set('menu_categorias',categorias,getattr(settings,'SESSION_COOKIE_AGE',7200))
+		cache.set('menu_categorias',categorias,SESSION_CACHE_TIEMOUT)
 	else:
 		categorias = cache.get('menu_categorias')
 	return categorias
@@ -25,18 +26,24 @@ def get_categorias(idCategoriaPadre = None):
 # retorna los productos relacionados de otro
 # filtra por categoria, categoria padre y marca
 def get_productos_relacionados(saldoInventario):
-	filtro_Q = Q(producto__categoria = saldoInventario.producto.categoria.pk) | Q(producto__categoria__categoriaPadre = saldoInventario.producto.categoria.pk)
-	filtro_Q |= Q(producto__categoria = saldoInventario.producto.categoria.categoriaPadre)
-	filtro_Q |= Q(producto__marca = saldoInventario.producto.marca_id)
-	# Se filtran solo los que esten con estado True y tengan cantidades
-	filtro_Q = filtro_Q & Q(estado=True) & Q(cantidad__gte = 1)
-	try:
-		fields=['idSaldoInventario','producto','producto__nombre','precioOferta','precioVentaUnitario','producto__categoria__descripcion','producto__marca__descripcion']
-		listado_saldo = SaldoInventario.objects.filter_products(filtro_Q).exclude(producto = saldoInventario.producto_id).distinct().values(*fields)[:getattr(settings,'SELECT_TOP_MIN',5)]
-		cargar_producto_imagen_principal(listado_saldo)
+	name_var_cache = "producto_relacionado%s" % str(saldoInventario.pk)
+	if not cache.get(name_var_cache):
+		filtro_Q = Q(producto__categoria = saldoInventario.producto.categoria_id) | Q(producto__categoria__categoriaPadre = saldoInventario.producto.categoria_id)
+		filtro_Q |= Q(producto__categoria = saldoInventario.producto.categoria.categoriaPadre_id)
+		#filtro_Q |= Q(producto__marca = saldoInventario.producto.marca_id)
+		# Se filtran solo los que esten con estado True y tengan cantidades
+		filtro_Q = filtro_Q & Q(estado=True) & Q(cantidad__gte = 1)
+		listado_saldo = None
+		try:
+			fields=['idSaldoInventario','producto','producto__nombre','precioOferta','precioVentaUnitario','producto__categoria__descripcion','producto__marca__descripcion']
+			listado_saldo = SaldoInventario.objects.filter_products(filtro_Q).exclude(producto = saldoInventario.producto_id).distinct().values(*fields)[:getattr(settings,'SELECT_TOP_MIN',5)]
+			cargar_producto_imagen_principal(listado_saldo)
+		except SaldoInventario.DoesNotExist:
+			listado_saldo = None
+		cache.set(name_var_cache,listado_saldo,SESSION_CACHE_TIEMOUT)
 		return listado_saldo
-	except SaldoInventario.DoesNotExist:
-		return None
+	else:
+		return cache.get(name_var_cache)
 		
 # Retorna un listado de saldoInventario paginado y ordenado
 def consultar_saldo_inventario_paginado(filtro,order,page):
