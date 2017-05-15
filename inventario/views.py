@@ -32,7 +32,7 @@ def productos_categoria(request,descripcion_categoria,descripcion_marca = None):
 	if descripcion_marca is not None:
 		marca = get_object_or_404(Marca,descripcion__iexact = descripcion_marca)
 		filtro_Q = Q(producto__marca = marca.pk) & (filtro_Q)
-		page_title = "%s (%s)" % (descripcion_categoria,descripcion_marca)
+		page_title = "%s %s" % (descripcion_categoria,descripcion_marca)
 
 	# Se consulta el inventario
 	#listado_saldo_inventario = SaldoInventario.objects.filter(filtro_Q).order_by(order)
@@ -43,10 +43,12 @@ def productos_categoria(request,descripcion_categoria,descripcion_marca = None):
 		# se consultan las marcas de los productos del inventario
 		listado_marcas = core.cargar_marcas_desde_listado_saldo_inventario(listado_saldo_inventario)
 
+	meta_descriptions = "%s en ShopNeubs" % page_title
 	return render(request,"inventario/filtro_producto.html",{ 'listado_saldo_inventario': listado_saldo_inventario,
 															  'listado_marcas': listado_marcas,
 															  'listado_categorias' : core.get_menu_categorias(),
-															  'page_title': page_title})
+															  'page_title': page_title,
+															  'meta_descriptions':meta_descriptions})
 
 @cache_page(SESSION_CACHE_TIEMOUT)
 def productos_marca(request,descripcion_marca):
@@ -56,7 +58,8 @@ def productos_marca(request,descripcion_marca):
 	listado_saldo_inventario = core.consultar_saldo_inventario_paginado(Q(producto__marca__descripcion = descripcion_marca),order,page)
 	return render(request,"inventario/filtro_producto.html",{ 'listado_saldo_inventario': listado_saldo_inventario , 
 															  'listado_categorias' : core.get_menu_categorias(),
-															  'page_title':descripcion_marca})	
+															  'page_title':descripcion_marca,
+															  'meta_descriptions': "Productos %s en ShopNeubs" % descripcion_marca })	
 
 @cache_page(SESSION_CACHE_TIEMOUT)
 def producto_detalle(request,descripcion_categoria,descripcion_marca,idSaldoInventario):
