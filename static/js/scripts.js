@@ -212,54 +212,6 @@ var lenguage_spanish = {
         "sSortDescending": ": Activar para ordenar la columna de manera descendente"
     }
 }
-
-//Slider de marcas
-$(".slider").slick({
-  //variable de transicion infinita
-  infinite: true,
-  //centar el slider
-  centerMode: true,
-  //slides que se visualizar
-  slidesToShow:6,
-  //slides que avanzara en el slider
-  slidesToScroll: 1,
-  //slider inicia su transiscion automaticamente
-  autoplay: true,
-  //tiempo de cada transicion
-  autoplaySpeed: 1000,
-  //propiedad responsive
-  responsive: 
-  [
-    {
-      //Tamaño de pantalla Habilita los conjuntos de configuración con un ancho de pantalla determinado. 
-      breakpoint: 1024,
-
-      //Ajuste de numero de slides , y los numero de slides en cd scroll y en infinitivo
-      settings: 
-      {
-        slidesToShow: 3,
-        slidesToScroll: 3,
-        infinite: true,
-      }
-    },
-    {
-      breakpoint: 600,
-      settings:
-      {
-        slidesToShow: 2,
-        slidesToScroll: 2
-      }
-    },
-    {
-      breakpoint: 480,
-      settings: 
-      {
-        slidesToShow: 1,
-        slidesToScroll: 1
-      }
-    }
-  ]
-});
 /*
  * Retora formato de moneda
  */

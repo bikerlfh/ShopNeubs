@@ -22,7 +22,6 @@ and open the template in the editor.
         <link rel="stylesheet" href="{% static 'css/animations.min.css'%}">
         <link rel="stylesheet" href="{% static 'css/toastr.min.css'%}">
         <link rel="stylesheet" href="{% static 'css/font-Aller.css'%}">
-        <link rel="stylesheet" type="text/css" href="{% static 'css/slick.min.css' %}">
         <style type="text/css">
             .navbar-brand:hover{
                 opacity: 1;
@@ -65,15 +64,14 @@ and open the template in the editor.
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script type="text/javascript" src="{% static 'js/bootstrap.min.js'%}"></script>
         <script type="text/javascript" src="{% static  'js/toastr.min.js' %}"></script>
-        <script type="text/javascript" src="{% static 'js/slick.min.js'%}"></script>
-        <script type="text/javascript" src="{% static 'js/scripts.min.js'%}"></script>
         <script type="text/javascript">
             $(document).ready(function(){
                 {# Se consulta de manera asincrona el header#}
                 {# esto con la finalidad de no dejarlo cacheado #}
-                usar_ajax("{% url 'get_header'%}","#header","next={{request.get_full_path}}","GET")
+                usar_ajax("{% url 'get_header'%}","#header","next={{request.get_full_path}}&filtro={{request.GET.filtro}}","GET")
             })
         </script>
         {% block script_footer %} {% endblock %}
+        <script type="text/javascript" src="{% static 'js/scripts.min.js'%}"></script>
     </body>
 </html>

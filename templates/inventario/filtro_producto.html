@@ -204,28 +204,26 @@ ShopNeubs | {{page_title|title}}
     {# MENU MARCAS#}
     {% if listado_marcas %}
       <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12" style=" padding-right: 0px;padding-left: 0px;float: right;">
-         <nav>
-          <ul class="nav-vertical-right box">
-          <li><h5 class="text-center">MARCAS</h5></li>
+        <div class="nav-vertical-right">
+          <h5 class="text-center">MARCAS</h5>
           <hr style="margin-bottom:0px;">
             {% for marca in listado_marcas %}
-              <li>
-                <a href="{{ request.get_full_path|filter_url_absolute|add:marca.descripcion|add:'/' }}">{{marca.descripcion}}
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                <a href="{{ request.get_full_path|filter_url_absolute|add:marca.descripcion|add:'/' }}" alt="{{marca.descripcion}}">
+                  <img class="center-block" src="{% static 'img/marca/'|add:marca.codigo|add:'.jpg' %}" width="98px" height="98px">
                 </a>
-              </li>     
+              </div>
             {% endfor %}
-          </ul>
-        </nav>
+        </div>
       </div>
     {% endif %}
   </div>
 </div>
-
 {% endblock %}
 
 {% if listado_marcas %}
   {% block above_footer %}
-  <div class="row">
+  <!-- <div class="row">
     <div class="container-fluid">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="slider">          
@@ -243,7 +241,7 @@ ShopNeubs | {{page_title|title}}
         </div> 
       </div>
     </div>
-  </div> 
+  </div>  -->
   {% endblock %}
 {% endif %}
 

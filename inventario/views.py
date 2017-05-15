@@ -95,10 +95,10 @@ def search_producto(request):
 	list_filtro = filtro.replace('+',' ').split(' ')
 
 	objects_Q = Q()
-
-	categoria = Categoria.objects.filter(reduce(operator.or_, (Q(descripcion__icontains=x) for x in list_filtro)))
-	if len(categoria) > 0:
-		objects_Q |= Q(producto__categoria = categoria.first().pk) | Q(producto__categoria__categoriaPadre = categoria.first().pk)
+	listado_categorias = Categoria.objects.filter(reduce(operator.or_, (Q(descripcion__icontains=x) for x in list_filtro)))
+	if listado_categorias:
+		for categoria in listado_categorias:
+			objects_Q |= Q(producto__categoria = categoria.pk) | Q(producto__categoria__categoriaPadre = categoria.pk)
 
 	marca = Marca.objects.filter(Q(descripcion__in = list_filtro))
 	if len(marca) > 0:
