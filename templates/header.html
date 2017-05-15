@@ -1,14 +1,6 @@
 {% load staticfiles %}
-
-{% block script_head %}
-    <style type="text/css">
-        .navbar-brand:hover{
-            opacity: 1;
-        }
-    </style>
-{% endblock %}
-<header> 
-   <nav class="navbar navbar-default">
+<header>
+    <nav class="navbar navbar-default">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse" aria-expanded="false">
                 <span class="sr-only">Toggle navigation</span>
@@ -21,7 +13,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse">
             <ul class="nav navbar-nav navbar-right" >
                 {% if not request.user.is_authenticated %}
-                    <li><a class="link-Ingresar" href="{% url 'auth_login'%}?next={{request.get_full_path}}">Ingresar</a></li>
+                    <li><a class="link-Ingresar" href="{% url 'auth_login'%}?next={{request.GET.next}}">Ingresar</a></li>
                     <li><a class="link-Registro" href="{% url 'registration_register'%}">Registro</a></li>
                 {% else %}
                     <style type="text/css">
@@ -68,3 +60,11 @@
         <sup class="badge badge-count-cart cantidad-total-carro">{{ request.session.shop_cart.cantidad_total|default:'0' }}</sup>
     </div>
 </header>
+{% if request.user.is_authenticated and request.user.is_staff %}
+    {% include "header_staff.html" %}
+    <style type="text/css">
+        .panel{
+            display: none;
+        }
+    </style>
+{% endif %}

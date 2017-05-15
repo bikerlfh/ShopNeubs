@@ -60,6 +60,7 @@ def productos_marca(request,descripcion_marca):
 
 @cache_page(SESSION_CACHE_TIEMOUT)
 def producto_detalle(request,descripcion_categoria,descripcion_marca,idSaldoInventario):
+	print("ENTRA AL PRODUCTO DETALLE %s" % idSaldoInventario)
 	# Solo se consulta con la categoria y marca para evitar que el usuario ponga cualquier
 	saldoInventario = get_object_or_404(SaldoInventario,
 										pk = idSaldoInventario,

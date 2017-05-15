@@ -1,6 +1,15 @@
 <div class="container-principal" style="padding-top: 0px;">
   <ul class="nav nav-tabs" >
-    <li><a href="/admin/" target="_blank">Administrador</a></li>
+    
+    <li role="presentation" class="dropdown">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+        Administración <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu">
+        <li><a href="/admin/" target="_blank">Zona Administrador</a></li>
+        <li><a href="{% url 'actualizar_cache' %}">Actualizar Cache</a></li>
+      </ul>
+    </li>
     <li role="presentation" class="dropdown">
       <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
         Compras <span class="caret"></span>
@@ -11,7 +20,7 @@
          
       </ul>
     </li>
-     <li role="presentation" class="dropdown">
+    <li role="presentation" class="dropdown">
       <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
         Ventas <span class="caret"></span>
       </a>

@@ -23,22 +23,18 @@ and open the template in the editor.
         <link rel="stylesheet" href="{% static 'css/toastr.min.css'%}">
         <link rel="stylesheet" href="{% static 'css/font-Aller.css'%}">
         <link rel="stylesheet" type="text/css" href="{% static 'css/slick.min.css' %}">
-        
+        <style type="text/css">
+            .navbar-brand:hover{
+                opacity: 1;
+            }
+        </style>
         {# Carga los stilos y los scripts necesarios a la pagina #}
         {% block script_head %} 
         {% endblock %}
     </head>
     
     <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
-        {% include "header.html" %}
-        {% if request.user.is_authenticated and request.user.is_staff %}
-            {% include "header_staff.html" %}
-            <style type="text/css">
-                .panel{
-                    display: none;
-                }
-            </style>
-        {% endif %}
+        <div id="header"></div>
         
         <div class="panel">
             <div class="panel-body text-center">
@@ -73,9 +69,9 @@ and open the template in the editor.
         <script type="text/javascript" src="{% static 'js/scripts.min.js'%}"></script>
         <script type="text/javascript">
             $(document).ready(function(){
-                getJSON("{% url 'get_cantidad_cart'%}",function(data){
-                    $(".cantidad-total-carro").html(data.cantidad_total)
-                })
+                {# Se consulta de manera asincrona el header#}
+                {# esto con la finalidad de no dejarlo cacheado #}
+                usar_ajax("{% url 'get_header'%}","#header","next={{request.get_full_path}}","GET")
             })
         </script>
         {% block script_footer %} {% endblock %}

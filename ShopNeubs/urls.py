@@ -31,7 +31,8 @@ urlpatterns = [
     
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('registration.backends.default.urls')),
-    
+
+    url(r'^header/$', view_base.get_header, name = 'get_header'),
     url(r'^informacion-envio/$', view_base.informacion_envio, name = 'informacion_envio'),
     url(r'^terminos-y-condiciones/$', view_base.terminos_condiciones, name = 'terminos_y_condiciones'),
     url(r'^como-comprar/$', view_base.como_comprar, name = 'como_comprar'),
@@ -40,8 +41,6 @@ urlpatterns = [
     
     # Cart
     url(r'^cart/$', views_ventas.cart, name = 'cart'),
-    url(r'^cart/get/$', views_ventas.get_cantidad_cart, name = 'get_cantidad_cart'),
-    
     url(r'^cart/add/(?P<idSaldoInventario>[\d]{1,10})/(?P<cantidad>-?\d{1,3})/$', views_ventas.add_cart, name='add_cart'),
     url(r'^cart/change/(?P<idSaldoInventario>[\d]{1,10})/(?P<cantidad>-?\d{1,3})/$', views_ventas.ajustar_cantidad_cart, name='change_cart'),
     url(r'^cart/remove/(?P<idSaldoInventario>[\d]{1,10})/$', views_ventas.remove_item, name='remove_item_cart'),

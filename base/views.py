@@ -54,6 +54,9 @@ def como_comprar(request):
 def garantia(request):
 	return render(request,"base/garantia.html",{})
 
+def get_header(request):
+	return render(request,"header.html")
+
 class actualizar_cache(View):
 	def get(self,request,*args,**kwargs):
 		if not request.user.is_superuser:
