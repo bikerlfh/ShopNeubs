@@ -123,7 +123,9 @@ Compra {{ saldoInventario.producto.nombre }} en ShopNeubs
 								<h4 class="item-text"><b>Referencia:</b> {{saldoInventario.producto.referencia}}</h4> 
 							{% endif %}
 							<h4 class="item-text"><b>Código:</b> {{saldoInventario.producto.numeroProducto}}</h4>
+							{% if saldoInventario.producto.marca.codigo != '36' %}
 							<h4 class="item-text"><b>Marca:</b>	 <a href="{% url 'productos_marca' saldoInventario.producto.marca.descripcion %}">{{saldoInventario.producto.marca.descripcion}}</a></h4>
+							{% endif %}
 							{% if saldoInventario.precioOferta %}
 								<h4 class="item-text"><b>Precio:</b><a class="item-precio bg-red ">${{saldoInventario.precioOferta|stringformat:"d"|intcomma }}</a>
 								<a class="precio-antes">$ {{ saldoInventario.precioVentaUnitario|stringformat:"d"|intcomma }}</a>
