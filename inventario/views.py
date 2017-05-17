@@ -61,14 +61,16 @@ def productos_marca(request,descripcion_marca):
 															  'page_title':descripcion_marca,
 															  'meta_descriptions': "Productos %s en ShopNeubs" % descripcion_marca })	
 
-@cache_page(SESSION_CACHE_TIEMOUT)
 def producto_detalle(request,descripcion_categoria,descripcion_marca,idSaldoInventario):
-	print("ENTRA AL PRODUCTO DETALLE %s" % idSaldoInventario)
 	# Solo se consulta con la categoria y marca para evitar que el usuario ponga cualquier
-	saldoInventario = get_object_or_404(SaldoInventario,
-										pk = idSaldoInventario,
-										producto__categoria__descripcion = descripcion_categoria,
-										producto__marca__descripcion = descripcion_marca)
+	if not cache.get('idSaldoInventario'+idSaldoInventario):
+		saldoInventario = get_object_or_404(SaldoInventario,
+											pk = idSaldoInventario,
+											producto__categoria__descripcion = descripcion_categoria,
+											producto__marca__descripcion = descripcion_marca)
+		cache.set('idSaldoInventario'+idSaldoInventario,saldoInventario,SESSION_CACHE_TIEMOUT)
+	else:
+		saldoInventario = cache.get('idSaldoInventario'+idSaldoInventario)
 	# Cada vez que el producto se visualiza por un usuario, se debe registrar esa visita
 	review = ProductoReview(producto = saldoInventario.producto,numeroVista = 1,numeroVenta = 0)
 	review.save()

@@ -101,9 +101,9 @@ class SaldoInventarioAdmin(admin.ModelAdmin):
     fieldsets  = [
         ('Default',{'fields':['producto','proveedor','garantia','referenciaProveedor','cantidad','costoTotal','precioCompraUnitario','precioVentaUnitario','precioOferta','estado']}),
     ]
-    list_display = ['producto','proveedor','referenciaProveedor','cantidad','costoTotal','precioCompraUnitario','precioVentaUnitario','precioOferta','fechaCreacion','estado']
+    list_display = ['producto','proveedor','referenciaProveedor','cantidad','costoTotal','precioCompraUnitario','precioVentaUnitario','precioOferta','estado']
     search_fields = ['referenciaProveedor','producto__numeroProducto','producto__nombre','producto__referencia']
-    list_filter = ['proveedor','estado',CategoriaSaldoInventarioListFilter]
+    list_filter = ['proveedor','estado',CategoriaSaldoInventarioListFilter,'producto__marca']
     ordering = ['-producto__numeroProducto','estado']
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         kwargs = ordenar_field_for_foreignkey(db_field,kwargs)
