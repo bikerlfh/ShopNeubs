@@ -33,7 +33,7 @@ def index(request):
 	
 	# Se consultan todas las marcas o se obtienen del cache
 	if not cache.get('marcas'):
-		marcas = Marca.objects.all().order_by('descripcion')
+		marcas = Marca.objects.all().exclude(codigo = '36').order_by('descripcion')
 		cache.set('marcas',marcas,SESSION_CACHE_TIEMOUT)
 	else:
 		marcas = cache.get('marcas')

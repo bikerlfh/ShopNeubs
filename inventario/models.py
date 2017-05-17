@@ -27,10 +27,10 @@ class Categoria(models.Model):
 		verbose_name = 'Categoría'
 		verbose_name_plural = 'Categorías'
 
-class MarcaManager(models.Manager):
-    def get_queryset(self):
-    	# Se excluye la marca '36 - Sin Marca' 
-        return super(MarcaManager, self).get_queryset().exclude(codigo = '36')
+# class MarcaManager(models.Manager):
+#     def get_queryset(self):
+#     	# Se excluye la marca '36 - Sin Marca' 
+#         return super(MarcaManager, self).get_queryset().exclude(codigo = '36')
 
 # Marca
 class Marca(models.Model):
@@ -38,7 +38,7 @@ class Marca(models.Model):
 	codigo = models.CharField(max_length = 5,unique = True)
 	descripcion = models.CharField(max_length = 20)
 
-	objects = MarcaManager()
+	#objects = MarcaManager()
 	def __str__(self):
 		return '%s - %s' % (self.codigo , self.descripcion)
 

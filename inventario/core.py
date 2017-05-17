@@ -89,6 +89,6 @@ def cargar_producto_imagen_principal(listado_saldo_inventario):
 # A partir de un listado de saldo inventario, retorna las marcas de los productos
 def cargar_marcas_desde_listado_saldo_inventario(listado_saldo_inventario):
 	if listado_saldo_inventario:
-		return Marca.objects.filter(idMarca__in = list(p['producto__marca__idMarca'] for p in listado_saldo_inventario)).distinct().values('codigo','descripcion')
+		return Marca.objects.filter(idMarca__in = list(p['producto__marca__idMarca'] for p in listado_saldo_inventario)).exclude(codigo = '36').distinct().values('codigo','descripcion')
 	return None
 	
