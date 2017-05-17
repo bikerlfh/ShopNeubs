@@ -17,7 +17,7 @@ def index(request):
 
 	# Se consultan las categorias o se obtienen del cache
 	if not cache.get('categorias'):
-		categorias = Categoria.objects.filter(categoriaPadre = None).order_by('descripcion')
+		categorias = Categoria.objects.filter(categoriaPadre = None,estado=True).order_by('descripcion')
 		cache.set('categorias',categorias,SESSION_CACHE_TIEMOUT)
 	else:
 		categorias = cache.get('categorias')

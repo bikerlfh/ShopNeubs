@@ -41,10 +41,10 @@ class CategoriaPadreListFilter(admin.SimpleListFilter):
 class CategoriaAdmin(admin.ModelAdmin):
 	fieldsets  = [
 		('Categoría Padre',{'fields':['categoriaPadre']}),
-		('Default', {'fields':['codigo','descripcion']})
+		('Default', {'fields':['codigo','descripcion','estado']})
 	]
-	list_display = ['codigo','descripcion','categoriaPadre']
-	list_filter = [CategoriaPadreListFilter]
+	list_display = ['codigo','descripcion','categoriaPadre','estado']
+	list_filter = [CategoriaPadreListFilter,'estado']
 	search_fields = ['codigo','descripcion']
 	ordering = ['codigo']
 admin.site.register(Categoria,CategoriaAdmin)
@@ -122,8 +122,9 @@ class PromocionAdmin(admin.ModelAdmin):
     readonly_fields = ('saldoInventario','precioOferta','fechaInicio','fechaFin',)
     list_display = ['saldoInventario','precioVenta','precioOferta','fechaInicio','fechaFin','estado']
     list_display_links = ['saldoInventario']
-    #list_filter = ['saldoInventario__producto','saldoInventario__proveedor']
-    #search_fields = ['saldoInventario__producto','saldoInventario__proveedor']
+    list_filter = ['saldoInventario__proveedor','estado']
+    search_fields = ['saldoInventario__producto__numeroProducto','saldoInventario__producto__nombre','saldoInventario__proveedor']
+    ordering = ['fechaInicio','estado']
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         kwargs = ordenar_field_for_foreignkey(db_field,kwargs)
         return super(PromocionAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)

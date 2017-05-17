@@ -29,11 +29,11 @@ Compra {{ saldoInventario.producto.nombre }} en ShopNeubs
 	}
 
 	#imagen-principal{
-		width:85%;
+		width:75%;
 		float: right;
 	}
 	#gal1{
-		width:15%;
+		width:25%;
     	float: left;
 	}
 	#gal1 ul {
@@ -65,7 +65,14 @@ Compra {{ saldoInventario.producto.nombre }} en ShopNeubs
 		    padding: 10px;
 		    text-decoration: none;
 		}
-
+	}
+	@media screen and (min-width:768px) and (max-width:991px){
+		#imagen-principal{
+			width:85%;
+		}
+		#gal1{
+			width:15%;
+		}
 	}
 </style>
 {% endblock %}
@@ -112,7 +119,9 @@ Compra {{ saldoInventario.producto.nombre }} en ShopNeubs
 						<section>
 							<!-- <h3 class="title-principal">{{saldoInventario.producto.nombre}}</h3>
 							<br> -->
-							<h4 class="item-text"><b>Referencia:</b> {{saldoInventario.producto.referencia}}</h4>
+							{% if saldoInventario.producto.referencia %} 
+								<h4 class="item-text"><b>Referencia:</b> {{saldoInventario.producto.referencia}}</h4> 
+							{% endif %}
 							<h4 class="item-text"><b>Código:</b> {{saldoInventario.producto.numeroProducto}}</h4>
 							<h4 class="item-text"><b>Marca:</b>	 <a href="{% url 'productos_marca' saldoInventario.producto.marca.descripcion %}">{{saldoInventario.producto.marca.descripcion}}</a></h4>
 							{% if saldoInventario.precioOferta %}

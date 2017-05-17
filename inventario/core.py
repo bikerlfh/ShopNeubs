@@ -18,7 +18,7 @@ def get_menu_categorias():
 # consulta las categorias padres y sus hijos y retorna una lista
 def get_categorias(idCategoriaPadre = None):
 	categorias = []
-	listado_categoria_padre = Categoria.objects.filter(categoriaPadre=idCategoriaPadre).values('idCategoria','descripcion').order_by('descripcion')
+	listado_categoria_padre = Categoria.objects.filter(categoriaPadre=idCategoriaPadre,estado=True).values('idCategoria','descripcion').order_by('descripcion')
 	if len(listado_categoria_padre) > 0:
 		for i,categoria in enumerate(listado_categoria_padre):
 			categorias.append({ 'categoriaPadre' : categoria, 'categoriaHijo':  get_categorias(categoria['idCategoria'])})

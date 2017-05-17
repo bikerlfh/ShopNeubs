@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.shortcuts import render,render_to_response,HttpResponse,get_object_or_404,get_list_or_404,Http404
 from django.views.decorators.cache import cache_page
 from inventario import core
-from inventario.models import Producto,Categoria,Marca,SaldoInventario,ProductoReview,ProductoImagen
+from inventario.models import Producto,Categoria,Marca,SaldoInventario,ProductoReview,ProductoImagen,Promocion
 import operator
 from functools import reduce
 import json
@@ -157,7 +157,9 @@ def busqueda_asincrona_producto(request):
 	listado_saldo_inventario = None
 	if request.GET.get("promocion",False):
 		if not cache.get('index_promocion'):
-			listado_saldo_inventario = SaldoInventario.objects.filter_products(precioOferta__gt=0,estado=True).values(*fields)[:top]
+			#listado_saldo_inventario = SaldoInventario.objects.filter_products(precioOferta__gt=0,estado=True).values(*fields)[:top]
+			listado_promociones = Promocion.objects.only('saldoInventario_id').filter(fechaFin__isnull=True,estado=True,saldoInventario__precioOferta__gt=0,saldoInventario__estado=True).order_by('-fechaInicio')[:top]
+			listado_saldo_inventario = SaldoInventario.objects.filter_products(pk__in=list(p.saldoInventario_id for p in listado_promociones)).values(*fields)
 			cache.set('index_promocion',listado_saldo_inventario,SESSION_CACHE_TIEMOUT)
 		else:
 			listado_saldo_inventario = cache.get('index_promocion')

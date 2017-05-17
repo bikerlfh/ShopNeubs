@@ -15,6 +15,7 @@ class Categoria(models.Model):
 	categoriaPadre = models.ForeignKey("Categoria",db_column = 'idCategoriaPadre',blank = True,null = True,on_delete= models.CASCADE,verbose_name = 'Categoría Padre')
 	codigo = models.CharField(max_length = 5, unique = True)
 	descripcion = models.CharField(max_length = 50)
+	estado = models.BooleanField(default=True)
 
 	def __str__(self):
 		if self.categoriaPadre != None:
@@ -73,7 +74,7 @@ class Producto(models.Model):
 	marca = models.ForeignKey("Marca",db_column = "idMarca", on_delete = models.PROTECT)
 	numeroProducto = models.BigIntegerField(verbose_name = 'Número Producto', unique = True)
 	nombre = models.CharField(max_length=150)
-	referencia = models.CharField(max_length=50)
+	referencia = models.CharField(max_length=50,null=True,blank=True)
 	descripcion = models.TextField(max_length=3000,null= True,blank = True)
 	especificacion = models.TextField(max_length=3000, null = True,blank = True)
 	urldescripcion = models.URLField(max_length=200, blank = True,null = True,verbose_name='Url')
@@ -137,10 +138,6 @@ class SaldoInventarioManager(models.Manager):
 					#listado_saldo_inventario = listado_saldo_inventario.exclude(pk=sa.pk)
 				else:
 					# Se filtran los saldos inventarios a excluir (dejando el actual en la lista)
-					#listado_exclude = listado_saldo_inventario.filter(producto = sa.producto_id).exclude(pk=sa.pk)
-					# Se excluyen los saldos inventarios del listado
-					#listado_saldo_inventario = listado_saldo_inventario.exclude(pk__in = listado_exclude.values_list('pk',flat = True))
-
 					for exclude in listado_saldo_inventario.filter(producto = sa.producto_id).exclude(pk=sa.pk).values_list('pk',flat = True):
 						listado_pk_exclude.append(exclude)
 
