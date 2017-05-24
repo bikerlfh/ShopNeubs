@@ -34,9 +34,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
+    'allauth',
+    'allauth.account',
+    #'rest_auth.registration',
+
     'easy_thumbnails',
     'filer',
     'mptt',
+    'django_hosts',
     'registration',
     'crispy_forms',
     'base',
@@ -49,6 +58,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'django_hosts.middleware.HostsRequestMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     #'django.middleware.cache.UpdateCacheMiddleware',
@@ -58,9 +68,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
 ROOT_URLCONF = 'ShopNeubs.urls'
+ROOT_HOSTCONF = 'ShopNeubs.hosts'
+DEFAULT_HOST = 'www'
 
 TEMPLATES = [
     {
@@ -182,7 +195,7 @@ SELECT_TOP_MAX = 10
 # Cantidad maxima en los SELECT TOP para los elementos del index
 SELECT_TOP_MAX_INDEX_ITEM = 8
 # Número de productos a listar
-NUM_ITEMS_DISPLAY = 25
+NUM_ITEMS_DISPLAY = 10
 
 THUMBNAIL_PROCESSORS = (
     'easy_thumbnails.processors.colorspace',
@@ -191,6 +204,7 @@ THUMBNAIL_PROCESSORS = (
     'filer.thumbnail_processors.scale_and_crop_with_subject_location',
     'easy_thumbnails.processors.filters',
 )
+
 THUMBNAIL_ALIASES = {
    '': {
         'large': {'size': (400, 300)},

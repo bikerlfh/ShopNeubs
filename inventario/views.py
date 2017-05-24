@@ -96,23 +96,23 @@ def search_producto(request):
 	filtro = request.GET.get('filtro').strip()
 	list_filtro = filtro.replace('+',' ').split(' ')
 
-	objects_Q = Q()
+	filter_Q = Q()
 	listado_categorias = Categoria.objects.filter(reduce(operator.or_, (Q(descripcion__icontains=x) for x in list_filtro)))
 	if listado_categorias:
 		for categoria in listado_categorias:
-			objects_Q |= Q(producto__categoria = categoria.pk) | Q(producto__categoria__categoriaPadre = categoria.pk)
+			filter_Q |= Q(producto__categoria = categoria.pk) | Q(producto__categoria__categoriaPadre = categoria.pk)
 
 	marca = Marca.objects.filter(Q(descripcion__in = list_filtro))
 	if len(marca) > 0:
-		objects_Q = objects_Q and Q(producto__marca = marca.first().pk)
+		filter_Q = filter_Q and Q(producto__marca = marca.first().pk)
 	
 	for filtro in list_filtro:
-		objects_Q |= Q(producto__nombre__icontains = filtro) | Q(producto__referencia__icontains = filtro)
-	#listado_saldo_inventario = get_list_or_404(SaldoInventario,objects_Q)
+		filter_Q |= Q(producto__nombre__icontains = filtro) | Q(producto__referencia__icontains = filtro)
+	#listado_saldo_inventario = get_list_or_404(SaldoInventario,filter_Q)
 
 	order = request.GET.get('order','rel')
 	page = request.GET.get('page', 1)
-	listado_saldo_inventario = core.consultar_saldo_inventario_paginado(objects_Q,order,page)
+	listado_saldo_inventario = core.consultar_saldo_inventario_paginado(filter_Q,order,page)
 
 	listado_marcas = None
 	# se consultan las marcas de los productos del inventario siempre y cuando no se halla filtrado por marca

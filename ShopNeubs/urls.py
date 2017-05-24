@@ -18,17 +18,17 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
-#from django.contrib.auth.decorators import login_required,permission_required
 from base import views as view_base
 from tercero import views as views_tercero
 from ventas import views as views_ventas
-#from django_pdfkit import PDFView
-
 
 urlpatterns = [
     url(r'^$', view_base.index, name = 'home'),
-    url(r'^filer/', include('filer.urls')),
     
+    # solo para desarrollo
+    #url(r'^api/', include('api.urls')),
+
+    url(r'^filer/', include('filer.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('registration.backends.default.urls')),
 
