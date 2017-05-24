@@ -16,9 +16,11 @@ urlpatterns = [
 
 	url(r'^search/$', views_inventario.search_producto.as_view(), name = 'search_producto'),
 	url(r'^producto-marca/$', views_inventario.producto_marca.as_view(), name = 'producto_marca'),
+	url(r'^ofertas/$', views_inventario.oferta.as_view(), name = 'oferta'),
 	
 	url(r'^ventas/solicitud/$', views_ventas.solicitud_pedido.as_view(), name = 'solicitud_pedido'),
 	url(r'^ventas/mis-pedidos/$', views_ventas.mis_pedidos.as_view(), name = 'mis_pedidos'),
+
 	
 	url(r'^$', views_inventario.producto_categoria.as_view(), name = 'producto_categoria'),
 ]

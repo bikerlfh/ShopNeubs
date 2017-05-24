@@ -54,13 +54,27 @@ class producto_categoria(ListAPIView):
 	serializer_class = SaldoInventarioListSerializer
 	pagination_class = CustomPageNumberPagination
 	def get_queryset(self, *args,**kwargs):
-		categoria = self.request.GET.get('idCategoria',None)
-		marca = self.request.GET.get('idMarca',None)
+		categoria = self.request.GET.get('categoria',None)
+		marca = self.request.GET.get('marca',None)
 		filter_Q = Q()
 		if categoria:
-			filter_Q = Q(producto__categoria = categoria) | Q(producto__categoria__categoriaPadre = categoria)
+			filter_Q = Q(producto__categoria__codigo = categoria) | Q(producto__categoria__categoriaPadre__codigo = categoria)
 		if marca:
-			filter_Q &= Q(producto__marca = marca)
+			filter_Q &= Q(producto__marca__codigo = marca)
+		return SaldoInventario.objects.filter_products(filter_Q)
+
+class oferta(ListAPIView):
+	serializer_class = SaldoInventarioListSerializer
+	pagination_class = CustomPageNumberPagination
+
+	def get_queryset(self, *args,**kwargs):
+		categoria = self.request.GET.get('categoria',None)
+		marca = self.request.GET.get('marca',None)
+		filter_Q = Q(precioOferta__isnull = False) & Q(precioOferta__gte = 0) & Q(estado = True)
+		if categoria:
+			filter_Q = Q(producto__categoria__codigo = categoria) | Q(producto__categoria__categoriaPadre__codigo = categoria)
+		if marca:
+			filter_Q &= Q(producto__marca__codigo = marca)
 		return SaldoInventario.objects.filter_products(filter_Q)
 
 class search_producto(ListAPIView):

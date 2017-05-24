@@ -3,7 +3,7 @@ from inventario.models import Categoria,Producto,SaldoInventario
 from rest_framework.serializers import (ModelSerializer, HyperlinkedIdentityField,
 										SerializerMethodField,ValidationError,CharField)
 
-THUMBNAIL_DEFAULT_STORAGE = getattr(settings,'THUMBNAIL_DEFAULT_STORAGE','')
+THUMBNAIL_DEFAULT_STORAGE = getattr(settings,'THUMBNAIL_DEFAULT_STORAGE','http://192.168.1.50:8000')
 
 class CategoriaSerializer(ModelSerializer):
 	#padre = HyperlinkedIdentityField(view_name='categoria_detail',lookup_field='cp')

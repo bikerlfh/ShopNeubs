@@ -26,7 +26,7 @@ urlpatterns = [
     url(r'^$', view_base.index, name = 'home'),
     
     # solo para desarrollo
-    #url(r'^api/', include('api.urls')),
+    url(r'^api/', include('api.urls')),
 
     url(r'^filer/', include('filer.urls')),
     url(r'^admin/', admin.site.urls),
