@@ -145,7 +145,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 # Numero de dias de registrado los saldos inventarios
 # Para marcarlos como nuevos
@@ -207,17 +207,17 @@ THUMBNAIL_PROCESSORS = (
 
 THUMBNAIL_ALIASES = {
    '': {
-        'large': {'size': (400, 300)},
-        'medium': {'size': (300, 300)},
-        'small': {'size': (100, 100)},
-        # Imagenes de los productos en el filtro producto
-        'producto': {'size': (200, 200),'crop':True,'upscale':True, },
-        # Imagen principal del producto detalle
-        'producto_detalle': {'size': (350, 350),'crop':False,'upscale':True },
+        #'large': {'size': (400, 300)},
+        #'medium': {'size': (300, 300)},
+        #'small': {'size': (100, 100)},
         # galeria del producto detalle
         'galeria': {'size': (70, 70),'crop':True,'upscale':True },
         # Imagen de los productos relacionados
         'producto_relacionado': {'size': (100, 100),'crop':True,'upscale':True },
+        # Imagenes de los productos en el filtro producto
+        'producto': {'size': (200, 200),'crop':True,'upscale':True, },
+        # Imagen principal del producto detalle
+        'producto_detalle': {'size': (350, 350),'crop':False,'upscale':True },
         # Carousel
         'carousel': {'size': (1800, 500),'crop':True,'upscale':True },
     },

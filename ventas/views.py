@@ -11,6 +11,7 @@ from .models import EstadoPedidoVenta,PedidoVenta,PedidoVentaPosicion,PosicionVe
 from inventario.models import SaldoInventario
 from tercero.models import Cliente
 from compras.models import PedidoCompra
+from ventas.send_mail_venta import send_email_pedido_venta
 
 # from django.contrib.auth.decorators import login_required,permission_required
 # from django.utils.decorators import method_decorator
@@ -103,6 +104,8 @@ def solicitud_pedido(request):
 	if pedidoVenta.save():
 		# se elimina el carro
 		del request.session['shop_cart']
+		# Se envia el email de notificación de nuevo pedido venta
+		send_email_pedido_venta(pedidoVenta.get_pedidoVenta())
 		#messages.success(request,"Tu pedido ha sido enviado satisfactoriamente, muy pronto nos comunicaremos contigo.")
 		return HttpResponseRedirect(reverse('pedido_enviado',kwargs={'numeroPedido': pedidoVenta.get_numero_pedido()}))
 	else:
@@ -112,8 +115,9 @@ def solicitud_pedido(request):
 
 def pedido_enviado(request,numeroPedido):
 	return render(request,'ventas/pedido_enviado.html',{ 'numeroPedido':numeroPedido })
-def pedido_no_generado(request,numeroPedido):
-	return render(request,'ventas/pedido_no_generado.html',{ 'numeroPedido':numeroPedido })
+
+def pedido_no_generado(request):
+	return render(request,'ventas/pedido_no_generado.html')
 
 class autorizar_pedido(View):
 	#@permission_required('PedidoVenta.autorizar_pedido')

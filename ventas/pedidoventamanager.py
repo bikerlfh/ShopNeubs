@@ -5,7 +5,6 @@ from ventas.models import *
 from compras.models import PedidoCompraPosicion
 from tercero.models import Cliente
 
-
 class PedidoVentaManager:	
 
 	error = None
@@ -43,7 +42,6 @@ class PedidoVentaManager:
 
 			# Se guarda la cabecera del pedido
 			self.__pedidoVenta.save()
-			
 		except Exception as e:
 			transaction.rollback()
 			self.error = e
@@ -54,6 +52,9 @@ class PedidoVentaManager:
 			transaction.set_autocommit(True)
 		return True
 
+	def get_pedidoVenta(self):
+		return self.__pedidoVenta
+		
 	def get_numero_pedido(self):
 		return self.__pedidoVenta.numeroPedido
 

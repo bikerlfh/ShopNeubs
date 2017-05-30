@@ -9,6 +9,12 @@ from django.db.models import Max
 from decimal import *
 from datetime import datetime
 
+from easy_thumbnails.signals import saved_file
+from easy_thumbnails.signal_handlers import generate_aliases_global,generate_aliases
+
+saved_file.connect(generate_aliases_global)
+
+
 # Categoria
 class Categoria(models.Model):
 	idCategoria = models.AutoField(primary_key = True)

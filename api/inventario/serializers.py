@@ -3,6 +3,8 @@ from inventario.models import Categoria,Producto,SaldoInventario
 from rest_framework.serializers import (ModelSerializer, HyperlinkedIdentityField,
 										SerializerMethodField,ValidationError,CharField)
 
+from easy_thumbnails.templatetags.thumbnail import thumbnail_url
+
 THUMBNAIL_DEFAULT_STORAGE = getattr(settings,'THUMBNAIL_DEFAULT_STORAGE','http://192.168.1.50:8000')
 
 class CategoriaSerializer(ModelSerializer):
@@ -37,7 +39,7 @@ class ProductoDetailSerializer(ModelSerializer):
 		list_imagenes = []
 		if imagenes:
 			for i,imagen in enumerate(imagenes):
-				list_imagenes.append({'order':i,'url': THUMBNAIL_DEFAULT_STORAGE + imagen.url})
+				list_imagenes.append({'order':i,'url': THUMBNAIL_DEFAULT_STORAGE + thumbnail_url(imagen, 'producto_detalle')})
 			return list_imagenes
 		return None	
 
@@ -58,7 +60,8 @@ class ProductoSimpleSerializer(ModelSerializer):
 	def get_imagen(self,obj):
 		imagen = obj.imagen()
 		if imagen:
-			return THUMBNAIL_DEFAULT_STORAGE + imagen.url
+			# se consulta la imagen thumbnail con el alias 'producto'
+			return THUMBNAIL_DEFAULT_STORAGE + thumbnail_url(imagen, 'producto')
 		return None
 
 
