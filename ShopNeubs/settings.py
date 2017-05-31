@@ -218,9 +218,9 @@ THUMBNAIL_ALIASES = {
         'producto': {'size': (200, 200),'crop':True,'upscale':True, },
         # Imagen principal del producto detalle
         'producto_detalle': {'size': (350, 350),'crop':False,'upscale':True },
-        # Carousel
-        'carousel': {'size': (1800, 500),'crop':True,'upscale':True },
-    },
+        # Imagen carousel
+        'carousel': {'size': (1800, 500),'crop':True,'upscale':True },  
+    },   
 }
 
 #FILER_CANONICAL_URL = 'sharing/'

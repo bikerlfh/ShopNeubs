@@ -7,6 +7,7 @@ from django.views import View
 from django.views.decorators.cache import cache_page
 from inventario.models  import Categoria,Marca,SaldoInventario,ProductoReview
 from .models import Carousel
+from easy_thumbnails.templatetags.thumbnail import thumbnail_url
 
 SESSION_CACHE_TIEMOUT = getattr(settings,'SESSION_CACHE_TIEMOUT',7200)
 
@@ -37,7 +38,6 @@ def index(request):
 		cache.set('marcas',marcas,SESSION_CACHE_TIEMOUT)
 	else:
 		marcas = cache.get('marcas')
-	
 	return render(request,"base/index.html",{ 'listado_categoria' : categorias,'listado_marcas':marcas ,'carousel':carousel})
 
 @cache_page(SESSION_CACHE_TIEMOUT)

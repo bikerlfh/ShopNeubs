@@ -20,3 +20,9 @@ class Carousel(models.Model):
 			except Carousel.DoesNotExist:
 				pass
 		super(Carousel, self).save(*args, **kwargs)
+
+
+def generate_thumbnails(model, pk, field):
+    instance = model._default_manager.get(pk=pk)
+    fieldfile = getattr(instance, field)
+    generate_aliases_carousel(fieldfile)
