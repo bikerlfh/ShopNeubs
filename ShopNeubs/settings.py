@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_auth',
     'allauth',
     'allauth.account',
+    
     #'rest_auth.registration',
 
     'easy_thumbnails',
@@ -196,6 +197,8 @@ SELECT_TOP_MAX = 10
 SELECT_TOP_MAX_INDEX_ITEM = 8
 # Número de productos a listar
 NUM_ITEMS_DISPLAY = 10
+# Numero de productos a listar en la API
+NUM_ITEMS_DISPLAY_API = 10
 
 THUMBNAIL_PROCESSORS = (
     'easy_thumbnails.processors.colorspace',

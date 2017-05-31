@@ -39,7 +39,10 @@ class ProductoDetailSerializer(ModelSerializer):
 		list_imagenes = []
 		if imagenes:
 			for i,imagen in enumerate(imagenes):
-				list_imagenes.append({'order':i,'url': THUMBNAIL_DEFAULT_STORAGE + thumbnail_url(imagen, 'producto_detalle')})
+				if getattr(settings,'DEBUG',False):			
+					list_imagenes.append({'order':i,'url': THUMBNAIL_DEFAULT_STORAGE + thumbnail_url(imagen, 'producto_detalle')})
+				else:
+					list_imagenes.append({'order':i,'url': thumbnail_url(imagen, 'producto_detalle')})
 			return list_imagenes
 		return None	
 
@@ -61,7 +64,10 @@ class ProductoSimpleSerializer(ModelSerializer):
 		imagen = obj.imagen()
 		if imagen:
 			# se consulta la imagen thumbnail con el alias 'producto'
-			return THUMBNAIL_DEFAULT_STORAGE + thumbnail_url(imagen, 'producto')
+			if getattr(settings,'DEBUG',False):	
+				return THUMBNAIL_DEFAULT_STORAGE + thumbnail_url(imagen, 'producto')
+			else:
+				return thumbnail_url(imagen, 'producto')
 		return None
 
 

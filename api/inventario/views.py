@@ -10,6 +10,12 @@ from api.pagination import CustomPageNumberPagination
 from api.exceptions import CustomException
 import operator
 from functools import reduce
+from django.conf import settings
+
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+
+SESSION_CACHE_TIEMOUT = getattr(settings,'SESSION_CACHE_TIEMOUT',7200)
 
 class CategoriaListView(ListAPIView):
 	#queryset = Categoria.objects.filter(estado = True)
@@ -38,6 +44,11 @@ class producto_detalle(RetrieveAPIView):
 	queryset = SaldoInventario.objects.filter_products()
 	serializer_class = SaldoInventarioDetailSerializer
 
+	# Se cachea
+	@method_decorator(cache_page(SESSION_CACHE_TIEMOUT))
+	def dispatch(self,request, *args, **kwargs):
+		return super(producto_detalle, self).dispatch(request,*args, **kwargs)
+
 
 class producto_marca(ListAPIView):
 	#queryset = SaldoInventario.objects.filter_products()
@@ -48,6 +59,11 @@ class producto_marca(ListAPIView):
 		if not marca:
 			raise CustomException('Hace falta especificar la variable','idMarca',status_code = status.HTTP_400_BAD_REQUEST)
 		return SaldoInventario.objects.filter_products(producto__marca = marca)
+
+	# Se cachea
+	@method_decorator(cache_page(SESSION_CACHE_TIEMOUT))
+	def dispatch(self,request, *args, **kwargs):
+		return super(producto_marca, self).dispatch(request,*args, **kwargs)
 
 class producto_categoria(ListAPIView):
 	#queryset = SaldoInventario.objects.filter_products()
@@ -63,6 +79,11 @@ class producto_categoria(ListAPIView):
 			filter_Q &= Q(producto__marca__codigo = marca)
 		return SaldoInventario.objects.filter_products(filter_Q)
 
+	# Se cachea
+	@method_decorator(cache_page(SESSION_CACHE_TIEMOUT))
+	def dispatch(self,request, *args, **kwargs):
+		return super(producto_categoria, self).dispatch(request,*args, **kwargs)
+
 class oferta(ListAPIView):
 	serializer_class = SaldoInventarioListSerializer
 	pagination_class = CustomPageNumberPagination
@@ -76,6 +97,11 @@ class oferta(ListAPIView):
 		if marca:
 			filter_Q &= Q(producto__marca__codigo = marca)
 		return SaldoInventario.objects.filter_products(filter_Q)
+
+	# Se cachea
+	@method_decorator(cache_page(SESSION_CACHE_TIEMOUT))
+	def dispatch(self,request, *args, **kwargs):
+		return super(oferta, self).dispatch(request,*args, **kwargs)
 
 class search_producto(ListAPIView):
 	serializer_class = SaldoInventarioListSerializer
@@ -112,3 +138,8 @@ class search_producto(ListAPIView):
 		elif order == 'promo':
 			order = 'precioOferta'
 		return SaldoInventario.objects.filter_products(filter_Q).order_by(order)
+
+	# Se cachea
+	@method_decorator(cache_page(SESSION_CACHE_TIEMOUT))
+	def dispatch(self,request, *args, **kwargs):
+		return super(search_producto, self).dispatch(request,*args, **kwargs)
