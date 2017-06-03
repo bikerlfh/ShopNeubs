@@ -1,5 +1,5 @@
 from django.conf import settings
-from inventario.models import Categoria,Producto,SaldoInventario
+from inventario.models import Categoria,Marca,Producto,SaldoInventario
 from rest_framework.serializers import (ModelSerializer, HyperlinkedIdentityField,
 										SerializerMethodField,ValidationError,CharField)
 
@@ -16,6 +16,15 @@ class CategoriaSerializer(ModelSerializer):
 			'codigo',
 			'descripcion',
 			'categoriaPadre',
+		]
+
+class MarcaSerializer(ModelSerializer):
+	class Meta:
+		model = Marca
+		fields = [
+			'pk',
+			'codigo',
+			'descripcion',
 		]
 
 class ProductoDetailSerializer(ModelSerializer):

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Carousel
+from .models import Carousel, ApiTabla,ApiSincronizacion
 from django.contrib.admin.models import LogEntry
 # Register your models here.
 
@@ -22,6 +22,21 @@ class CarouselAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Carousel,CarouselAdmin)
+
+admin.site.register(ApiTabla,DefaultAdmin)
+
+
+class ApiSincronizacionAdmin(admin.ModelAdmin):
+	fieldsets  = [
+		('',{'fields':['tabla','fecha']}),
+	]
+	list_display = ['tabla','fecha']
+	ordering = ['-fecha']
+	search_fields = ['tabla','fecha']
+	list_filter = ['tabla']
+
+admin.site.register(ApiSincronizacion,ApiSincronizacionAdmin)
+
 
 class logEntryAdmin(admin.ModelAdmin):
 	list_display = ['__str__','user','action_time','content_type','object_repr','change_message']

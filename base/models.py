@@ -26,3 +26,30 @@ def generate_thumbnails(model, pk, field):
     instance = model._default_manager.get(pk=pk)
     fieldfile = getattr(instance, field)
     generate_aliases_carousel(fieldfile)
+
+
+class ApiTabla(models.Model):
+	idApiTabla = models.AutoField(primary_key=True)
+	codigo = models.CharField(max_length=2,null=False,blank = False)
+	descripcion = models.CharField(max_length = 20,null=False,blank=False)
+
+	def __str__(self):
+		return '%s - %s' % (self.codigo,self.descripcion)
+
+	class Meta:
+		db_table = 'ApiTabla'
+		verbose_name = 'API Tabla'
+		verbose_name_plural = 'API Tablas'
+
+class ApiSincronizacion(models.Model):
+	idApiSincronizacion = models.AutoField(primary_key = True)
+	tabla = models.ForeignKey("ApiTabla",db_column = 'idApiTabla',blank = False,null = False,on_delete= models.CASCADE,verbose_name = 'API Tabla')
+	fecha = models.DateTimeField(blank = False,null = False,verbose_name = 'Fecha Sincronización')
+
+	def __str__(self):
+		return '(%s) %s' % (str(self.fecha),self.tabla)
+
+	class Meta:
+		db_table = 'ApiSincronizacion'
+		verbose_name = 'API Sincronización'
+		verbose_name_plural = verbose_name

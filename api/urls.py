@@ -10,6 +10,7 @@ urlpatterns = [
 	url(r'^register/$', views_tercero.register.as_view(), name = 'register'),
 	#url(r'^login/$', views_tercero.login.as_view(), name = 'login'),
 	url(r'^categoria/$', views_inventario.CategoriaListView.as_view(), name = 'lista_categoria'),
+	url(r'^marca/$', views_inventario.MarcaListView.as_view(), name = 'lista_marca'),
 	url(r'^categoria/(?P<pk>[\d]{1,2})/$', views_inventario.CategoriaDetailView.as_view(), name = 'categoria_detalle'),
 
 	url(r'^producto/(?P<pk>[\d]{1,4})/$', views_inventario.producto_detalle.as_view(), name = 'producto_detalle'),

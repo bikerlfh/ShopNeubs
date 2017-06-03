@@ -3,8 +3,8 @@ from rest_framework.permissions import IsAuthenticated,IsAdminUser,IsAuthenticat
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.filters import SearchFilter,OrderingFilter
-from .serializers import CategoriaSerializer,ProductoDetailSerializer,SaldoInventarioListSerializer,SaldoInventarioDetailSerializer
-from inventario.models import Categoria,Producto,SaldoInventario,Marca
+from .serializers import CategoriaSerializer,MarcaSerializer,ProductoDetailSerializer,SaldoInventarioListSerializer,SaldoInventarioDetailSerializer
+from inventario.models import Categoria,Marca,Producto,SaldoInventario,Marca
 from django.db.models import Q
 from api.pagination import CustomPageNumberPagination
 from api.exceptions import CustomException
@@ -30,6 +30,13 @@ class CategoriaListView(ListAPIView):
 		if categoriaPadre:
 			queryset_list = queryset_list.filter(categoriaPadre = categoriaPadre)
 		return queryset_list
+
+class MarcaListView(ListAPIView):
+	queryset = Marca.objects.all()
+	serializer_class = MarcaSerializer
+	#filter_backends = [SearchFilter]
+	filter_backends = [OrderingFilter]
+	# sarch_fields = ['']
 
 
 class CategoriaDetailView(RetrieveAPIView):
