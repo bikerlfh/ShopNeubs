@@ -2,6 +2,7 @@ from django.conf.urls import url,include
 from .tercero import views as views_tercero
 from .inventario import views as views_inventario
 from .ventas import views as views_ventas
+from . import views as views_base
 
 urlpatterns = [
 	url(r'^rest-auth/', include('rest_auth.urls')),
@@ -21,6 +22,9 @@ urlpatterns = [
 	
 	url(r'^ventas/solicitud/$', views_ventas.solicitud_pedido.as_view(), name = 'solicitud_pedido'),
 	url(r'^ventas/mis-pedidos/$', views_ventas.mis_pedidos.as_view(), name = 'mis_pedidos'),
+
+	url(r'^api-tabla/$', views_base.APITabla.as_view(), name = 'api_tabla'),
+	url(r'^api-sincronizacion/$', views_base.APISincronizacion.as_view(), name = 'api_sincronizacion'),
 
 	
 	url(r'^$', views_inventario.producto_categoria.as_view(), name = 'producto_categoria'),

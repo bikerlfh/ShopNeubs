@@ -1,5 +1,6 @@
 from rest_framework.serializers import ModelSerializer, HyperlinkedIdentityField,SerializerMethodField,ValidationError
 from inventario.models import Categoria,Producto,SaldoInventario
+from base.models import ApiTabla,ApiSincronizacion
 from django.contrib.auth import get_user_model
 
 
@@ -14,7 +15,7 @@ class UserCreateSerializer(ModelSerializer):
 			'email'
 		]
 		extra_kwargs = {'password':
-							{'write_only':True}
+							{ 'write_only':True }
 						}
 	def validate_email(self,value):
 		data = self.get_initial()
@@ -32,4 +33,23 @@ class UserCreateSerializer(ModelSerializer):
 		user_obj.set_password(password)
 		user_obj.save()
 		return validated_data
+
+class ApiTablaSerializer(ModelSerializer):
+	class Meta:
+		model = ApiTabla
+		fields = [
+			'idApiTabla',
+			'codigo',
+			'descripcion'
+		]
+
+class ApiSincronizacionSerializer(ModelSerializer):
+	tabla = ApiTablaSerializer()
+	class Meta:
+		model = ApiSincronizacion
+		fields = [
+			'idApiSincronizacion',
+			'tabla',
+			'fecha'
+		]
 

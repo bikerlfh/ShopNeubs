@@ -28,10 +28,10 @@ admin.site.register(ApiTabla,DefaultAdmin)
 
 class ApiSincronizacionAdmin(admin.ModelAdmin):
 	fieldsets  = [
-		('',{'fields':['tabla','fecha']}),
+		('',{'fields':['tabla','fecha','ultima']}),
 	]
-	list_display = ['tabla','fecha']
-	ordering = ['-fecha']
+	list_display = ['tabla','fecha','ultima']
+	ordering = ['-fecha','ultima']
 	search_fields = ['tabla','fecha']
 	list_filter = ['tabla']
 

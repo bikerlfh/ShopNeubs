@@ -43,8 +43,9 @@ class ApiTabla(models.Model):
 
 class ApiSincronizacion(models.Model):
 	idApiSincronizacion = models.AutoField(primary_key = True)
-	tabla = models.ForeignKey("ApiTabla",db_column = 'idApiTabla',blank = False,null = False,on_delete= models.CASCADE,verbose_name = 'API Tabla')
+	tabla = models.ForeignKey("ApiTabla",db_column = 'idApiTabla',blank = True,null = True,on_delete= models.CASCADE,verbose_name = 'API Tabla')
 	fecha = models.DateTimeField(blank = False,null = False,verbose_name = 'Fecha Sincronización')
+	ultima = models.BooleanField(default = True,blank=False,null=False)
 
 	def __str__(self):
 		return '(%s) %s' % (str(self.fecha),self.tabla)
@@ -53,3 +54,11 @@ class ApiSincronizacion(models.Model):
 		db_table = 'ApiSincronizacion'
 		verbose_name = 'API Sincronización'
 		verbose_name_plural = verbose_name
+
+	def save(self,*args,**kwargs):
+		if self.idApiSincronizacion == 0:
+			apiSincronizacion = ApiSincronizacion.objects.filter(tabla_id = self.tabla_id, ultima = True)
+			if apiSincronizacion.exists():
+				apiSincronizacion.ultima = False
+				apiSincronizacion.save()
+		super(ApiSincronizacion,self).save(*args,**kwargs)
