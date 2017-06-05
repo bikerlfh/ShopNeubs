@@ -2,7 +2,7 @@ from rest_framework.serializers import ModelSerializer, HyperlinkedIdentityField
 from inventario.models import Categoria,Producto,SaldoInventario
 from base.models import ApiTabla,ApiSincronizacion
 from django.contrib.auth import get_user_model
-
+from datetime import date,datetime
 
 User = get_user_model()
 
@@ -45,6 +45,7 @@ class ApiTablaSerializer(ModelSerializer):
 
 class ApiSincronizacionSerializer(ModelSerializer):
 	tabla = ApiTablaSerializer()
+	fecha = SerializerMethodField()
 	class Meta:
 		model = ApiSincronizacion
 		fields = [
@@ -52,4 +53,9 @@ class ApiSincronizacionSerializer(ModelSerializer):
 			'tabla',
 			'fecha'
 		]
+
+	def get_fecha(self,obj):
+		#date1 = datetime(obj.fecha)
+		return obj.fecha.strftime('%d-%m-%Y %H:%M:%S')
+
 

@@ -17,7 +17,7 @@ class APISincronizacion(ListAPIView):
 
 	def get_queryset(self,*args,**kwargs):
 		filter_Q = Q(ultima = True)
-
+		# Se valida la tabla
 		if self.request.GET.get('tabla',None):
 			filter_Q = filter_Q & Q(tabla_id = self.request.GET.get('tabla',None))
 		return ApiSincronizacion.objects.filter(filter_Q).order_by('-fecha')

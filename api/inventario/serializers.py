@@ -12,7 +12,7 @@ class CategoriaSerializer(ModelSerializer):
 	class Meta:
 		model = Categoria
 		fields = [
-			'pk',
+			'idCategoria',
 			'codigo',
 			'descripcion',
 			'categoriaPadre',
