@@ -56,9 +56,11 @@ class ApiSincronizacion(models.Model):
 		verbose_name_plural = verbose_name
 
 	def save(self,*args,**kwargs):
-		if self.idApiSincronizacion == 0:
-			apiSincronizacion = ApiSincronizacion.objects.filter(tabla_id = self.tabla_id, ultima = True)
-			if apiSincronizacion.exists():
+		if self.idApiSincronizacion is None:
+			try:
+				apiSincronizacion = ApiSincronizacion.objects.get(tabla = self.tabla, ultima = True)
 				apiSincronizacion.ultima = False
 				apiSincronizacion.save()
+			except Exception as e:
+				pass
 		super(ApiSincronizacion,self).save(*args,**kwargs)

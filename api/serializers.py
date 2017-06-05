@@ -51,7 +51,8 @@ class ApiSincronizacionSerializer(ModelSerializer):
 		fields = [
 			'idApiSincronizacion',
 			'tabla',
-			'fecha'
+			'fecha',
+			'ultima'
 		]
 
 	def get_fecha(self,obj):
