@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.filters import SearchFilter,OrderingFilter
 from .serializers import CategoriaSerializer,MarcaSerializer,ProductoDetailSerializer,SaldoInventarioListSerializer,SaldoInventarioDetailSerializer
-from inventario.models import Categoria,Marca,Producto,SaldoInventario,Marca
+from inventario.models import Categoria,Marca,Producto,SaldoInventario,Marca,Promocion
 from django.db.models import Q
 from api.pagination import CustomPageNumberPagination
 from api.exceptions import CustomException
@@ -98,7 +98,9 @@ class oferta(ListAPIView):
 	def get_queryset(self, *args,**kwargs):
 		categoria = self.request.GET.get('categoria',None)
 		marca = self.request.GET.get('marca',None)
-		filter_Q = Q(precioOferta__isnull = False) & Q(precioOferta__gte = 0) & Q(estado = True)
+
+		listado_promociones = Promocion.objects.only('saldoInventario_id').filter(fechaFin__isnull=True,estado=True,saldoInventario__precioOferta__gt=0,saldoInventario__estado=True).order_by('-fechaInicio')
+		filter_Q = Q(pk__in=list(p.saldoInventario_id for p in listado_promociones))
 		if categoria:
 			filter_Q = Q(producto__categoria__codigo = categoria) | Q(producto__categoria__categoriaPadre__codigo = categoria)
 		if marca:
