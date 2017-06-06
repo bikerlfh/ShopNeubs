@@ -79,11 +79,14 @@ class producto_categoria(ListAPIView):
 	def get_queryset(self, *args,**kwargs):
 		categoria = self.request.GET.get('categoria',None)
 		marca = self.request.GET.get('marca',None)
-		filter_Q = Q()
+		filter_Q = None
 		if categoria:
 			filter_Q = Q(producto__categoria__codigo = categoria) | Q(producto__categoria__categoriaPadre__codigo = categoria)
+		else:
+			raise CustomException('Hace falta especificar la variable','categoria',status_code = status.HTTP_400_BAD_REQUEST)
 		if marca:
 			filter_Q &= Q(producto__marca__codigo = marca)
+
 		return SaldoInventario.objects.filter_products(filter_Q)
 
 	# Se cachea
