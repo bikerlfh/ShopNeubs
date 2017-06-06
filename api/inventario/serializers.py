@@ -101,7 +101,7 @@ class SaldoInventarioListSerializer(ModelSerializer):
 	class Meta:
 		model = SaldoInventario
 		fields = [
-			'pk',
+			'idSaldoInventario',
 			'producto',
 			'precioVentaUnitario',
 			'precioOferta',
