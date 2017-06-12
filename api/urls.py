@@ -21,7 +21,7 @@ urlpatterns = [
 	url(r'^ofertas/$', views_inventario.oferta.as_view(), name = 'oferta'),
 	
 	url(r'^ventas/solicitud/$', views_ventas.solicitud_pedido.as_view(), name = 'solicitud_pedido'),
-	url(r'^ventas/mis-pedidos/$', views_ventas.mis_pedidos.as_view(), name = 'mis_pedidos'),
+	url(r'^mis-pedidos/$', views_ventas.mis_pedidos.as_view(), name = 'mis_pedidos'),
 
 	url(r'^usuario/(?P<pk>[\d]{1,4})/$', views_tercero.UsuarioDetailView.as_view(), name = 'usuario_detalle'),
 

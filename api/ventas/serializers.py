@@ -5,41 +5,45 @@ from inventario.models import SaldoInventario
 from ventas.models import PedidoVenta,PedidoVentaPosicion,EstadoPedidoVenta,MotivoCancelacionPedidoVenta
 from ventas.pedidoventamanager import PedidoVentaManager
 
-
-class PedidoVentaSerializer(ModelSerializer):
-	cliente = SerializerMethodField()
+class PedidoVentaListSerializer(ModelSerializer):
+	#cliente = SerializerMethodField()
+	idCliente = SerializerMethodField()
 	estadoPedidoVenta = SerializerMethodField()
+	numeroProductos = SerializerMethodField()
+	valorTotal = SerializerMethodField()
+	fecha = SerializerMethodField()
 	motivoCancelacionPedidoVenta = SerializerMethodField()
-	listadoPedidoVentaPosicion = SerializerMethodField()
+	#listadoPedidoVentaPosicion = SerializerMethodField()
 	class Meta:
 		model = PedidoVenta
 		fields = [
 			'pk',
-			'cliente',
+			'idCliente',
+			'numeroProductos',
+			'valorTotal',
 			'estadoPedidoVenta',
 			'numeroPedido',
 			'fecha',
 			'fechaAutorizacion',
 			'motivoCancelacionPedidoVenta',
-			'listadoPedidoVentaPosicion'
+			
 		]
-	# obtiene todas las imagenes en una lista
-	def get_cliente(self,obj):
-		return obj.cliente.datoBasicoTercero.__str__()
+	def get_idCliente(self,obj):
+		return obj.cliente_id
+	def get_fecha(self,obj):
+		return obj.fecha.date()
+	# def get_cliente(self,obj):
+	# 	return obj.cliente.datoBasicoTercero.__str__()
 	def get_estadoPedidoVenta(self,obj):
 		return obj.estadoPedidoVenta.descripcion
 	def get_motivoCancelacionPedidoVenta(self,obj):
 		if obj.motivoCancelacionPedidoVenta:
 			return obj.motivoCancelacionPedidoVenta.descripcion
 		return None
-	def get_listadoPedidoVentaPosicion(self,obj):
-		listado = ({'pk':p.pk,
-					'idProducto':p.producto.pk,
-					'cantidad':p.cantidad,
-					'costoTotal':p.costoTotal,
-					'cancelado':p.cancelado,
-					'motivoCancelacionPedidoVenta':p.motivoCancelacionPedidoVenta} for p in PedidoVentaPosicion.objects.filter(pedidoVenta = obj.pk))#.values(*fields))
-		return listado
+	def get_numeroProductos(self,obj):
+		return sum(p.cantidad for p in PedidoVentaPosicion.objects.filter(pedidoVenta_id = obj.pk))
+	def get_valorTotal(self,obj):
+		return sum(p.costoTotal for p in PedidoVentaPosicion.objects.filter(pedidoVenta_id = obj.pk))
 
 
 	def validate_listadoPedidoVentaPosicion(self,value):

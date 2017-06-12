@@ -1,11 +1,9 @@
 from rest_framework.serializers import ModelSerializer, HyperlinkedIdentityField,SerializerMethodField,ValidationError,CharField,EmailField
 from django.contrib.auth import get_user_model
-from registration.forms import RegistrationForm
 from registration.models import SHA1_RE, RegistrationProfile
 from django.contrib.sites.shortcuts import get_current_site
 from tercero.models import Cliente
-
-
+from django.test import RequestFactory
 
 User = get_user_model()
 
@@ -52,7 +50,7 @@ class UserCreateSerializer(ModelSerializer):
 		username = data.get("username")
 
 		if User.objects.filter(username = username).exists():
-			raise ValidationError("Ya existe un usuario registrado con el username %s" % username)
+			raise ValidationError("Ya existe un usuario con este nombre")
 		return value
 
 	def validate_email(self,value):
@@ -60,7 +58,7 @@ class UserCreateSerializer(ModelSerializer):
 		email = data.get("email")
 
 		if User.objects.filter(email = email).exists():
-			raise ValidationError("Ya existe un usuario registrado con el email %s" % email)
+			raise ValidationError("Ya existe un usuario con este email")
 		return value
 
 
@@ -68,23 +66,14 @@ class UserCreateSerializer(ModelSerializer):
 		username = validated_data['username']
 		email = validated_data['email']
 		password = validated_data['password']
-		
 
-		"""user_obj = User(username = username,email = email)
-		user_obj.set_password(password)
-		user_obj.save()"""
-
-		form = RegistrationForm(
-            data={
-                User.USERNAME_FIELD: username,
-                'password1': password,
-                'password2': password,
-                'email': email,
-            }
-        )
-
+		user_info = {
+			'username':username,
+			'email':email,
+			'password':password
+		}
 		new_user = RegistrationProfile.objects.create_inactive_user(
-			form
+			site=get_site(),
+			**user_info
 		)
-
 		return validated_data

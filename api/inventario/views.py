@@ -64,7 +64,7 @@ class producto_marca(ListAPIView):
 	def get_queryset(self, *args,**kwargs):
 		marca = self.request.GET.get('idMarca',None)
 		if not marca:
-			raise CustomException('Hace falta especificar la variable','idMarca',status_code = status.HTTP_400_BAD_REQUEST)
+			raise CustomException('Hace falta especificar la variable','idMarca')
 		return SaldoInventario.objects.filter_products(producto__marca = marca)
 
 	# Se cachea
@@ -83,7 +83,7 @@ class producto_categoria(ListAPIView):
 		if categoria:
 			filter_Q = Q(producto__categoria__codigo = categoria) | Q(producto__categoria__categoriaPadre__codigo = categoria)
 		else:
-			raise CustomException('Hace falta especificar la variable','categoria',status_code = status.HTTP_400_BAD_REQUEST)
+			raise CustomException('Hace falta especificar la variable','categoria')
 		if marca:
 			filter_Q &= Q(producto__marca__codigo = marca)
 
@@ -121,7 +121,7 @@ class search_producto(ListAPIView):
 
 	def get_queryset(self,*args,**kwargs):
 		if not self.request.GET.get('filtro'):
-			raise CustomException('Hace falta especificar la variable','filtro',status_code = status.HTTP_400_BAD_REQUEST)
+			raise CustomException('Hace falta especificar la variable','filtro')
 			
 		filtro = self.request.GET.get('filtro').strip()
 		list_filtro = filtro.replace('+',' ').split(' ')
