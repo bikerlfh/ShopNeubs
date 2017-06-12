@@ -23,6 +23,10 @@ urlpatterns = [
 	url(r'^ventas/solicitud/$', views_ventas.solicitud_pedido.as_view(), name = 'solicitud_pedido'),
 	url(r'^ventas/mis-pedidos/$', views_ventas.mis_pedidos.as_view(), name = 'mis_pedidos'),
 
+	url(r'^usuario/(?P<pk>[\d]{1,4})/$', views_tercero.UsuarioDetailView.as_view(), name = 'usuario_detalle'),
+
+	url(r'^usuario/(?P<username>[\w]{1,25})/$', views_tercero.UsuarioDetailUsernameView.as_view(), name = 'usuario_detalle'),
+
 	url(r'^api-tabla/$', views_base.APITabla.as_view(), name = 'api_tabla'),
 	url(r'^api-sincronizacion/$', views_base.APISincronizacion.as_view(), name = 'api_sincronizacion'),
 
