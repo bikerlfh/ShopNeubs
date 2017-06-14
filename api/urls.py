@@ -1,4 +1,5 @@
 from django.conf.urls import url,include
+from .division_territorial import views as views_division_territorial
 from .tercero import views as views_tercero
 from .inventario import views as views_inventario
 from .ventas import views as views_ventas
@@ -9,9 +10,11 @@ urlpatterns = [
     #url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
 
 	url(r'^register/$', views_tercero.register.as_view(), name = 'register'),
+	url(r'^profile/$', views_tercero.PerfilView.as_view(), name = 'profile'),
+	url(r'^profile/create/$', views_tercero.PerfilCreateView, name = 'profile_create'),
+	url(r'^profile/edit/$', views_tercero.PerfilUpdateView, name = 'profile_edit'),
 	#url(r'^login/$', views_tercero.login.as_view(), name = 'login'),
-	url(r'^categoria/$', views_inventario.CategoriaListView.as_view(), name = 'lista_categoria'),
-	url(r'^marca/$', views_inventario.MarcaListView.as_view(), name = 'lista_marca'),
+	
 	url(r'^categoria/(?P<pk>[\d]{1,2})/$', views_inventario.CategoriaDetailView.as_view(), name = 'categoria_detalle'),
 
 	url(r'^producto/(?P<pk>[\d]{1,4})/$', views_inventario.producto_detalle.as_view(), name = 'producto_detalle'),
@@ -27,8 +30,15 @@ urlpatterns = [
 
 	url(r'^usuario/(?P<username>[\w]{1,25})/$', views_tercero.UsuarioDetailUsernameView.as_view(), name = 'usuario_detalle'),
 
-	url(r'^api-tabla/$', views_base.APITabla.as_view(), name = 'api_tabla'),
-	url(r'^api-sincronizacion/$', views_base.APISincronizacion.as_view(), name = 'api_sincronizacion'),
+	#sincronizacion
+	url(r'^sync/categoria/$', views_inventario.CategoriaListView.as_view(), name = 'lista_categoria'),
+	url(r'^sync/marca/$', views_inventario.MarcaListView.as_view(), name = 'lista_marca'),
+	url(r'^sync/api-tabla/$', views_base.APITabla.as_view(), name = 'api_tabla'),
+	url(r'^sync/api-sincronizacion/$', views_base.APISincronizacion.as_view(), name = 'api_sincronizacion'),
+	url(r'^sync/pais/$', views_division_territorial.PaisListView.as_view(), name = 'sync_pais'),
+	url(r'^sync/departamento/$', views_division_territorial.DepartamentoListView.as_view(), name = 'sync_departamento'),
+	url(r'^sync/municipio/$', views_division_territorial.MunicipioListView.as_view(), name = 'sync_municipio'),
+	url(r'^sync/tipo-documento/$', views_tercero.TipoDocumentoListView.as_view(), name = 'sync_tipo_documento'),
 
 	
 	url(r'^$', views_inventario.producto_categoria.as_view(), name = 'producto_categoria'),
