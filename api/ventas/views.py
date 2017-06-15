@@ -1,6 +1,6 @@
 from rest_framework.generics import ListAPIView,RetrieveAPIView,CreateAPIView
 from rest_framework.serializers import ValidationError
-from .serializers import PedidoVentaListSerializer
+from .serializers import PedidoVentaListSerializer,PedidoVentaDetalleSerializer
 from rest_framework.permissions import IsAuthenticated,IsAdminUser,IsAuthenticatedOrReadOnly,AllowAny
 from ventas.models import PedidoVenta
 from tercero.models import Cliente
@@ -20,12 +20,18 @@ class mis_pedidos(ListAPIView):
 	def get_queryset(self,*args,**kwargs):
 		try:
 			cliente = Cliente.objects.get(usuario=self.request.user.pk)
-			queryset_list = PedidoVenta.objects.filter(cliente_id=cliente.pk)
+			queryset_list = PedidoVenta.objects.filter(cliente_id=cliente.pk).order_by('-fecha')
 			return queryset_list
 		except Cliente.DoesNotExist:
 			raise CustomException(detail="El usuario no está creado como cliente",field="usuario_no_cliente")
 		except Exception:
 			raise CustomException(detail="No tiene pedidos")
+
+class PedidoVentaDetalleView(RetrieveAPIView):
+	queryset = PedidoVenta.objects.all()
+	serializer_class = PedidoVentaDetalleSerializer
+	permission_classes = [IsAuthenticated]
+	lookup_field = 'idPedidoVenta'
 
 
 

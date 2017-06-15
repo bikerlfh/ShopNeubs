@@ -2,11 +2,12 @@ from inventario.models import Categoria,Producto,SaldoInventario
 from rest_framework.serializers import (ModelSerializer, HyperlinkedIdentityField,
 										SerializerMethodField,ValidationError,IntegerField)
 from inventario.models import SaldoInventario
+from api.inventario.serializers import ProductoSimpleSerializer
 from ventas.models import PedidoVenta,PedidoVentaPosicion,EstadoPedidoVenta,MotivoCancelacionPedidoVenta
 from ventas.pedidoventamanager import PedidoVentaManager
 
 class PedidoVentaListSerializer(ModelSerializer):
-	#cliente = SerializerMethodField()
+	urlDetalle = HyperlinkedIdentityField(read_only=True,view_name='pedido_detalle',lookup_field='idPedidoVenta')
 	idCliente = SerializerMethodField()
 	estadoPedidoVenta = SerializerMethodField()
 	numeroProductos = SerializerMethodField()
@@ -26,6 +27,7 @@ class PedidoVentaListSerializer(ModelSerializer):
 			'fecha',
 			'fechaAutorizacion',
 			'motivoCancelacionPedidoVenta',
+			'urlDetalle',
 			
 		]
 	def get_idCliente(self,obj):
@@ -71,62 +73,40 @@ class PedidoVentaListSerializer(ModelSerializer):
 		return validated_data
 
 
-		
-# class PedidoVentaPosicionSerializer(ModelSerializer):
-# 	pedidoVenta = IntegerField()
-# 	idSaldoInventario = IntegerField()
-# 	motivoCancelacionPedidoVenta = SerializerMethodField()
-# 	class Meta:
-# 		model = PedidoVentaPosicion
-# 		fields =[
-# 			'pk',
-# 			'pedidoVenta',
-# 			'idSaldoInventario',
-# 			'cantidad',
-# 			'costoTotal',
-# 			'cancelado',
-# 			'motivoCancelacionPedidoVenta',
-# 		]
+class PedidoVentaPosicionSerializer(ModelSerializer):
+	producto = ProductoSimpleSerializer()
+	idSaldoInventario = SerializerMethodField()
+	motivoCancelacionPedidoVenta = SerializerMethodField()
+	class Meta:
+		model=PedidoVentaPosicion
+		fields=[
+			'idPedidoVentaPosicion',
+			'producto',
+			'cantidad',
+			'idSaldoInventario',
+			'costoTotal',
+			'cancelado',
+			'motivoCancelacionPedidoVenta'
 
-# 	def get_motivoCancelacionPedidoVenta(self,obj):
-# 		return obj.motivoCancelacionPedidoVenta.descripcion
+		]
+	def get_motivoCancelacionPedidoVenta(self,obj):
+		if obj.motivoCancelacionPedidoVenta:
+			return obj.motivoCancelacionPedidoVenta.descripcion
+		return None
+	def get_idSaldoInventario(self,obj):
+		return SaldoInventario.objects.get(producto=obj.producto_id,proveedor = obj.proveedor_id).pk
+"""
+Serializer para el detalle del pedido.
+No es necesario visualizar todos los campos, solo las posiciones
+"""
+class PedidoVentaDetalleSerializer(ModelSerializer):
+	pedidoVentaPosicion = SerializerMethodField()
+	class Meta:
+		model=PedidoVenta
+		fields=[
+			'idPedidoVenta',
+			'pedidoVentaPosicion'
+		]
 
-# 	def validate_idPedidoVenta(self,value):
-# 		data = self.get_initial()
-# 		pedidoVenta = data.get("pedidoVenta")
-
-# 		if not PedidoVenta.objects.filter(pk = pedidoVenta).exists():
-# 			raise ValidationError("No existe el pedido venta %s" % pedidoVenta)
-# 		return value
-# 	def validate_idSaldoInventario(self,value):
-# 		data = self.get_initial()
-# 		idSaldoInventario = data.get("idSaldoInventario")
-
-# 		if not SaldoInventario.objects.filter(pk = idSaldoInventario).exists():
-# 			raise ValidationError("No existe el saldo inventario %s" % idSaldoInventario)
-# 		return value
-
-	# def create(self,validated_data):
-	# 	idPedidoVenta = validated_data['idPedidoVenta']
-	# 	idSaldoInventario = validated_data['idSaldoInventario']
-	# 	cantidad = validated_data['cantidad']
-	# 	costoTotal = validated_data['costoTotal']
-	# 	cancelado = validated_data['cancelado']
-
-	# 	pedidoVenta = PedidoVenta.objects.get(pk = idPedidoVenta)
-	# 	saldoInventario = SaldoInventario.objects.get(pk=idSaldoInventario)
-
-	# 	posicion = PedidoVentaPosicion(pedidoVenta=pedidoVenta,
-	# 								   producto=saldoInventario.producto,
-	# 								   proveedor=saldoInventario.proveedor,
-	# 								   cantidad=cantidad,
-	# 								   costoTotal=costoTotal,
-	# 								   cancelado = cancelado)
-	# 	posicion.save()
-	# 	return validated_data
-
-
-
-
-
-
+	def get_pedidoVentaPosicion(self,obj):
+		return (PedidoVentaPosicionSerializer(instance=p).data for p in PedidoVentaPosicion.objects.filter(pedidoVenta_id=obj.pk))
