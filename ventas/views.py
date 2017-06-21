@@ -99,7 +99,7 @@ def solicitud_pedido(request):
 	pedidoVenta = PedidoVentaManager(request.user.pk)
 	# se agregan los detalles del pedido
 	for item in cart.items:
-		pedidoVenta.add_posicion(item.saldoInventario.producto,item.saldoInventario.proveedor,item.cantidad,item.valor_total)
+		pedidoVenta.add_posicion(item.saldoInventario,item.cantidad)
 	# Se guarda el pedido
 	if pedidoVenta.save():
 		# se elimina el carro

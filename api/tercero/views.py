@@ -193,9 +193,7 @@ def PerfilUpdateView(request):
 		cliente.municipio=municipio
 		cliente.save()
 
-		cliente_datos= {
-			"idCliente": cliente.pk,
-		}
+		cliente_datos = { "idCliente": cliente.pk }
 	except Exception as e:
 		transaction.rollback()
 		raise CustomException(detail=e)

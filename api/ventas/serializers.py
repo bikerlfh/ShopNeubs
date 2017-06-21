@@ -1,9 +1,13 @@
 from inventario.models import Categoria,Producto,SaldoInventario
-from rest_framework.serializers import (ModelSerializer, HyperlinkedIdentityField,
-										SerializerMethodField,ValidationError,IntegerField)
+from rest_framework.serializers import (Serializer,ListSerializer,ModelSerializer, HyperlinkedIdentityField,
+										SerializerMethodField,ValidationError,IntegerField,DecimalField)
 from inventario.models import SaldoInventario
 from api.inventario.serializers import ProductoSimpleSerializer
 from ventas.models import PedidoVenta,PedidoVentaPosicion,EstadoPedidoVenta,MotivoCancelacionPedidoVenta
+from ventas.pedidoventamanager import PedidoVentaManager
+from api.exceptions import CustomException
+
+from ventas.send_mail_venta import send_email_pedido_venta
 from ventas.pedidoventamanager import PedidoVentaManager
 
 class PedidoVentaListSerializer(ModelSerializer):
@@ -102,11 +106,59 @@ No es necesario visualizar todos los campos, solo las posiciones
 class PedidoVentaDetalleSerializer(ModelSerializer):
 	pedidoVentaPosicion = SerializerMethodField()
 	class Meta:
-		model=PedidoVenta
-		fields=[
+		model = PedidoVenta
+		fields = [
 			'idPedidoVenta',
 			'pedidoVentaPosicion'
 		]
 
 	def get_pedidoVentaPosicion(self,obj):
 		return (PedidoVentaPosicionSerializer(instance=p).data for p in PedidoVentaPosicion.objects.filter(pedidoVenta_id=obj.pk))
+
+
+""" 
+	*****************************************************
+	SERIALIZERS DE SOLICITUD PEDIDO VENTA
+    ***************************************************** 
+"""
+class PosicionPedidoListSerializer(ListSerializer):
+	many = True
+	#child = PedidoVentaPosicionCreateSerializer()
+
+	# retorna el numero del pedido
+	# -1 si no se guardó el pedido
+	def create(self, validated_data):
+		# se instancia el PedidoVentaManager pasandole el usuario_id
+		pedidoVentaManager = PedidoVentaManager(validated_data[0].get('user'))
+		for item in validated_data:
+			saldoInventario = SaldoInventario.objects.get(pk=item.get('idSaldoInventario'))
+			pedidoVentaManager.add_posicion(saldoInventario,item.get('cantidad'))
+
+		numeroPedido = -1
+		if pedidoVentaManager.save():
+			send_email_pedido_venta(pedidoVentaManager.get_pedidoVenta())
+			numeroPedido = pedidoVentaManager.get_numero_pedido()
+		return numeroPedido
+
+class PosicionPedidoSerializer(Serializer):
+	cantidad = IntegerField()
+	idSaldoInventario = IntegerField()
+
+	class Meta:
+		list_serializer_class = PosicionPedidoListSerializer
+
+	# retorna el numero del pedido
+	# -1 si no se guardó el pedido
+	def create(self, validated_data):
+		pedidoVentaManager = PedidoVentaManager(validated_data.get('user'))
+		saldoInventario = SaldoInventario.objects.get(pk=validated_data.get('idSaldoInventario'))
+		pedidoVentaManager.add_posicion(saldoInventario,validated_data.get('cantidad'))
+
+		numeroPedido = -1
+		if pedidoVentaManager.save():
+			send_email_pedido_venta(pedidoVentaManager.get_pedidoVenta())
+			numeroPedido = pedidoVentaManager.get_numero_pedido()
+		return numeroPedido
+
+
+

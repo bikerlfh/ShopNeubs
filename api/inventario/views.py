@@ -3,7 +3,7 @@ from rest_framework.permissions import IsAuthenticated,IsAdminUser,IsAuthenticat
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.filters import SearchFilter,OrderingFilter
-from .serializers import CategoriaSerializer,MarcaSerializer,ProductoDetailSerializer,SaldoInventarioListSerializer,SaldoInventarioDetailSerializer
+from .serializers import CategoriaSerializer,MarcaSerializer,ProductoDetailSerializer,SaldoInventarioListSerializer,SaldoInventarioDetailSerializer,SaldoInventarioListSimpleSerializer
 from inventario.models import Categoria,Marca,Producto,SaldoInventario,Marca,Promocion
 from django.db.models import Q
 from api.pagination import CustomPageNumberPagination
@@ -13,7 +13,10 @@ from functools import reduce
 from django.conf import settings
 
 from django.utils.decorators import method_decorator
+from rest_framework.decorators import api_view
 from django.views.decorators.cache import cache_page
+import json
+
 
 SESSION_CACHE_TIEMOUT = getattr(settings,'SESSION_CACHE_TIEMOUT',7200)
 
@@ -64,7 +67,7 @@ class producto_marca(ListAPIView):
 	def get_queryset(self, *args,**kwargs):
 		marca = self.request.GET.get('idMarca',None)
 		if not marca:
-			raise CustomException('Hace falta especificar la variable','idMarca')
+			raise CustomException(detail='Hace falta especificar la variable',field='idMarca')
 		return SaldoInventario.objects.filter_products(producto__marca = marca)
 
 	# Se cachea
@@ -155,3 +158,12 @@ class search_producto(ListAPIView):
 	@method_decorator(cache_page(SESSION_CACHE_TIEMOUT))
 	def dispatch(self,request, *args, **kwargs):
 		return super(search_producto, self).dispatch(request,*args, **kwargs)
+
+# recibe por post un parametro data = [{"idSaldoInventario":130},{"idSaldoInventario":129}]
+@api_view(['POST'])
+def saldo_inventario_simple(request):
+	if not request.POST.get("data",None):
+		raise CustomException(detail='Hace falta especificar los datos')
+	data = json.loads(request.POST.get("data",None))
+	listado = (SaldoInventarioListSimpleSerializer(instance= p).data for p in  SaldoInventario.objects.filter(pk__in = list(d.get("idSaldoInventario") for d in data)))
+	return Response(data=listado,status = 200)

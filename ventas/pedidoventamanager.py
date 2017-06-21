@@ -12,15 +12,20 @@ class PedidoVentaManager:
 		self.__pedidoVenta = PedidoVenta()
 		self.__pedidoVenta.listadoPedidoVentaPosicion = []
 		if idUsuario != None:
-			self.__cliente = Cliente.objects.get(usuario = idUsuario)
+			self.__cliente = Cliente.objects.get(usuario_id = idUsuario)
 			self.__pedidoVenta.cliente = self.__cliente
 			self.__pedidoVenta.idUsuarioCreacion = idUsuario
 		self.error = ''
 
 	# Agrega posiciones al Pedido Venta
-	def add_posicion(self,producto,proveedor,cantidad,costoTotal):
-		self.__pedidoVenta.listadoPedidoVentaPosicion.append(PedidoVentaPosicion(producto = producto,proveedor = proveedor,
-									   											 cantidad = cantidad,costoTotal = costoTotal))
+	def add_posicion(self,saldoInventario,cantidad):
+		costoTotal = saldoInventario.precioVentaUnitario
+		if saldoInventario.precioOferta > 0:
+			costoTotal = saldoInventario.precioOferta
+		self.__pedidoVenta.listadoPedidoVentaPosicion.append(PedidoVentaPosicion(producto = saldoInventario.producto,
+																				 proveedor = saldoInventario.proveedor,
+									   											 cantidad = cantidad,
+									   											 costoTotal = costoTotal))
 	#@transaction.atomic
 	def save(self):
 		transaction.set_autocommit(False)

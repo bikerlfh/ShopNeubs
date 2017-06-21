@@ -107,3 +107,13 @@ class SaldoInventarioListSerializer(ModelSerializer):
 			'precioOferta',
 			'estado',
 		]
+# se usa para actualizar los precios del carrito
+class SaldoInventarioListSimpleSerializer(ModelSerializer):
+	class Meta:
+		model = SaldoInventario
+		fields = [
+			'idSaldoInventario',
+			'precioVentaUnitario',
+			'precioOferta',
+			'estado',
+		]
