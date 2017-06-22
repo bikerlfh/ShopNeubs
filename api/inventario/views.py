@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.filters import SearchFilter,OrderingFilter
 from .serializers import CategoriaSerializer,MarcaSerializer,ProductoDetailSerializer,SaldoInventarioListSerializer,SaldoInventarioDetailSerializer,SaldoInventarioListSimpleSerializer
-from inventario.models import Categoria,Marca,Producto,SaldoInventario,Marca,Promocion
+from inventario.models import Categoria,Marca,Producto,SaldoInventario,Marca,Promocion,ProductoReview
 from django.db.models import Q
 from api.pagination import CustomPageNumberPagination
 from api.exceptions import CustomException
@@ -167,3 +167,39 @@ def saldo_inventario_simple(request):
 	data = json.loads(request.POST.get("data",None))
 	listado = (SaldoInventarioListSimpleSerializer(instance= p).data for p in  SaldoInventario.objects.filter(pk__in = list(d.get("idSaldoInventario") for d in data)))
 	return Response(data=listado,status = 200)
+
+
+
+class oferta_index(ListAPIView):
+	#queryset = SaldoInventario.objects.filter_products()
+	serializer_class = SaldoInventarioListSerializer
+	pagination_class = CustomPageNumberPagination
+	def get_queryset(self, *args,**kwargs):
+		listado_promociones = Promocion.objects.only('saldoInventario_id').filter(fechaFin__isnull=True,estado=True,saldoInventario__precioOferta__gt=0,saldoInventario__estado=True).order_by('-fechaInicio')[:10]
+		return SaldoInventario.objects.filter_products(pk__in=list(p.saldoInventario_id for p in listado_promociones))
+
+	# Se cachea
+	@method_decorator(cache_page(SESSION_CACHE_TIEMOUT))
+	def dispatch(self,request, *args, **kwargs):
+		return super(oferta_index, self).dispatch(request,*args, **kwargs)
+
+class mas_vistos_index(ListAPIView):
+	#queryset = SaldoInventario.objects.filter_products()
+	serializer_class = SaldoInventarioListSerializer
+	pagination_class = CustomPageNumberPagination
+	def get_queryset(self, *args,**kwargs):
+		top = 10
+		review = ProductoReview.objects.all().order_by('-numeroVista')[:25].values_list('producto',flat=True)
+		listado_idSaldoInventario = []
+		for idProducto in review:
+			if SaldoInventario.objects.filter_products(estado=True,producto=idProducto).exists():
+				listado_idSaldoInventario.append(SaldoInventario.objects.filter_products(estado=True,producto=idProducto).only('pk').first().pk)
+			if len(listado_idSaldoInventario) >= top:
+				break
+		print(listado_idSaldoInventario)
+		return SaldoInventario.objects.filter_products(estado=True,pk__in = listado_idSaldoInventario)
+
+	# Se cachea
+	@method_decorator(cache_page(SESSION_CACHE_TIEMOUT))
+	def dispatch(self,request, *args, **kwargs):
+		return super(mas_vistos_index, self).dispatch(request,*args, **kwargs)

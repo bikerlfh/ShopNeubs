@@ -18,13 +18,16 @@ urlpatterns = [
 	url(r'^categoria/(?P<pk>[\d]{1,2})/$', views_inventario.CategoriaDetailView.as_view(), name = 'categoria_detalle'),
 
 	url(r'^producto/(?P<pk>[\d]{1,4})/$', views_inventario.producto_detalle.as_view(), name = 'producto_detalle'),
-
 	url(r'^producto-simple/$', views_inventario.saldo_inventario_simple, name = 'producto_simple'),
 	
 
 	url(r'^search/$', views_inventario.search_producto.as_view(), name = 'search_producto'),
 	url(r'^producto-marca/$', views_inventario.producto_marca.as_view(), name = 'producto_marca'),
 	url(r'^ofertas/$', views_inventario.oferta.as_view(), name = 'oferta'),
+
+	url(r'^index-oferta/$', views_inventario.oferta_index.as_view(), name = 'index_oferta'),
+	url(r'^index-mas-vistos/$', views_inventario.mas_vistos_index.as_view(), name = 'index_mas_vistos'),
+
 	
 	#url(r'^ventas/solicitud/$', views_ventas.solicitud_pedido.as_view(), name = 'solicitud_pedido'),
 	url(r'^ventas/solicitud/$', views_ventas.PedidoVentaCreateView, name = 'solicitud_pedido'),

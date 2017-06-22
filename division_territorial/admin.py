@@ -11,6 +11,7 @@ class DepartamentoAdmin(admin.ModelAdmin):
 	list_display = ['codigo','descripcion','pais']
 	ordering = ['pais','codigo']
 	search_fields = ['codigo','descripcion']
+	list_filter = ['pais']
 
 admin.site.register(Departamento,DepartamentoAdmin)
 
@@ -18,6 +19,7 @@ class MunicipioAdmin(admin.ModelAdmin):
 	list_display = ['codigo','descripcion','departamento']
 	ordering = ['departamento','codigo']
 	search_fields = ['codigo','descripcion']
+	list_filter = ['departamento']
 
 admin.site.register(Municipio,MunicipioAdmin)
 
