@@ -2,7 +2,7 @@ from rest_framework.generics import ListAPIView,RetrieveAPIView,CreateAPIView
 from rest_framework.serializers import ValidationError
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK,HTTP_201_CREATED,HTTP_400_BAD_REQUEST
-from .serializers import PedidoVentaListSerializer,PedidoVentaDetalleSerializer,PosicionPedidoSerializer
+from .serializers import PedidoVentaSimpleSerializer,PedidoVentaDetalleSerializer,PedidoVentaCompletoSerializer,PosicionPedidoSerializer
 from rest_framework.permissions import IsAuthenticated,IsAdminUser,IsAuthenticatedOrReadOnly,AllowAny
 from ventas.models import PedidoVenta
 from tercero.models import Cliente
@@ -19,7 +19,7 @@ import json
 User = get_user_model()
 
 class mis_pedidos(ListAPIView):
-	serializer_class = PedidoVentaListSerializer
+	serializer_class = PedidoVentaSimpleSerializer
 	permission_classes = [IsAuthenticated]
 
 	def get_queryset(self,*args,**kwargs):
@@ -35,6 +35,12 @@ class mis_pedidos(ListAPIView):
 class PedidoVentaDetalleView(RetrieveAPIView):
 	queryset = PedidoVenta.objects.all()
 	serializer_class = PedidoVentaDetalleSerializer
+	permission_classes = [IsAuthenticated]
+	lookup_field = 'idPedidoVenta'
+
+class PedidoVentaCompletoView(RetrieveAPIView):
+	queryset = PedidoVenta.objects.all()
+	serializer_class = PedidoVentaCompletoSerializer
 	permission_classes = [IsAuthenticated]
 	lookup_field = 'idPedidoVenta'
 
@@ -55,9 +61,9 @@ def PedidoVentaCreateView(request):
 	serializer = PosicionPedidoSerializer(data=data,many=isinstance(data,list))
 	if serializer.is_valid():
 		# se guarda el pedido
-		numeroPedido = serializer.save(user=request.user.pk)
-		if numeroPedido != -1:
-			return Response(data={'numeroPedido':numeroPedido},status = HTTP_201_CREATED)
+		pedidoVenta = serializer.save(user=request.user.pk)
+		if pedidoVenta != None:
+			return Response(data={'idPedidoVenta':pedidoVenta.pk,'numeroPedido':pedidoVenta.numeroPedido},status = HTTP_201_CREATED)
 		else:
 			raise CustomException(detail="Error al guardar el pedido venta")
 	else:

@@ -31,7 +31,8 @@ urlpatterns = [
 
 
 	url(r'^mis-pedidos/$', views_ventas.mis_pedidos.as_view(), name = 'mis_pedidos'),
-	url(r'^pedido/(?P<idPedidoVenta>[\d]{1,4})/$', views_ventas.PedidoVentaDetalleView.as_view(), name = 'pedido_detalle'),
+	url(r'^pedido-simple/(?P<idPedidoVenta>[\d]{1,4})/$', views_ventas.PedidoVentaDetalleView.as_view(), name = 'pedido_detalle_simple'),
+	url(r'^pedido/(?P<idPedidoVenta>[\d]{1,4})/$', views_ventas.PedidoVentaCompletoView.as_view(), name = 'pedido_detalle'),
 	
 
 	url(r'^usuario/(?P<pk>[\d]{1,4})/$', views_tercero.UsuarioDetailView.as_view(), name = 'usuario_detalle'),

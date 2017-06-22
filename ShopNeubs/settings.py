@@ -70,8 +70,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_hosts.middleware.HostsResponseMiddleware',
-]
 
+    # valida la Seguridad HTTPS
+    'ShopNeubs.middleware.SecureRequiredMiddleware',
+]
+# True todas las peticiones deben ser HTTPS
+HTTPS_SUPPORT = True
 ROOT_URLCONF = 'ShopNeubs.urls'
 ROOT_HOSTCONF = 'ShopNeubs.hosts'
 DEFAULT_HOST = 'www'
@@ -134,8 +138,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
+         'rest_framework.renderers.JSONRenderer',
+         #'rest_framework.renderers.BrowsableAPIRenderer',
     ),
     # 'DEFAULT_PARSER_CLASSES': (
     #     #'rest_framework.parsers.JSONParser',
