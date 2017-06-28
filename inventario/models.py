@@ -137,14 +137,22 @@ class SaldoInventarioManager(models.Manager):
 		listado_pk_exclude = []
 		for sa in listado_saldo_inventario:
 			# Si existe mas de un saldo inventario con el mismo producto
-			if listado_saldo_inventario.filter(producto = sa.producto_id).count()>1 and not sa.pk in listado_pk_exclude:
-				# Si el saldo inventario actual esta con estado False, se debe excluir
-				if listado_saldo_inventario.filter(pk=sa.pk,estado = False).exists():
+			if listado_saldo_inventario.filter(producto_id = sa.producto_id).count()>1 and not sa.pk in listado_pk_exclude:
+
+				""" Si el saldo inventario actual esta con estado False o
+				    si existe un SA con el mismo producto y con un precioOferta menor al precioVentaUnitario, se debe excluir
+				"""
+				menorPrecio = sa.precioVentaUnitario
+				if sa.precioOferta != None and sa.precioOferta > 0:
+					menorPrecio = sa.precioOferta
+				if not sa.estado or listado_saldo_inventario.filter(producto_id = sa.producto_id,
+																    precioOferta__gt = 0, 
+																    precioOferta__lt = menorPrecio,
+																    estado=True).exclude(pk=sa.pk).exists():
 					listado_pk_exclude.append(sa.pk)
-					#listado_saldo_inventario = listado_saldo_inventario.exclude(pk=sa.pk)
 				else:
 					# Se filtran los saldos inventarios a excluir (dejando el actual en la lista)
-					for exclude in listado_saldo_inventario.filter(producto = sa.producto_id).exclude(pk=sa.pk).values_list('pk',flat = True):
+					for exclude in listado_saldo_inventario.filter(producto_id = sa.producto_id).exclude(pk=sa.pk).values_list('pk',flat = True):
 						listado_pk_exclude.append(exclude)
 
 		return listado_saldo_inventario.exclude(pk__in = listado_pk_exclude)
