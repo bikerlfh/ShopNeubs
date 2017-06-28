@@ -53,6 +53,8 @@ class CategoriaDetailView(RetrieveAPIView):
 class producto_detalle(RetrieveAPIView):
 	queryset = SaldoInventario.objects.filter_products()
 	serializer_class = SaldoInventarioDetailSerializer
+	lookup_field = 'pk'
+	lookup_url_kwarg = 'pk'
 
 	# Se cachea
 	@method_decorator(cache_page(SESSION_CACHE_TIEMOUT))
