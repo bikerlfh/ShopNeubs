@@ -241,6 +241,31 @@ class Garantia(models.Model):
 	class Meta:
 		db_table = 'Garantia'
 
+
+class PromocionManager(models.Manager):
+	def filter(self,*args,**kwargs):
+		# Se filtran las promociones que esten activas
+		return super(PromocionManager,self).filter(*args,**kwargs).filter(fechaFin__isnull=True,estado = True)
+
+	# Filtra las promociones
+	# Si el filtro trae una promoción, pero existe otra con el mismo producto y de menor valor,
+	# visualiza ésta ultima
+	def filter_promocion(self,*args,**kwargs):
+		# Se consulta el saldo inventario ordenandolo por precioVentaUnitario (para mostrar siempre el de menor precio)
+		listado_promocion = self.filter(*args,**kwargs)
+		listado_pk = []
+		listado_pk_exclude = []
+		for p in listado_promocion:
+			if Promocion.objects.filter(saldoInventario__producto_id = p.saldoInventario.producto_id,
+										fechaFin__isnull=True,estado=True,
+										precioOferta__lt=p.precioOferta).exclude(pk=p.pk).exists():
+				listado_pk.append(Promocion.objects.filter(saldoInventario__producto_id = p.saldoInventario.producto_id,
+															fechaFin__isnull=True,estado=True,
+															precioOferta__lt=p.precioOferta).exclude(pk=p.pk)[0].pk)
+			else:
+				listado_pk.append(p.pk)
+		return Promocion.objects.filter(pk__in=listado_pk)
+
 class Promocion(models.Model):
 	idPromocion = models.BigAutoField(primary_key=True)
 	saldoInventario = models.ForeignKey("SaldoInventario",db_column='idSaldoInventario',on_delete = models.PROTECT,verbose_name='Saldo Inventario')
@@ -250,6 +275,7 @@ class Promocion(models.Model):
 	fechaFin = models.DateTimeField(null = True,blank = True,verbose_name = 'Fecha Fin')
 	estado = models.BooleanField(default = True)
 
+	objects = PromocionManager()
 	def __str__(self):
 		return '%s'% self.saldoInventario
 	def save(self,*args,**kwargs):

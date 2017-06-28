@@ -160,7 +160,9 @@ def busqueda_asincrona_producto(request):
 	if request.GET.get("promocion",False):
 		if not cache.get('index_promocion'):
 			#listado_saldo_inventario = SaldoInventario.objects.filter_products(precioOferta__gt=0,estado=True).values(*fields)[:top]
-			listado_promociones = Promocion.objects.only('saldoInventario_id').filter(fechaFin__isnull=True,estado=True,saldoInventario__precioOferta__gt=0,saldoInventario__estado=True).order_by('-fechaInicio')[:top]
+			listado_promociones = Promocion.objects.filter_promocion(fechaFin__isnull=True,estado=True,
+																	 saldoInventario__precioOferta__gt=0,
+																	 saldoInventario__estado=True).only('saldoInventario_id').order_by('-fechaInicio')[:top]
 			listado_saldo_inventario = SaldoInventario.objects.filter_products(pk__in=list(p.saldoInventario_id for p in listado_promociones)).values(*fields)
 			cache.set('index_promocion',listado_saldo_inventario,SESSION_CACHE_TIEMOUT)
 		else:

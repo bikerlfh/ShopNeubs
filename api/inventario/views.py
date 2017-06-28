@@ -177,7 +177,10 @@ class oferta_index(ListAPIView):
 	serializer_class = SaldoInventarioListSerializer
 	pagination_class = CustomPageNumberPagination
 	def get_queryset(self, *args,**kwargs):
-		listado_promociones = Promocion.objects.only('saldoInventario_id').filter(fechaFin__isnull=True,estado=True,saldoInventario__precioOferta__gt=0,saldoInventario__estado=True).order_by('-fechaInicio')[:10]
+		listado_promociones = Promocion.objects.filter_promocion(fechaFin__isnull=True,
+																 estado=True,
+																 saldoInventario__precioOferta__gt=0,
+																 saldoInventario__estado=True).only('saldoInventario_id').order_by('-fechaInicio')[:10]
 		return SaldoInventario.objects.filter_products(pk__in=list(p.saldoInventario_id for p in listado_promociones))
 
 	# Se cachea
