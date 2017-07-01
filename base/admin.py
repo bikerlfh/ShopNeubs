@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Carousel, ApiTabla,ApiSincronizacion
+from .forms import ApiBannerForm
+from .models import Carousel, ApiTabla,ApiSincronizacion,ApiBanner
 from django.contrib.admin.models import LogEntry
 # Register your models here.
 
@@ -28,7 +29,7 @@ admin.site.register(ApiTabla,DefaultAdmin)
 
 class ApiSincronizacionAdmin(admin.ModelAdmin):
 	fieldsets  = [
-		('',{'fields':['tabla','fecha','ultima']}),
+		('',{'fields':['tabla','ultima']}),
 	]
 	list_display = ['tabla','fecha','ultima']
 	ordering = ['-fecha','ultima']
@@ -36,6 +37,21 @@ class ApiSincronizacionAdmin(admin.ModelAdmin):
 	list_filter = ['tabla']
 
 admin.site.register(ApiSincronizacion,ApiSincronizacionAdmin)
+
+class ApiBannerAdmin(admin.ModelAdmin):
+	form = ApiBannerForm
+	fieldsets  = [
+		('',{'fields':['imagen','isClickable','saldoInventario','urlRequest','estado']}),
+	]
+	list_display = ['imagen','isClickable','saldoInventario','urlRequest','fecha','estado']
+	ordering = ['estado','-fecha']
+	#search_fields = ['tabla','fecha']
+	list_filter = ['saldoInventario']
+
+	def has_delete_permission(self, request, obj=None):
+		return False
+
+admin.site.register(ApiBanner,ApiBannerAdmin)
 
 
 class logEntryAdmin(admin.ModelAdmin):

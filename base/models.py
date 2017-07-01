@@ -44,7 +44,7 @@ class ApiTabla(models.Model):
 class ApiSincronizacion(models.Model):
 	idApiSincronizacion = models.AutoField(primary_key = True)
 	tabla = models.ForeignKey("ApiTabla",db_column = 'idApiTabla',blank = True,null = True,on_delete= models.CASCADE,verbose_name = 'API Tabla')
-	fecha = models.DateTimeField(blank = False,null = False,verbose_name = 'Fecha Sincronización')
+	fecha = models.DateTimeField(auto_now_add = True,blank = False,null = False,verbose_name = 'Fecha Sincronización')
 	ultima = models.BooleanField(default = True,blank=False,null=False)
 
 	def __str__(self):
@@ -64,3 +64,53 @@ class ApiSincronizacion(models.Model):
 			except Exception as e:
 				pass
 		super(ApiSincronizacion,self).save(*args,**kwargs)
+
+# banner para los dispositivos moviles
+class ApiBanner(models.Model):
+	idApiBanner = models.AutoField(primary_key=True)
+	imagen = FilerImageField(null=False, blank=False)
+	isClickable = models.BooleanField(default=False,blank=False,null = False)
+	saldoInventario = models.ForeignKey("inventario.SaldoInventario",db_column = 'idSaldoInventario',blank=True,null=True,on_delete=models.CASCADE,verbose_name = 'Saldo Inventario')
+	urlRequest = models.CharField(max_length = 256,blank = True,null=True)
+	fecha = models.DateTimeField(auto_now_add = True,blank = False,null=False)
+	estado = models.BooleanField(default = True,blank=False,null=False)
+
+	def __str__(self):
+		return 'imagen (%s) fecha %s' % (self.imagen,str(self.fecha))
+
+	class Meta:
+		db_table = 'ApiBanner'
+		verbose_name = 'Api Banner'
+		verbose_name_plural = verbose_name
+
+	def save(self,*args,**kwargs):
+		self.guardar_apiSincronizacion()
+		super(ApiBanner,self).save(*args,**kwargs)
+
+	# def delete(self, *args, **kwargs):
+	# 	# se elimina la imagen
+	# 	#self.imagen.delete()
+	# 	self.guardar_apiSincronizacion()
+	# 	super(ApiBanner, self).delete(*args, **kwargs)
+
+	# Guarda un registro en tabla apiSincronización para indicar
+	# la actualización de los datos de ésta tabla
+	def guardar_apiSincronizacion(self):
+		try:
+			# se consulta la ApiTabla (ApiBanner "codigo = 04")
+			apiTabla = ApiTabla.objects.get(codigo = '04')
+			# se agrega una nueva apiSincronizacion
+			apiSincronizacion = ApiSincronizacion(tabla = apiTabla,ultima = True)
+			apiSincronizacion.save()
+		except Exception as e:
+			pass
+
+
+	def generate_thumbnails(model, pk, field):
+	    instance = model._default_manager.get(pk=pk)
+	    fieldfile = getattr(instance, field)
+	    generate_aliases_apibanner(fieldfile)
+
+
+
+

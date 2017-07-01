@@ -1,8 +1,13 @@
 from rest_framework.serializers import ModelSerializer, HyperlinkedIdentityField,SerializerMethodField,ValidationError
 from inventario.models import Categoria,Producto,SaldoInventario
-from base.models import ApiTabla,ApiSincronizacion
+from base.models import ApiTabla,ApiSincronizacion,ApiBanner
 from django.contrib.auth import get_user_model
 from datetime import date,datetime
+from django.conf import settings
+#from easy_thumbnails.templatetags.thumbnail import thumbnail_url
+
+
+THUMBNAIL_DEFAULT_STORAGE = getattr(settings,'THUMBNAIL_DEFAULT_STORAGE','http://192.168.1.50:8000')
 
 User = get_user_model()
 
@@ -55,6 +60,33 @@ class ApiSincronizacionSerializer(ModelSerializer):
 			'ultima'
 		]
 
+	def get_fecha(self,obj):
+		#date1 = datetime(obj.fecha)
+		return obj.fecha.strftime('%d-%m-%Y %H:%M:%S')
+
+class ApiBannerSerializer(ModelSerializer):
+	urlImagen = SerializerMethodField()
+	idSaldoInventario = SerializerMethodField()
+	fecha = SerializerMethodField()
+	class Meta:
+		model = ApiBanner
+		fields = [
+			'idApiBanner',
+			'urlImagen',
+			'isClickable',
+			'idSaldoInventario',
+			'urlRequest',
+			'fecha',
+			'estado',
+		]
+	def get_urlImagen(self,obj):
+		if getattr(settings,'DEBUG',False):	
+		 	return THUMBNAIL_DEFAULT_STORAGE + obj.imagen.url
+		else:
+		 	return obj.imagen.url
+
+	def get_idSaldoInventario(self,obj):
+		return obj.saldoInventario_id
 	def get_fecha(self,obj):
 		#date1 = datetime(obj.fecha)
 		return obj.fecha.strftime('%d-%m-%Y %H:%M:%S')

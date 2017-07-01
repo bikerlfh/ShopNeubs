@@ -1,7 +1,7 @@
 from rest_framework.generics import ListAPIView,RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated,IsAdminUser,IsAuthenticatedOrReadOnly,AllowAny
-from .serializers import ApiSincronizacionSerializer,ApiTablaSerializer
-from base.models import ApiSincronizacion,ApiTabla
+from .serializers import ApiSincronizacionSerializer,ApiTablaSerializer,ApiBannerSerializer
+from base.models import ApiSincronizacion,ApiTabla,ApiBanner
 from django.db.models import Q
 
 
@@ -21,3 +21,10 @@ class APISincronizacion(ListAPIView):
 		if self.request.GET.get('tabla',None):
 			filter_Q = filter_Q & Q(tabla_id = self.request.GET.get('tabla',None))
 		return ApiSincronizacion.objects.filter(filter_Q).order_by('-fecha')
+
+class APIBanner(ListAPIView):
+	serializer_class = ApiBannerSerializer
+
+	def get_queryset(self,*args,**kwargs):
+		queryset_list = ApiBanner.objects.all().order_by('-fecha')
+		return queryset_list

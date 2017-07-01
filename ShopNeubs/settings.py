@@ -243,7 +243,7 @@ THUMBNAIL_ALIASES = {
         # Imagen principal del producto detalle
         'producto_detalle': {'size': (350, 350),'crop':False,'upscale':True },
         # Imagen carousel
-        'carousel': {'size': (1800, 500),'crop':True,'upscale':True },  
+        'carousel': {'size': (1800, 500),'crop':True,'upscale':True },
     },   
 }
 
