@@ -111,6 +111,39 @@ class ApiBanner(models.Model):
 	    fieldfile = getattr(instance, field)
 	    generate_aliases_apibanner(fieldfile)
 
+class ApiSection(models.Model):
+	idApiSection = models.AutoField(primary_key = True)
+	title = models.CharField(max_length = 25,blank = False,null	= False)
+	subTitle = models.CharField(max_length = 50,blank = True,null	= True)
+	urlRequestProductos = models.CharField(max_length = 256,blank = False,null = False)
+	urlRequestMas = models.CharField(max_length = 256,blank = True,null	= True)
+	estado = models.BooleanField(default = True,blank=False,null=False)
+
+	def __str__(self):
+		return '%s - %s' % (self.title, self.subTitle)
+
+	class Meta:
+		db_table = 'ApiSection'
+		verbose_name = 'Api Section'
+		verbose_name_plural = 'Api Sections'
+
+	def save(self,*args,**kwargs):
+		self.guardar_apiSincronizacion()
+		super(ApiSection,self).save(*args,**kwargs)
+		
+	# Guarda un registro en tabla apiSincronización para indicar
+	# la actualización de los datos de ésta tabla
+	def guardar_apiSincronizacion(self):
+		try:
+			# se consulta la ApiSection (ApiBanner "codigo = 05")
+			apiTabla = ApiTabla.objects.get(codigo = '05')
+			# se agrega una nueva apiSincronizacion
+			apiSincronizacion = ApiSincronizacion(tabla = apiTabla,ultima = True)
+			apiSincronizacion.save()
+		except Exception as e:
+			pass
+
+
 
 
 

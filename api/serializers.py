@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer, HyperlinkedIdentityField,SerializerMethodField,ValidationError
 from inventario.models import Categoria,Producto,SaldoInventario
-from base.models import ApiTabla,ApiSincronizacion,ApiBanner
+from base.models import ApiTabla,ApiSincronizacion,ApiBanner,ApiSection
 from django.contrib.auth import get_user_model
 from datetime import date,datetime
 from django.conf import settings
@@ -90,5 +90,17 @@ class ApiBannerSerializer(ModelSerializer):
 	def get_fecha(self,obj):
 		#date1 = datetime(obj.fecha)
 		return obj.fecha.strftime('%d-%m-%Y %H:%M:%S')
+
+class ApiSectionSerializer(ModelSerializer):
+	class Meta:
+		model = ApiSection
+		fields = [
+			'idApiSection',
+			'title',
+			'subTitle',
+			'urlRequestProductos',
+			'urlRequestMas',
+			'estado',
+		]
 
 

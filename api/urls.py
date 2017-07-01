@@ -43,12 +43,16 @@ urlpatterns = [
 	url(r'^usuario/(?P<username>[\w]{1,25})/$', views_tercero.UsuarioDetailUsernameView.as_view(), name = 'usuario_detalle'),
 
 	#sincronizacion
-	url(r'^sync/banner/$', views_base.APIBanner.as_view(), name = 'api_banner'),
+
+	url(r'^sync/api-tabla/$', views_base.APITablaListView.as_view(), name = 'api_tabla'),
+	url(r'^sync/api-sincronizacion/$', views_base.APISincronizacionListView.as_view(), name = 'api_sincronizacion'),
 	url(r'^sync/categoria/$', views_inventario.CategoriaListView.as_view(), name = 'lista_categoria'),
 	url(r'^sync/marca/$', views_inventario.MarcaListView.as_view(), name = 'lista_marca'),
-	url(r'^sync/api-tabla/$', views_base.APITabla.as_view(), name = 'api_tabla'),
-	url(r'^sync/api-sincronizacion/$', views_base.APISincronizacion.as_view(), name = 'api_sincronizacion'),
 	url(r'^sync/pais/$', views_division_territorial.PaisListView.as_view(), name = 'sync_pais'),
+	
+	url(r'^sync/banner/$', views_base.APIBannerListView.as_view(), name = 'api_banner'),
+	url(r'^sync/section/$', views_base.APISectionListView.as_view(), name = 'api_section'),
+	
 	url(r'^sync/departamento/$', views_division_territorial.DepartamentoListView.as_view(), name = 'sync_departamento'),
 	url(r'^sync/municipio/$', views_division_territorial.MunicipioListView.as_view(), name = 'sync_municipio'),
 	url(r'^sync/tipo-documento/$', views_tercero.TipoDocumentoListView.as_view(), name = 'sync_tipo_documento'),

@@ -1,18 +1,18 @@
 from rest_framework.generics import ListAPIView,RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated,IsAdminUser,IsAuthenticatedOrReadOnly,AllowAny
-from .serializers import ApiSincronizacionSerializer,ApiTablaSerializer,ApiBannerSerializer
-from base.models import ApiSincronizacion,ApiTabla,ApiBanner
+from .serializers import ApiSincronizacionSerializer,ApiTablaSerializer,ApiBannerSerializer,ApiSectionSerializer
+from base.models import ApiSincronizacion,ApiTabla,ApiBanner,ApiSection
 from django.db.models import Q
 
 
-class APITabla(ListAPIView):
+class APITablaListView(ListAPIView):
 	serializer_class = ApiTablaSerializer
 
 	def get_queryset(self,*args,**kwargs):
 		queryset_list = ApiTabla.objects.all()
 		return queryset_list
 
-class APISincronizacion(ListAPIView):
+class APISincronizacionListView(ListAPIView):
 	serializer_class = ApiSincronizacionSerializer
 
 	def get_queryset(self,*args,**kwargs):
@@ -22,9 +22,14 @@ class APISincronizacion(ListAPIView):
 			filter_Q = filter_Q & Q(tabla_id = self.request.GET.get('tabla',None))
 		return ApiSincronizacion.objects.filter(filter_Q).order_by('-fecha')
 
-class APIBanner(ListAPIView):
+class APIBannerListView(ListAPIView):
 	serializer_class = ApiBannerSerializer
 
 	def get_queryset(self,*args,**kwargs):
-		queryset_list = ApiBanner.objects.all().order_by('-fecha')
-		return queryset_list
+		return ApiBanner.objects.all().order_by('-fecha')
+
+class APISectionListView(ListAPIView):
+	serializer_class = ApiSectionSerializer
+	def get_queryset(self,*args,**kwargs):
+		return ApiSection.objects.all().order_by('-estado')
+		

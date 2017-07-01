@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .forms import ApiBannerForm
-from .models import Carousel, ApiTabla,ApiSincronizacion,ApiBanner
+from .models import Carousel, ApiTabla,ApiSincronizacion,ApiBanner,ApiSection
 from django.contrib.admin.models import LogEntry
 # Register your models here.
 
@@ -46,12 +46,25 @@ class ApiBannerAdmin(admin.ModelAdmin):
 	list_display = ['imagen','isClickable','saldoInventario','urlRequest','fecha','estado']
 	ordering = ['estado','-fecha']
 	#search_fields = ['tabla','fecha']
-	list_filter = ['saldoInventario']
+	list_filter = ['estado','isClickable']
 
 	def has_delete_permission(self, request, obj=None):
 		return False
 
 admin.site.register(ApiBanner,ApiBannerAdmin)
+
+class ApiSectionAdmin(admin.ModelAdmin):
+	fieldsets  = [
+		('',{'fields':['title','subTitle','urlRequestProductos','urlRequestMas','estado']}),
+	]
+	list_display = ['title','subTitle','urlRequestProductos','urlRequestMas','estado']
+	ordering = ['estado']
+	list_filter = ['estado']
+
+	def has_delete_permission(self, request, obj=None):
+		return False
+
+admin.site.register(ApiSection,ApiSectionAdmin)
 
 
 class logEntryAdmin(admin.ModelAdmin):
