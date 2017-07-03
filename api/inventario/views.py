@@ -6,7 +6,7 @@ from rest_framework.filters import SearchFilter,OrderingFilter
 from .serializers import CategoriaSerializer,MarcaSerializer,ProductoDetailSerializer,SaldoInventarioListSerializer,SaldoInventarioDetailSerializer,SaldoInventarioListSimpleSerializer
 from inventario.models import Categoria,Marca,Producto,SaldoInventario,Marca,Promocion,ProductoReview
 from django.db.models import Q
-from api.pagination import CustomPageNumberPagination
+from api.pagination import PaginationSaldoInventario
 from api.exceptions import CustomException
 import operator
 from functools import reduce
@@ -65,7 +65,7 @@ class producto_detalle(RetrieveAPIView):
 class producto_marca(ListAPIView):
 	#queryset = SaldoInventario.objects.filter_products()
 	serializer_class = SaldoInventarioListSerializer
-	pagination_class = CustomPageNumberPagination
+	pagination_class = PaginationSaldoInventario
 	def get_queryset(self, *args,**kwargs):
 		marca = self.request.GET.get('idMarca',None)
 		if not marca:
@@ -80,7 +80,7 @@ class producto_marca(ListAPIView):
 class producto_categoria(ListAPIView):
 	#queryset = SaldoInventario.objects.filter_products()
 	serializer_class = SaldoInventarioListSerializer
-	pagination_class = CustomPageNumberPagination
+	pagination_class = PaginationSaldoInventario
 	def get_queryset(self, *args,**kwargs):
 		categoria = self.request.GET.get('categoria',None)
 		marca = self.request.GET.get('marca',None)
@@ -101,7 +101,7 @@ class producto_categoria(ListAPIView):
 
 class oferta(ListAPIView):
 	serializer_class = SaldoInventarioListSerializer
-	pagination_class = CustomPageNumberPagination
+	pagination_class = PaginationSaldoInventario
 
 	def get_queryset(self, *args,**kwargs):
 		categoria = self.request.GET.get('categoria',None)
@@ -122,7 +122,7 @@ class oferta(ListAPIView):
 
 class search_producto(ListAPIView):
 	serializer_class = SaldoInventarioListSerializer
-	pagination_class = CustomPageNumberPagination
+	pagination_class = PaginationSaldoInventario
 
 	def get_queryset(self,*args,**kwargs):
 		if not self.request.GET.get('filtro'):
@@ -175,7 +175,7 @@ def saldo_inventario_simple(request):
 class oferta_index(ListAPIView):
 	#queryset = SaldoInventario.objects.filter_products()
 	serializer_class = SaldoInventarioListSerializer
-	pagination_class = CustomPageNumberPagination
+	pagination_class = PaginationSaldoInventario
 	def get_queryset(self, *args,**kwargs):
 		listado_promociones = Promocion.objects.filter_promocion(fechaFin__isnull=True,
 																 estado=True,
@@ -191,7 +191,7 @@ class oferta_index(ListAPIView):
 class mas_vistos_index(ListAPIView):
 	#queryset = SaldoInventario.objects.filter_products()
 	serializer_class = SaldoInventarioListSerializer
-	pagination_class = CustomPageNumberPagination
+	pagination_class = PaginationSaldoInventario
 	def get_queryset(self, *args,**kwargs):
 		top = 10
 		review = ProductoReview.objects.all().order_by('-numeroVista')[:25].values_list('producto',flat=True)
