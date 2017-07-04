@@ -92,7 +92,17 @@ class producto_categoria(ListAPIView):
 		if marca:
 			filter_Q &= Q(producto__marca__codigo = marca)
 
-		return SaldoInventario.objects.filter_products(filter_Q)
+		order = self.request.GET.get('order','rel')
+		if order == "desc":
+			order = '-precioVentaUnitario'
+		elif(order == 'asc'):
+			order = 'precioVentaUnitario'
+		elif order == 'rel':
+			order = '-fechaCreacion'
+		elif order == 'promo':
+			order = 'precioOferta'
+
+		return SaldoInventario.objects.filter_products(filter_Q).order_by(order)
 
 	# Se cachea
 	@method_decorator(cache_page(SESSION_CACHE_TIEMOUT))
@@ -144,7 +154,9 @@ class search_producto(ListAPIView):
 		for filtro in list_filtro:
 			filter_Q |= Q(producto__nombre__icontains = filtro) | Q(producto__referencia__icontains = filtro)
 		#listado_saldo_inventario = get_list_or_404(SaldoInventario,filter_Q)
-
+		marca_filtro = self.request.GET.get('marca',None)
+		if marca_filtro:
+			filter_Q &= Q(producto__marca__codigo = marca_filtro)
 		order = self.request.GET.get('order','rel')
 		if order == "desc":
 			order = '-precioVentaUnitario'

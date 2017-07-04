@@ -30,5 +30,5 @@ def cargar_marcas_desde_listado_saldo_inventario(listado_saldo_inventario):
 	listado_marca = None
 	if listado_saldo_inventario:
 		listado_id_marca = list(sa.producto.marca_id for sa in SaldoInventario.objects.filter(pk__in= list(p['idSaldoInventario'] for p in listado_saldo_inventario)))
-		listado_marca = Marca.objects.filter(idMarca__in =listado_id_marca).exclude(codigo = '36').distinct().order_by('descripcion').values('idMarca','descripcion')	
+		listado_marca = Marca.objects.filter(idMarca__in =listado_id_marca).exclude(codigo = '36').distinct().order_by('descripcion').values('pk','codigo','descripcion')	
 	return listado_marca
