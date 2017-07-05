@@ -20,7 +20,7 @@ class PedidoVentaManager:
 	# Agrega posiciones al Pedido Venta
 	def add_posicion(self,saldoInventario,cantidad):
 		costoTotal = saldoInventario.precioVentaUnitario
-		if saldoInventario.precioOferta > 0:
+		if saldoInventario.precioOferta != None and saldoInventario.precioOferta > 0:
 			costoTotal = saldoInventario.precioOferta
 		self.__pedidoVenta.listadoPedidoVentaPosicion.append(PedidoVentaPosicion(producto = saldoInventario.producto,
 																				 proveedor = saldoInventario.proveedor,
