@@ -16,7 +16,7 @@ class PedidoVentaAdmin(admin.ModelAdmin):
   fieldsets  = [
     (None,{'fields':['numeroPedido','cliente','estadoPedidoVenta','fechaAutorizacion','urlFactura','idUsuarioCreacion']}),
   ]
-  readonly_fields = ('cliente','numeroPedido','fechaAutorizacion','idUsuarioCreacion',)
+  readonly_fields = ('numeroPedido','fechaAutorizacion','idUsuarioCreacion',)
   list_display = ['numeroPedido','cliente','fecha','estadoPedidoVenta']
   search_fields = ['numeroPedido','cliente']
 
