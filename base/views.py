@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.views import View
 from django.views.decorators.cache import cache_page
 from inventario.models  import Categoria,Marca,SaldoInventario,ProductoReview
-from .models import Carousel
+from .models import Carousel,ApiSincronizacion
 from easy_thumbnails.templatetags.thumbnail import thumbnail_url
 
 SESSION_CACHE_TIEMOUT = getattr(settings,'SESSION_CACHE_TIEMOUT',7200)
@@ -69,6 +69,10 @@ class actualizar_cache(View):
 		if name_cache is None:
 			return render(request,"base/actualizar_cache.html")
 		else:
+			# Se crea un nuevo registro en ApiSincronizacion
+			apiSincronizacion = ApiSincronizacion()
+			apiSincronizacion.save()
+			
 			if name_cache == "index_carousel":
 				cache.delete("carousel")
 				messages.success(request, 'Se ha eliminado el cache del Carousel')
@@ -91,5 +95,6 @@ class actualizar_cache(View):
 				cache.clear()
 				messages.success(request, 'Se ha eliminado todo el cache')
 		return HttpResponseRedirect(reverse("actualizar_cache"))
+
 
 

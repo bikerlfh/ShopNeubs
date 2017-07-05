@@ -102,7 +102,7 @@ class producto_categoria(ListAPIView):
 		elif order == 'promo':
 			order = 'precioOferta'
 
-		return SaldoInventario.objects.filter_products(filter_Q).order_by(order)
+		return SaldoInventario.objects.filter_products(filter_Q).order_by('-estado',order)
 
 	# Se cachea
 	@method_decorator(cache_page(SESSION_CACHE_TIEMOUT))
@@ -166,7 +166,7 @@ class search_producto(ListAPIView):
 			order = '-fechaCreacion'
 		elif order == 'promo':
 			order = 'precioOferta'
-		return SaldoInventario.objects.filter_products(filter_Q).order_by(order)
+		return SaldoInventario.objects.filter_products(filter_Q).order_by('-estado',order)
 
 	# Se cachea
 	@method_decorator(cache_page(SESSION_CACHE_TIEMOUT))

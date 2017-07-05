@@ -217,7 +217,7 @@ SELECT_TOP_MAX = 10
 # Cantidad maxima en los SELECT TOP para los elementos del index
 SELECT_TOP_MAX_INDEX_ITEM = 8
 # Número de productos a listar
-NUM_ITEMS_DISPLAY = 10
+NUM_ITEMS_DISPLAY = 20
 # Numero de productos a listar en la API
 NUM_ITEMS_DISPLAY_API = 10
 
