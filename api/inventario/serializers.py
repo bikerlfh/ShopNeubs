@@ -28,13 +28,15 @@ class MarcaSerializer(ModelSerializer):
 		]
 
 class ProductoDetailSerializer(ModelSerializer):
+	idCategoria = SerializerMethodField()
+	idMarca = SerializerMethodField()
 	imagenes = SerializerMethodField()
 	class Meta:
 		model = Producto
 		fields = [
 			'idProducto',
-			'categoria',
-			'marca',
+			'idCategoria',
+			'idMarca',
 			'numeroProducto',
 			'nombre',
 			'descripcion',
@@ -53,20 +55,26 @@ class ProductoDetailSerializer(ModelSerializer):
 				else:
 					list_imagenes.append({'order':i,'url': thumbnail_url(imagen, 'producto_detalle')})
 			return list_imagenes
-		return None	
+		return None
+	def get_idCategoria(self,obj):
+		return obj.categoria_id
+	def get_idMarca(self,obj):
+		return obj.marca_id
 
 
 class ProductoSimpleSerializer(ModelSerializer):
 	#detail = HyperlinkedIdentityField(view_name='producto_detail',lookup_field='pk')
+	idMarca = SerializerMethodField()
 	imagen = SerializerMethodField()
 	class Meta:
 		model = Producto
 		fields = [
 			#'detail',
 			#'pk',
+			'idMarca',
 			'numeroProducto',
 			'nombre',
-			'imagen'
+			'imagen',
 		]
 	# Se consulta la imagen principal del producto
 	def get_imagen(self,obj):
@@ -78,7 +86,8 @@ class ProductoSimpleSerializer(ModelSerializer):
 			else:
 				return thumbnail_url(imagen, 'producto')
 		return None
-
+	def get_idMarca(self,obj):
+		return obj.marca_id
 
 class SaldoInventarioDetailSerializer(ModelSerializer):
 	producto = ProductoDetailSerializer()
