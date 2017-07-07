@@ -89,6 +89,7 @@ class producto_categoria(ListAPIView):
 			filter_Q = Q(producto__categoria__codigo = categoria) | Q(producto__categoria__categoriaPadre__codigo = categoria)
 		else:
 			raise CustomException('Hace falta especificar la variable','categoria')
+		
 		if marca:
 			filter_Q &= Q(producto__marca__codigo = marca)
 
@@ -123,7 +124,17 @@ class oferta(ListAPIView):
 			filter_Q = Q(producto__categoria__codigo = categoria) | Q(producto__categoria__categoriaPadre__codigo = categoria)
 		if marca:
 			filter_Q &= Q(producto__marca__codigo = marca)
-		return SaldoInventario.objects.filter_products(filter_Q)
+
+		order = self.request.GET.get('order','rel')
+		if order == "desc":
+			order = '-precioVentaUnitario'
+		elif(order == 'asc'):
+			order = 'precioVentaUnitario'
+		elif order == 'rel':
+			order = '-fechaCreacion'
+		elif order == 'promo':
+			order = 'precioOferta'
+		return SaldoInventario.objects.filter_products(filter_Q).order_by('-estado',order)
 
 	# Se cachea
 	@method_decorator(cache_page(SESSION_CACHE_TIEMOUT))
@@ -193,7 +204,7 @@ class oferta_index(ListAPIView):
 																 estado=True,
 																 saldoInventario__precioOferta__gt=0,
 																 saldoInventario__estado=True).only('saldoInventario_id').order_by('-fechaInicio')[:10]
-		return SaldoInventario.objects.filter_products(pk__in=list(p.saldoInventario_id for p in listado_promociones))
+		return SaldoInventario.objects.filter_products(pk__in=list(p.saldoInventario_id for p in listado_promociones)).order_by('-estado')
 
 	# Se cachea
 	@method_decorator(cache_page(SESSION_CACHE_TIEMOUT))
@@ -213,8 +224,7 @@ class mas_vistos_index(ListAPIView):
 				listado_idSaldoInventario.append(SaldoInventario.objects.filter_products(estado=True,producto=idProducto).only('pk').first().pk)
 			if len(listado_idSaldoInventario) >= top:
 				break
-		print(listado_idSaldoInventario)
-		return SaldoInventario.objects.filter_products(estado=True,pk__in = listado_idSaldoInventario)
+		return SaldoInventario.objects.filter_products(estado=True,pk__in = listado_idSaldoInventario).order_by('-estado')
 
 	# Se cachea
 	@method_decorator(cache_page(SESSION_CACHE_TIEMOUT))
