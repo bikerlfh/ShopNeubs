@@ -117,6 +117,7 @@ class ApiSection(models.Model):
 	subTitle = models.CharField(max_length = 50,blank = True,null	= True)
 	urlRequestProductos = models.CharField(max_length = 256,blank = False,null = False)
 	urlRequestMas = models.CharField(max_length = 256,blank = True,null	= True)
+	orden = models.PositiveSmallIntegerField(default = 1,blank = False, null = False)
 	estado = models.BooleanField(default = True,blank=False,null=False)
 
 	def __str__(self):

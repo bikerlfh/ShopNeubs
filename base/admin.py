@@ -55,9 +55,9 @@ admin.site.register(ApiBanner,ApiBannerAdmin)
 
 class ApiSectionAdmin(admin.ModelAdmin):
 	fieldsets  = [
-		('',{'fields':['title','subTitle','urlRequestProductos','urlRequestMas','estado']}),
+		('',{'fields':['title','subTitle','orden','urlRequestProductos','urlRequestMas','estado']}),
 	]
-	list_display = ['title','subTitle','urlRequestProductos','urlRequestMas','estado']
+	list_display = ['title','subTitle','orden','urlRequestProductos','urlRequestMas','estado']
 	ordering = ['estado']
 	list_filter = ['estado']
 

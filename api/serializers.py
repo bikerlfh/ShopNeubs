@@ -100,6 +100,7 @@ class ApiSectionSerializer(ModelSerializer):
 			'subTitle',
 			'urlRequestProductos',
 			'urlRequestMas',
+			'orden',
 			'estado',
 		]
 
