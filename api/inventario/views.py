@@ -28,7 +28,7 @@ class CategoriaListView(ListAPIView):
 	# sarch_fields = ['']
 
 	def get_queryset(self,*args,**kwargs):
-		queryset_list = Categoria.objects.filter(estado = True).order_by('codigo')
+		queryset_list = Categoria.objects.order_by('codigo').all()
 		categoriaPadre = self.request.GET.get('idCategoriaPadre',None)
 		if categoriaPadre:
 			queryset_list = queryset_list.filter(categoriaPadre = categoriaPadre)

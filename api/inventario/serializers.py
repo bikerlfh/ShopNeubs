@@ -16,6 +16,7 @@ class CategoriaSerializer(ModelSerializer):
 			'codigo',
 			'descripcion',
 			'categoriaPadre',
+			'estado',
 		]
 
 class MarcaSerializer(ModelSerializer):
