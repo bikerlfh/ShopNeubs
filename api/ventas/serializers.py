@@ -36,7 +36,7 @@ class PedidoVentaSimpleSerializer(ModelSerializer):
 	def get_idCliente(self,obj):
 		return obj.cliente_id
 	def get_fecha(self,obj):
-		return obj.fecha.date()
+		return obj.fecha.date().strftime("%d/%m/%Y %H:%m")
 	# def get_cliente(self,obj):
 	# 	return obj.cliente.datoBasicoTercero.__str__()
 	def get_estadoPedidoVenta(self,obj):
