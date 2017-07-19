@@ -9,7 +9,7 @@ from inventario.models  import Categoria,Marca
 from .models import Carousel,ApiSincronizacion,ArchivoModificacionPrecio
 from tercero.models import Proveedor
 from .forms import ArchivoModificarPrecioForm
-from .update_prices import Pofo
+from .update_prices import ActualizacionPrecio
 
 SESSION_CACHE_TIEMOUT = getattr(settings,'SESSION_CACHE_TIEMOUT',7200)
 
@@ -132,16 +132,26 @@ class actualizar_precios(View):
 						return HttpResponseRedirect(reverse("home"))
 
 				listado_archivos = ArchivoModificacionPrecio.objects.all()
+				data = request.GET
+				if data.get('file',None):
+						archivo = ArchivoModificacionPrecio.objects.get(pk=data.get('file',None))
 
-				if request.GET.get('file',None):
-						archivo = ArchivoModificacionPrecio.objects.get(pk = request.GET.get('file',None))
-						pofo = Pofo()
-						pofo.analizar_actualizacion(archivo.file.path)
+						actualizarPrecio = ActualizacionPrecio(archivo)
+						if not actualizarPrecio.make_actualizacion():
+								messages.warning(request, actualizarPrecio.mensajeError)
+						elif len(actualizarPrecio.listado_pendiente_actualizar) is 0 and len(actualizarPrecio.listado_pendiente_crear) is 0:
+								messages.success(request,"No se encontró ningun saldo inventario en el archivo")
+
+						"""
+						pofo = PofoActualizacion(data.get('proveedor').pk)
+						if pofo.analizar_actualizacion(archivo.file.path) != 1:
+								messages.warning(request,pofo.mensajeError)
+						"""
 						return render(request, "base/actualizar-precio.html",
 													context={'listado_archivos': listado_archivos,
 																	 'file_selected':archivo.pk,
-																	 'listado_pendiente_actualizar':pofo.listado_pendiente_actualizar,
-																	 'listado_pendiente_crear': pofo.listado_pendiente_crear})
+																	 'listado_pendiente_actualizar':actualizarPrecio.listado_pendiente_actualizar,
+																	 'listado_pendiente_crear': actualizarPrecio.listado_pendiente_crear})
 
 
 				return render(request, "base/actualizar-precio.html",
@@ -150,13 +160,17 @@ class actualizar_precios(View):
 		def post(self,request,*args,**kwargs):
 				if not request.user.is_superuser:
 						return HttpResponseRedirect(reverse("home"))
+				data = request.GET
+				if data.get('file',None):
+						archivo = ArchivoModificacionPrecio.objects.get(pk=data.get('file',None))
 
-				if request.GET.get('file',None):
-						archivo = ArchivoModificacionPrecio.objects.get(pk = request.GET.get('file',None))
-						pofo = Pofo()
-						pofo.analizar_actualizacion(archivo.file.path)
-						if len(pofo.listado_pendiente_actualizar)>0:
-							for sa_actualizar in pofo.listado_pendiente_actualizar:
+						actualizarPrecio = ActualizacionPrecio(archivo)
+						if not actualizarPrecio.make_actualizacion():
+								messages.warning(request, actualizarPrecio.mensajeError)
+								return HttpResponseRedirect(reverse("actualizar_precio"))
+
+						if len(actualizarPrecio.listado_pendiente_actualizar)>0:
+							for sa_actualizar in actualizarPrecio.listado_pendiente_actualizar:
 									sa_actualizar.updateSaldoInventario()
 
 						messages.success(request,"Se actualizaron los precios satisfactoriamente")
