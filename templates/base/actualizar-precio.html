@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load humanize %}
 
 {% block title %}
 	Actualizar Precios - Solo Admins
@@ -80,14 +81,14 @@
                             <td>{{ sa.saldoInventario.producto }}</td>
                             <td>{{ sa.saldoInventario.referenciaProveedor }}</td>
                             <td>{{ sa.saldoInventario.cantidad  }}</td>
-                            <td>{{ sa.saldoInventario.costoTotal }}</td>
-                            <td>{{ sa.saldoInventario.precioCompraUnitario }}</td>
-                            <td class="precio-nuevo">{{ sa.valor }}</td>
-                            <td class="diferencia">{{ sa.diferencia }}</td>
-                            <td>{{ sa.saldoInventario.precioVentaUnitario }}</td>
-                            <td class="precio-nuevo">{{ sa.precioVentaNuevo }}</td>
-                            <td>{{ sa.saldoInventario.precioOferta }}</td>
-                            <td class="precio-nuevo">{{ sa.precioOfertaNuevo }}</td>
+                            <td>{{ sa.saldoInventario.costoTotal|stringformat:"d"|intcomma }}</td>
+                            <td>{{ sa.saldoInventario.precioCompraUnitario|stringformat:"d"|intcomma }}</td>
+                            <td class="precio-nuevo">{{ sa.valor|stringformat:"d"|intcomma }}</td>
+                            <td class="diferencia">{{ sa.diferencia|stringformat:"d"|intcomma }}</td>
+                            <td>{{ sa.saldoInventario.precioVentaUnitario|stringformat:"d"|intcomma }}</td>
+                            <td class="precio-nuevo">{{ sa.precioVentaNuevo|stringformat:"d"|intcomma }}</td>
+                            <td>{{ sa.saldoInventario.precioOferta|stringformat:"d"|intcomma }}</td>
+                            <td class="precio-nuevo">{{ sa.precioOfertaNuevo|stringformat:"d"|intcomma }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -136,7 +137,7 @@
                         <tr>
                             <td>{{ sa.producto}}</td>
                             <td>{{ sa.referencia }}</td>
-                            <td>{{ sa.valor }}</td>
+                            <td>{{ sa.valor|stringformat:"d"|intcomma }}</td>
                             <td></td>
                         </tr>
                     {% endfor %}

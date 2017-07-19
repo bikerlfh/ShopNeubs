@@ -223,9 +223,18 @@ class TenseActualizacion:
 
 				self.mensajeError = None
 
-		#elimina los espacios en blanco de mas
+		# elimina los espacios en blanco de mas
 		def format_referencia(self, referencia):
 				return " ".join(referencia.split())
+
+		# se ajusta el valor del producto
+		def format_valor(self,valor):
+				#  se multiplica por 1000 el valor, debido a que el archivo viene en decimales
+				if valor < 10000:
+						valor *= 1000
+				# se resta el 5%
+				valor -= (valor * 5 / 100)
+				return valor
 
 		def analizar_actualizacion(self,file):
 				try:
@@ -233,17 +242,16 @@ class TenseActualizacion:
 						if xl_wordbook is not None:
 								#  se consulta la primera sheet
 								xl_sheet = xl_wordbook.sheet_by_index(0)
-
 								for row in range(0,xl_sheet.nrows):
 										for col in range(0,xl_sheet.ncols):
 												#  se verifica que el typo de la celda sea TEXT
 												if xl_sheet.cell_type(row,col) == 1:
 														referencia = self.format_referencia(xl_sheet.cell(row,col).value)
-														if SaldoInventario.objects.filter(referenciaProveedor__istartswith=referencia,proveedor_id=self.idProveedor).exists():
-																# si el campo valor no es numerico quiere decir que no tiene precio
-																if xl_sheet.cell_type(row, col + 1) is not 2:
-																		continue
-																valor = xl_sheet.cell(row,col+1).value
+														# si el campo valor no es numerico quiere decir que no tiene precio
+														if xl_sheet.cell_type(row, col + 1) is not 2:
+																continue
+														valor = self.format_valor(xl_sheet.cell(row, col + 1).value)
+														if not referencia.__eq__("") and SaldoInventario.objects.filter(referenciaProveedor__istartswith=referencia,proveedor_id=self.idProveedor).exists():
 																listado_saldo_inventario = SaldoInventario.objects.filter(referenciaProveedor__istartswith=referencia,proveedor_id=self.idProveedor)
 																for sa in listado_saldo_inventario:
 																		tense = SASerializer(referencia,referencia,valor)
@@ -252,6 +260,10 @@ class TenseActualizacion:
 																				self.listado_pendiente_actualizar.append(tense)
 																		else:
 																				self.listado_sin_cambio.append(tense)
+														else:
+																tense = SASerializer(referencia,referencia,valor)
+																self.listado_pendiente_crear.append(tense)
+
 						return 1
 				except Exception as ex:
 						self.mensajeError = ex
