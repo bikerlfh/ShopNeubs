@@ -124,15 +124,30 @@ class Pofo:
 								# se crea el objeto
 								pofo = PofoSerializer(codigo,producto,valor)
 								# si existe el saldo inventario con referencia proveedor = codigo
-								if SaldoInventario.objects.filter(referenciaProveedor = pofo.codigo).exists():
-										pofo.saldoInventario = SaldoInventario.objects.get(referenciaProveedor = pofo.codigo)
+								if SaldoInventario.objects.filter(referenciaProveedor=pofo.codigo).exists():
+										listado_saldo_inventario = SaldoInventario.objects.filter(referenciaProveedor=pofo.codigo)
 
-										# si el saldo inventario no tiene igual los precios se agrega al listado pendiente por actualizar
-										if not pofo.isEquals():
-												self.listado_pendiente_actualizar.append(pofo)
+										# si se encuentran más de un saldo inventario con el mismo código
+										if listado_saldo_inventario.count() > 1:
+												# se recorren los saldos inventario
+												for saldo in listado_saldo_inventario:
+														pofo_repetido = PofoSerializer(codigo,producto,valor)
+														pofo_repetido.saldoInventario = saldo
+														# si el saldo inventario no tiene igual los precios se agrega al listado pendiente por actualizar
+														if not pofo_repetido.isEquals():
+																self.listado_pendiente_actualizar.append(pofo_repetido)
+														else:
+																# si el saldoinventario tiene precios iguales se agrega al listado sin cambio
+																self.listado_sin_cambio.append(pofo_repetido)
 										else:
-												# si el saldoinventario tiene precios iguales se agrega al listado sin cambio
-												self.listado_sin_cambio.append(pofo)
+												pofo.saldoInventario = listado_saldo_inventario.first()
+
+												# si el saldo inventario no tiene igual los precios se agrega al listado pendiente por actualizar
+												if not pofo.isEquals():
+														self.listado_pendiente_actualizar.append(pofo)
+												else:
+														# si el saldoinventario tiene precios iguales se agrega al listado sin cambio
+														self.listado_sin_cambio.append(pofo)
 								else:
 										# se agrega pofo al listado pendiente por crear
 										self.listado_pendiente_crear.append(pofo)
