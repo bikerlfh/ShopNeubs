@@ -67,8 +67,7 @@ class SASerializer:
 						elif self.saldoInventario.cantidad == 0:
 								self.saldoInventario.cantidad = 1
 
-						if not self.saldoInventario.estado:
-								self.saldoInventario.estado = True
+						self.saldoInventario.estado=True
 						# se modifica el precioCompraUnitario
 						self.saldoInventario.precioCompraUnitario = Decimal(self.valor)
 						self.saldoInventario.save()
@@ -247,12 +246,15 @@ class TenseActualizacion:
 												#  se verifica que el typo de la celda sea TEXT
 												if xl_sheet.cell_type(row,col) == 1:
 														referencia = self.format_referencia(xl_sheet.cell(row,col).value)
+
 														# si el campo valor no es numerico quiere decir que no tiene precio
 														if xl_sheet.cell_type(row, col + 1) is not 2:
 																continue
 														valor = self.format_valor(xl_sheet.cell(row, col + 1).value)
 														if not referencia.__eq__("") and SaldoInventario.objects.filter(referenciaProveedor__istartswith=referencia,proveedor_id=self.idProveedor).exists():
 																listado_saldo_inventario = SaldoInventario.objects.filter(referenciaProveedor__istartswith=referencia,proveedor_id=self.idProveedor)
+																if len(listado_saldo_inventario) > 0:
+																		listado_saldo_inventario = listado_saldo_inventario.filter(referenciaProveedor__iexact=referencia,proveedor_id=self.idProveedor)
 																for sa in listado_saldo_inventario:
 																		tense = SASerializer(referencia,referencia,valor)
 																		tense.saldoInventario = sa
