@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .forms import ApiBannerForm
-from .models import Carousel, ApiTabla,ApiSincronizacion,ApiBanner,ApiSection
+from .models import Carousel, ApiTabla,ApiSincronizacion,ApiBanner,ApiSection,ArchivoModificacionPrecio
 from django.contrib.admin.models import LogEntry
 # Register your models here.
 
@@ -74,3 +74,8 @@ class logEntryAdmin(admin.ModelAdmin):
 	list_filter = ['content_type']
 	
 admin.site.register(LogEntry,logEntryAdmin)
+
+class ArchivoModificacionPrecioadmin(admin.ModelAdmin):
+		list_display = ['__str__','proveedor','fecha','ultimo']
+
+admin.site.register(ArchivoModificacionPrecio,ArchivoModificacionPrecioadmin)

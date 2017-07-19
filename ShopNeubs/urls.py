@@ -37,7 +37,10 @@ urlpatterns = [
     url(r'^terminos-y-condiciones/$', view_base.terminos_condiciones, name = 'terminos_y_condiciones'),
     url(r'^como-comprar/$', view_base.como_comprar, name = 'como_comprar'),
     url(r'^garantia/$', view_base.garantia, name = 'garantia'),
-    url(r'^actualizar-cache/$', login_required(view_base.actualizar_cache.as_view()), name = 'actualizar_cache'),
+    url(r'^actualizar-cache/$', login_required(view_base.actualizar_cache.as_view()), name='actualizar_cache'),
+
+    url(r'^subir-archivo-actualizar-precio/$', login_required(view_base.subir_archivo_actualizar_precios.as_view()), name = 'subir_archivo_actualizar_precio'),
+    url(r'^actualizar-precio/$', login_required(view_base.actualizar_precios.as_view()), name = 'actualizar_precio'),
     
     # Cart
     url(r'^cart/$', views_ventas.cart, name = 'cart'),

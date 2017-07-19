@@ -82,6 +82,8 @@ class ProductoAdmin(admin.ModelAdmin):
     search_fields = ['numeroProducto','referencia','nombre','marca__descripcion']
 admin.site.register(Producto,ProductoAdmin)
 
+admin.site.register(Plataforma,DefaultAdmin)
+
 class CategoriaSaldoInventarioListFilter(admin.SimpleListFilter):
     title = _('Categoría')
 
@@ -99,7 +101,8 @@ class CategoriaSaldoInventarioListFilter(admin.SimpleListFilter):
 class SaldoInventarioAdmin(admin.ModelAdmin):
     form = SaldoInventarioForm
     fieldsets  = [
-        ('Default',{'fields':['producto','proveedor','garantia','referenciaProveedor','cantidad','costoTotal','precioCompraUnitario','precioVentaUnitario','precioOferta','estado']}),
+        ('Default',{'fields':['producto','proveedor','garantia','referenciaProveedor','cantidad','costoTotal',
+                              'precioCompraUnitario','precioVentaUnitario','precioOferta','plataformas','estado']}),
     ]
     list_display = ['producto','proveedor','referenciaProveedor','cantidad','costoTotal','precioCompraUnitario','precioVentaUnitario','precioOferta','estado']
     search_fields = ['referenciaProveedor','producto__numeroProducto','producto__nombre','producto__referencia']

@@ -56,9 +56,10 @@ class ProductoImagen(models.Model):
 	producto  = models.ForeignKey("Producto",null=False, blank=False,db_column='idProducto')
 	imagen = FilerImageField(null=False, blank=False)
 	order = models.SmallIntegerField(default=0,blank=False,null=False)
-    
+
 	def __str__(self):
 		return '%s - %s' % (self.producto ,str(self.imagen))
+
 	def save(self, *args, **kwargs):
 		if self.idProductoImagen is None:
 			ordenamiento = ProductoImagen.objects.filter(producto = self.producto_id).aggregate(Max('order'))
@@ -67,6 +68,7 @@ class ProductoImagen(models.Model):
 			else:
 				self.order = ordenamiento['order__max'] +1
 		super(ProductoImagen, self).save(*args, **kwargs)
+
 	class Meta:
 		db_table = "ProductoImagen"
 		verbose_name = "Producto Imagen"
@@ -105,7 +107,7 @@ class Producto(models.Model):
 
 	def natural_key(self):
 		return ((str(self.numeroProducto) + " - " + self.nombre))
-		
+
 	def __str__(self):
 		return '%s - %s' % (str(self.numeroProducto),self.nombre)
 
@@ -146,7 +148,7 @@ class SaldoInventarioManager(models.Manager):
 				if sa.precioOferta != None and sa.precioOferta > 0:
 					menorPrecio = sa.precioOferta
 				if not sa.estado or listado_saldo_inventario.filter(producto_id = sa.producto_id,
-																    precioOferta__gt = 0, 
+																    precioOferta__gt = 0,
 																    precioOferta__lt = menorPrecio,
 																    estado=True).exclude(pk=sa.pk).exists():
 					listado_pk_exclude.append(sa.pk)
@@ -156,6 +158,18 @@ class SaldoInventarioManager(models.Manager):
 						listado_pk_exclude.append(exclude)
 
 		return listado_saldo_inventario.exclude(pk__in = listado_pk_exclude)
+
+
+class Plataforma(models.Model):
+	idPlataforma = models.AutoField(primary_key = True)
+	codigo = models.CharField(max_length=2)
+	descripcion = models.CharField(max_length=25)
+
+	def __str__(self):
+		return '%s - %s' % (self.codigo,self.descripcion)
+
+	class Meta:
+			db_table = "Plataforma"
 
 
 class SaldoInventario(models.Model):
@@ -169,6 +183,8 @@ class SaldoInventario(models.Model):
 	precioCompraUnitario = models.DecimalField(max_digits=10, decimal_places=2, verbose_name = 'Precio Compra Unitario',default=0)
 	precioVentaUnitario = models.DecimalField(max_digits=10, decimal_places=2,verbose_name = 'Precio venta Unitario')
 	precioOferta = models.DecimalField(max_digits=10,decimal_places=2, null=True,blank = True, verbose_name = 'Precio Oferta')
+	# si es un software se debe escoger las plataformas (windows, Steam, etc..)
+	plataformas = models.ManyToManyField(Plataforma,blank=True)
 	estado = models.BooleanField(default = True)
 	usuarioCreacion = models.ForeignKey(User,db_column ='idUsuarioCreacion',on_delete = models.PROTECT)
 	fechaCreacion = models.DateTimeField(auto_now_add = True,verbose_name = 'Fecha Creación')
@@ -176,7 +192,7 @@ class SaldoInventario(models.Model):
 	objects = SaldoInventarioManager()
 	def __str__(self):
 		return '%s (%s)' % (self.producto,self.proveedor)
-	
+
 	def save(self, *args, **kwargs):
 
 		if self.cantidad == 0:
@@ -339,7 +355,7 @@ class MovimientoInventario(models.Model):
 											 entradaSalida = 0,
 											 cantidadMovimiento = posicion.cantidad,
 											 valorMovimiento=posicion.costoTotal).save()
-		
+
 # MovimientoInventarioPosicion
 class MovimientoInventarioPosicion(models.Model):
 	idMovimientoInventarioPosicion = models.BigAutoField(primary_key = True)
@@ -372,7 +388,7 @@ class MovimientoInventarioPosicion(models.Model):
 				saldoInventario.save()
 			except SaldoInventario.DoesNotExist:
 				# si no existe el inventario y se va a realizar una salida
-				# se genera una excepción 
+				# se genera una excepción
 				if self.entradaSalida == 0:
 					raise Exception("La salida del inventario no se puede realizar. No existe inventario!")
 				# se crea el saldoInventario
@@ -406,7 +422,7 @@ class ProductoReview(models.Model):
 
 	def __str__(self):
 		return 'Producto:%s  vistas: %s ventas: %s' % (self.producto,str(self.numeroVista),str(self.numeroVenta))
-	
+
 	def save(self, *args, **kwargs):
 		if self.idProductoReview == None:
 			try:

@@ -177,6 +177,9 @@ DAYS_PRODUCT_NEW = 15
 LOGIN_URL = '/accounts/login/'
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
+
+# Se usa para subir los archivos de sincronización de datos
+LOCAL_FILES_UPLOAD_URL = "/var/tmp/shopneubs/uploads/"
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]

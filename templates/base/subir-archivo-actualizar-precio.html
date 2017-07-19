@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Actualizar Precios - Solo Admins
+{% endblock %}
+
+{% block script_head %}
+<style type="text/css">
+	.errorlist{
+		color: red;
+		font-weight: bolder;
+	}
+</style>
+{% endblock %}
+
+{% block posicion_pagina %}
+<ol class="breadcrumb">
+	<li><a href="{% url 'home'%}">Inicio</a></li>
+	<li><a class="active" href="{% url 'subir_archivo_actualizar_precio'%}">Subir Archivo Actualizar Precios</a></li>
+</ol>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+
+		<form class="form-horizontal" id="form-modificar-precio" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+				<h3 class="item-heading bg-grey">Subir Archivo Actualizar Precios</h3>
+				<hr>
+				<div class="form-group">
+                    <label class="col-lg-2 col-md-2 col-sm-2 col-xs-4 control-label">Archivo</label>
+                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6">
+                        <!--input type="file" name="file" id="file" class="form-control" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" required-->
+                        {{ form.file }}
+                        {{ form.file.errors }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 col-md-2 col-sm-2 col-xs-4 control-label">Proveedor</label>
+                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6">
+                        {{ form.proveedor }}
+                        {{ form.proveedor.errors }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-default">Subir</button>
+                    </div>
+                </div>
+			</div>
+			<hr>
+		</form>
+	</div>
+</div>
+{% endblock %}

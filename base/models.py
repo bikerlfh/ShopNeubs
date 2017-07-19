@@ -1,4 +1,6 @@
 from django.db import models
+from django.core.files.storage import FileSystemStorage
+from django.conf import settings
 from filer.fields.image import FilerImageField
 
 class Carousel(models.Model):
@@ -139,10 +141,32 @@ class ApiSection(models.Model):
 			# se consulta la ApiSection (ApiBanner "codigo = 05")
 			apiTabla = ApiTabla.objects.get(codigo = '05')
 			# se agrega una nueva apiSincronizacion
-			apiSincronizacion = ApiSincronizacion(tabla = apiTabla,ultima = True)
+			apiSincronizacion = ApiSincronizacion(tabla=apiTabla, ultima=True)
 			apiSincronizacion.save()
 		except Exception as e:
 			pass
+
+
+
+# clase para almacenar los archivos de modificación de precios
+class ArchivoModificacionPrecio(models.Model):
+		file = models.FileField(verbose_name="Archivo", upload_to="precios/", storage=FileSystemStorage(location=settings.LOCAL_FILES_UPLOAD_URL), blank=False, null=False)
+		proveedor = models.OneToOneField("tercero.Proveedor")
+		fecha = models.DateTimeField(auto_now_add=True)
+		ultimo = models.BooleanField(default=True, blank=False)
+
+		def __str__(self):
+				return "%s - %s " % (self.proveedor,self.file.name)
+
+		def delete(self, using=None, keep_parents=False):
+				self.file.delete()
+				super(ArchivoModificacionPrecio,self).delete(using=using, keep_parents=keep_parents)
+
+		class Meta:
+				db_table = "ArchivoModificacionPrecio"
+				verbose_name = "Archivo modificación precios"
+				verbose_name_plural = "Archivos modificación precios"
+
 
 
 
