@@ -1,9 +1,10 @@
-from rest_framework.generics import ListAPIView
-from rest_framework.filters import SearchFilter,OrderingFilter
+from django.conf import settings
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from rest_framework.filters import OrderingFilter
+from rest_framework.generics import ListAPIView
+
 from .serializers import *
-from django.conf import settings
 
 SESSION_CACHE_TIEMOUT = getattr(settings,'SESSION_CACHE_TIEMOUT',7200)
 

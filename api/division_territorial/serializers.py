@@ -1,6 +1,6 @@
-from division_territorial.models import Pais,Departamento,Municipio
-from rest_framework.serializers import (ModelSerializer, HyperlinkedIdentityField,
-										SerializerMethodField,ValidationError,CharField)
+from rest_framework.serializers import (ModelSerializer)
+
+from division_territorial.models import Pais, Departamento, Municipio
 
 
 class PaisSerializer(ModelSerializer):

@@ -1,12 +1,15 @@
+import json
+
 from django.contrib import messages
 from django.core import serializers
-from django.shortcuts import render,Http404,HttpResponseRedirect,HttpResponse
+from django.shortcuts import render, HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.views import View
+
 from compras.pedidocompramanager import PedidoCompraManager
-from .models import EstadoPedidoCompra,PedidoCompra,PedidoCompraPosicion
 from .forms import ConsultaPedidoCompraForm
-import json
+from .models import EstadoPedidoCompra, PedidoCompra, PedidoCompraPosicion
+
 
 class solicitud_pedido(View):
 	def get(self,request,*args,**kwargs):

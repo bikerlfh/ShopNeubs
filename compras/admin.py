@@ -1,7 +1,9 @@
 from django.contrib import admin
+
+from base.admin import DefaultAdmin, RangoPedidoAdmin
 from .models import *
-from base.admin import DefaultAdmin,RangoPedidoAdmin
-from django import forms
+
+
 # Register your models here.
 
 class PedidoCompraAdmin(admin.ModelAdmin):

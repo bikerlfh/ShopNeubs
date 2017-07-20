@@ -1,20 +1,17 @@
-from rest_framework.generics import ListAPIView,RetrieveAPIView,CreateAPIView
-from rest_framework.serializers import ValidationError
-from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK,HTTP_201_CREATED,HTTP_400_BAD_REQUEST
-from .serializers import PedidoVentaSimpleSerializer,PedidoVentaDetalleSerializer,PedidoVentaCompletoSerializer,PosicionPedidoSerializer
-from rest_framework.permissions import IsAuthenticated,IsAdminUser,IsAuthenticatedOrReadOnly,AllowAny
-from ventas.models import PedidoVenta
-from tercero.models import Cliente
-from api.exceptions import CustomException
-from django.contrib.auth import get_user_model
-from rest_framework.decorators import api_view,permission_classes
-from ventas.pedidoventamanager import PedidoVentaManager
-from rest_framework import status
-from rest_framework import viewsets
-from inventario.models import SaldoInventario
 import json
 
+from django.contrib.auth import get_user_model
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.status import HTTP_201_CREATED
+
+from api.exceptions import CustomException
+from tercero.models import Cliente
+from ventas.models import PedidoVenta
+from .serializers import PedidoVentaSimpleSerializer, PedidoVentaDetalleSerializer, PedidoVentaCompletoSerializer, \
+		PosicionPedidoSerializer
 
 User = get_user_model()
 

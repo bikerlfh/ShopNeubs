@@ -1,14 +1,20 @@
-from inventario.models import Categoria,Producto,SaldoInventario
-from rest_framework.serializers import (Serializer,ListSerializer,ModelSerializer, HyperlinkedIdentityField,
-										SerializerMethodField,ValidationError,IntegerField,DecimalField)
+from rest_framework.serializers import (Serializer, ListSerializer, ModelSerializer, HyperlinkedIdentityField,
+																				SerializerMethodField, IntegerField)
 from inventario.models import SaldoInventario
 from api.inventario.serializers import ProductoSimpleSerializer
-from ventas.models import PedidoVenta,PedidoVentaPosicion,EstadoPedidoVenta,MotivoCancelacionPedidoVenta
-from ventas.pedidoventamanager import PedidoVentaManager
-from api.exceptions import CustomException
+from ventas.models import PedidoVenta,PedidoVentaPosicion
 
 from ventas.send_mail_venta import send_email_pedido_venta
 from ventas.pedidoventamanager import PedidoVentaManager
+from rest_framework.serializers import (Serializer, ListSerializer, ModelSerializer, HyperlinkedIdentityField,
+																				SerializerMethodField, IntegerField)
+
+from api.inventario.serializers import ProductoSimpleSerializer
+from inventario.models import SaldoInventario
+from ventas.models import PedidoVenta, PedidoVentaPosicion
+from ventas.pedidoventamanager import PedidoVentaManager
+from ventas.send_mail_venta import send_email_pedido_venta
+
 
 class PedidoVentaSimpleSerializer(ModelSerializer):
 	urlDetalle = HyperlinkedIdentityField(read_only=True,view_name='pedido_detalle_simple',lookup_field='idPedidoVenta')

@@ -1,19 +1,18 @@
-from rest_framework.generics import CreateAPIView,RetrieveAPIView,ListAPIView,UpdateAPIView
-from rest_framework.permissions import IsAuthenticated,IsAdminUser,IsAuthenticatedOrReadOnly,AllowAny
-from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK,HTTP_201_CREATED,HTTP_400_BAD_REQUEST
-from rest_framework.views import APIView
+from django.conf import settings
 from django.contrib.auth import get_user_model
-from .serializers import UserCreateSerializer,UsuarioSerializer,TipoDocumentoSerializer,PerfilSerializer
-from tercero.models import TipoDocumento,Cliente,DatoBasicoTercero
-from division_territorial.models import Municipio
+from django.db import transaction
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
-from django.conf import settings
-from api.exceptions import CustomException
-from django.db import transaction
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.decorators import api_view,permission_classes
+from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
+
+from api.exceptions import CustomException
+from division_territorial.models import Municipio
+from tercero.models import TipoDocumento, Cliente, DatoBasicoTercero
+from .serializers import UserCreateSerializer, UsuarioSerializer, TipoDocumentoSerializer, PerfilSerializer
 
 SESSION_CACHE_TIEMOUT = getattr(settings,'SESSION_CACHE_TIEMOUT',7200)
 

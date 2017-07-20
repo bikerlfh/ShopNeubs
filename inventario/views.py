@@ -1,14 +1,16 @@
-from django.core import serializers
-from django.core.cache import cache
-from django.conf import settings
-from django.db.models import Q
-from django.shortcuts import render,render_to_response,HttpResponse,get_object_or_404,get_list_or_404,Http404
-from django.views.decorators.cache import cache_page
-from inventario import core
-from inventario.models import Producto,Categoria,Marca,SaldoInventario,ProductoReview,ProductoImagen,Promocion
+import json
 import operator
 from functools import reduce
-import json
+
+from django.conf import settings
+from django.core import serializers
+from django.core.cache import cache
+from django.db.models import Q
+from django.shortcuts import render, render_to_response, HttpResponse, get_object_or_404, Http404
+from django.views.decorators.cache import cache_page
+
+from inventario import core
+from inventario.models import Producto, Categoria, Marca, SaldoInventario, ProductoReview, ProductoImagen, Promocion
 
 SESSION_CACHE_TIEMOUT = getattr(settings,'SESSION_CACHE_TIEMOUT',7200)
 # vista de marcas registradas

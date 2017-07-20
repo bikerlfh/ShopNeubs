@@ -1,21 +1,22 @@
-from django.contrib import messages
-from django.core import serializers
-from django.shortcuts import render,HttpResponse,HttpResponseRedirect,Http404,get_list_or_404,get_object_or_404
-from django.urls import reverse
-from django.views import View
-from django.views.generic import ListView
-from .cart import Cart
-from .forms import ConsultaPedidoVentaForm
-from .pedidoventamanager import PedidoVentaManager
-from .models import EstadoPedidoVenta,PedidoVenta,PedidoVentaPosicion,PosicionVentaCompra,MotivoCancelacionPedidoVenta
-from inventario.models import SaldoInventario
-from tercero.models import Cliente
-from compras.models import PedidoCompra
-from ventas.send_mail_venta import send_email_pedido_venta
-
 # from django.contrib.auth.decorators import login_required,permission_required
 # from django.utils.decorators import method_decorator
 import json
+
+from django.contrib import messages
+from django.core import serializers
+from django.shortcuts import render, HttpResponse, HttpResponseRedirect, Http404, get_list_or_404, get_object_or_404
+from django.urls import reverse
+from django.views import View
+
+from inventario.models import SaldoInventario
+from tercero.models import Cliente
+from ventas.send_mail_venta import send_email_pedido_venta
+from .cart import Cart
+from .forms import ConsultaPedidoVentaForm
+from .models import EstadoPedidoVenta, PedidoVenta, PedidoVentaPosicion, PosicionVentaCompra, \
+		MotivoCancelacionPedidoVenta
+from .pedidoventamanager import PedidoVentaManager
+
 
 def cart(request):
 	cart = request.session.get('shop_cart',None)

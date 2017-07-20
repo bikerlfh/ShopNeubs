@@ -1,8 +1,8 @@
-from rest_framework.generics import ListAPIView,RetrieveAPIView
-from rest_framework.permissions import IsAuthenticated,IsAdminUser,IsAuthenticatedOrReadOnly,AllowAny
-from .serializers import ApiSincronizacionSerializer,ApiTablaSerializer,ApiBannerSerializer,ApiSectionSerializer
-from base.models import ApiSincronizacion,ApiTabla,ApiBanner,ApiSection
 from django.db.models import Q
+from rest_framework.generics import ListAPIView
+
+from base.models import ApiSincronizacion, ApiTabla, ApiBanner, ApiSection
+from .serializers import ApiSincronizacionSerializer, ApiTablaSerializer, ApiBannerSerializer, ApiSectionSerializer
 
 
 class APITablaListView(ListAPIView):

@@ -1,7 +1,10 @@
-from django.shortcuts import render,HttpResponse
-from .models import *
-from django.db.models import Q
 import json
+
+from django.shortcuts import HttpResponse
+
+from .models import *
+
+
 # Create your views here.
 
 def departamento_json(request,idPais):

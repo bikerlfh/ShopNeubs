@@ -1,13 +1,13 @@
-from datetime import datetime,timedelta
-from django import template
-from django.utils.safestring import mark_safe
-from django.urls import reverse
-from inventario.models import Categoria,SaldoInventario
-from ventas.cart import Cart
-import urllib
 import re
-from django.conf import settings
+import urllib
+from datetime import datetime, timedelta
 
+from django import template
+from django.conf import settings
+from django.urls import reverse
+from django.utils.safestring import mark_safe
+
+from inventario.models import Categoria, SaldoInventario
 
 register = template.Library()
 

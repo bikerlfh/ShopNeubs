@@ -1,7 +1,8 @@
-from django.db import models
-from django.core.files.storage import FileSystemStorage
 from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+from django.db import models
 from filer.fields.image import FilerImageField
+
 
 class Carousel(models.Model):
 	idCarousel = models.AutoField(primary_key = True)

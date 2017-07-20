@@ -1,10 +1,10 @@
-from rest_framework.serializers import ModelSerializer, HyperlinkedIdentityField,SerializerMethodField,ValidationError,CharField,EmailField
 from django.contrib.auth import get_user_model
-from registration.models import SHA1_RE, RegistrationProfile
 from django.contrib.sites.shortcuts import get_current_site
-from tercero.models import Cliente,TipoDocumento,DatoBasicoTercero
-from division_territorial.models import Municipio
 from django.test import RequestFactory
+from registration.models import RegistrationProfile
+from rest_framework.serializers import ModelSerializer, SerializerMethodField, ValidationError
+
+from tercero.models import Cliente, TipoDocumento
 
 User = get_user_model()
 

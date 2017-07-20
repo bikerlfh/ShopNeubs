@@ -1,6 +1,8 @@
 from django import forms
 from django.forms import ValidationError
-from .models import SaldoInventario,Promocion
+
+from .models import SaldoInventario
+
 
 class SaldoInventarioForm(forms.ModelForm):
 	class Meta:

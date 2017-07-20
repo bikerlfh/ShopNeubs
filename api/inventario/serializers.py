@@ -1,9 +1,8 @@
 from django.conf import settings
-from inventario.models import Categoria,Marca,Producto,SaldoInventario
-from rest_framework.serializers import (ModelSerializer, HyperlinkedIdentityField,
-										SerializerMethodField,ValidationError,CharField)
-
 from easy_thumbnails.templatetags.thumbnail import thumbnail_url
+from rest_framework.serializers import (ModelSerializer, SerializerMethodField)
+
+from inventario.models import Categoria, Marca, Producto, SaldoInventario
 
 THUMBNAIL_DEFAULT_STORAGE = getattr(settings,'THUMBNAIL_DEFAULT_STORAGE','http://192.168.1.50:8000')
 

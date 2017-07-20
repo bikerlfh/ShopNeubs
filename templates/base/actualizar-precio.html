@@ -57,22 +57,22 @@
 		</form>
         {% if listado_pendiente_actualizar %}
         <div class="col-lg-12">
-            <h3 class="text-center item-heading">SALDO INVENTARIO CON CAMBIOS EN PRECIOS</h3>
+            <h3 class="text-center item-heading">SALDO INVENTARIO CON CAMBIOS EN PRECIOS <b>({{ listado_pendiente_actualizar|length }})</b></h3>
             <div class="table-responive">
                 <table id="tabla_pedido" class="table table-striped">
                     <thead>
                         <tr>
                             <th>Producto</th>
                             <th>Referencia</th>
-                            <th>Cantidad</th>
-                            <th>Costo Total</th>
-                            <th>Precio Venta Unitario</th>
-                            <th class="precio-nuevo">Nuevo Precio</th>
+                            <th>Cant.</th>
+                            <th>Costo Tot.</th>
+                            <th>Pre. Compra Unitario</th>
+                            <th class="precio-nuevo">Pre. New</th>
                             <th class="diferencia">Diferencia</th>
                             <th>Precio Venta</th>
-                            <th class="precio-nuevo">Precio Venta Nuevo</th>
-                            <th>Precio Oferta</th>
-                            <th class="precio-nuevo">Precio Oferta Nuevo</th>
+                            <th class="precio-nuevo">Pre. Venta New</th>
+                            <th>Pre. Oferta</th>
+                            <th class="precio-nuevo">Pre. Oferta New</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -122,7 +122,7 @@
         {% endif %}
         {% if listado_pendiente_crear %}
         <div class="col-lg-12">
-            <h3 class="text-center item-heading">SALDO INVENTARIOS NO ENCONTRADOS</h3>
+            <h3 class="text-center item-heading">SALDO INVENTARIOS NO ENCONTRADOS <b>({{ listado_pendiente_crear|length }})</b></h3>
             <div class="table-responive">
                 <table id="tabla_pedido" class="table table-striped">
                     <thead>
@@ -137,7 +137,7 @@
                         <tr>
                             <td>{{ sa.producto}}</td>
                             <td>{{ sa.referencia }}</td>
-                            <td>{{ sa.valor|stringformat:"d"|intcomma }}</td>
+                            <td>${{ sa.valor|stringformat:"d"|intcomma }}</td>
                             <td></td>
                         </tr>
                     {% endfor %}

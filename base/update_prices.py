@@ -1,6 +1,8 @@
-import xlrd
-from inventario.models import SaldoInventario
 from decimal import Decimal
+
+import xlrd
+
+from inventario.models import SaldoInventario
 
 
 class SASerializer:

@@ -2,8 +2,9 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 
+from division_territorial.models import Pais, Municipio
 from .models import TipoDocumento
-from division_territorial.models import Pais,Departamento,Municipio
+
 
 #from crispy_forms.helper import FormHelper
 

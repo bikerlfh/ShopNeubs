@@ -1,6 +1,7 @@
-from django.db import models
 from django.contrib.sessions.models import Session
+from django.db import models
 from filer.fields.file import FilerFileField
+
 
 # Create your models here.
 

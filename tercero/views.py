@@ -1,15 +1,17 @@
-from django.shortcuts import render,HttpResponse,Http404,HttpResponseRedirect,get_object_or_404
-from .models import TipoDocumento,Proveedor,Cliente,DatoBasicoTercero,Cliente
-from ventas.models import PedidoVenta,PedidoVentaPosicion
-from .forms import ClienteForm
-from division_territorial.models import *
-from django.core import serializers
-from django.views import View
-from django.contrib.auth.models import User
-from django.db import transaction
-from django.contrib import messages
-from django.urls import reverse
 import json
+
+from django.contrib import messages
+from django.contrib.auth.models import User
+from django.core import serializers
+from django.db import transaction
+from django.shortcuts import render, HttpResponse, Http404, HttpResponseRedirect
+from django.urls import reverse
+from django.views import View
+
+from division_territorial.models import *
+from ventas.models import PedidoVenta, PedidoVentaPosicion
+from .forms import ClienteForm
+from .models import TipoDocumento, Proveedor, DatoBasicoTercero, Cliente
 
 
 # Create your views here.

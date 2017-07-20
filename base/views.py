@@ -1,14 +1,15 @@
 from django.conf import settings
 from django.contrib import messages
 from django.core.cache import cache
-from django.shortcuts import render,HttpResponseRedirect
+from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse
 from django.views import View
 from django.views.decorators.cache import cache_page
-from inventario.models  import Categoria,Marca
-from .models import Carousel,ApiSincronizacion,ArchivoModificacionPrecio
+
+from inventario.models import Categoria, Marca
 from tercero.models import Proveedor
 from .forms import ArchivoModificarPrecioForm
+from .models import Carousel, ApiSincronizacion, ArchivoModificacionPrecio
 from .update_prices import ActualizacionPrecio
 
 SESSION_CACHE_TIEMOUT = getattr(settings,'SESSION_CACHE_TIEMOUT',7200)

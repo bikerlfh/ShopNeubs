@@ -1,9 +1,10 @@
-from django.conf.urls import url,include
-from .division_territorial import views as views_division_territorial
-from .tercero import views as views_tercero
-from .inventario import views as views_inventario
-from .ventas import views as views_ventas
+from django.conf.urls import url, include
+
 from . import views as views_base
+from .division_territorial import views as views_division_territorial
+from .inventario import views as views_inventario
+from .tercero import views as views_tercero
+from .ventas import views as views_ventas
 
 urlpatterns = [
 	url(r'^rest-auth/', include('rest_auth.urls')),

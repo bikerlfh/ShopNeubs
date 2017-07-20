@@ -1,6 +1,7 @@
+import pdfkit
 from django.http import HttpResponse
 from django.template.loader import render_to_string
-import pdfkit
+
 
 def generate_pdf(template,context):
 	rendered = render_to_string(template,context)

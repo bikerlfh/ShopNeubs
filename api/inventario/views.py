@@ -1,22 +1,21 @@
-from rest_framework.generics import ListAPIView,RetrieveAPIView
-from rest_framework.permissions import IsAuthenticated,IsAdminUser,IsAuthenticatedOrReadOnly,AllowAny
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.filters import SearchFilter,OrderingFilter
-from .serializers import CategoriaSerializer,MarcaSerializer,ProductoDetailSerializer,SaldoInventarioListSerializer,SaldoInventarioDetailSerializer,SaldoInventarioListSimpleSerializer
-from inventario.models import Categoria,Marca,Producto,SaldoInventario,Marca,Promocion,ProductoReview
-from django.db.models import Q
-from api.pagination import PaginationSaldoInventario
-from api.exceptions import CustomException
+import json
 import operator
 from functools import reduce
+
 from django.conf import settings
-
+from django.db.models import Q
 from django.utils.decorators import method_decorator
-from rest_framework.decorators import api_view
 from django.views.decorators.cache import cache_page
-import json
+from rest_framework.decorators import api_view
+from rest_framework.filters import OrderingFilter
+from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.response import Response
 
+from api.exceptions import CustomException
+from api.pagination import PaginationSaldoInventario
+from inventario.models import Categoria, SaldoInventario, Marca, Promocion, ProductoReview
+from .serializers import CategoriaSerializer, MarcaSerializer, SaldoInventarioListSerializer, \
+		SaldoInventarioDetailSerializer, SaldoInventarioListSimpleSerializer
 
 SESSION_CACHE_TIEMOUT = getattr(settings,'SESSION_CACHE_TIEMOUT',7200)
 

@@ -1,8 +1,9 @@
-from .models import ProductoImagen,Categoria,SaldoInventario,Marca
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.core.cache import cache
 from django.conf import settings
+from django.core.cache import cache
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
+
+from .models import ProductoImagen, Categoria, SaldoInventario, Marca
 
 SESSION_CACHE_TIEMOUT = getattr(settings,'SESSION_CACHE_TIEMOUT',7200)
 

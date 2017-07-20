@@ -1,16 +1,16 @@
-from django.db import models
+from datetime import datetime
+from decimal import *
+
 from django.contrib.auth.models import User
-from django.conf import settings
-from filer.fields.image import FilerImageField
+from django.db import models
+from django.db.models import Max
 from django.db.models import Q
+from easy_thumbnails.signal_handlers import generate_aliases
+from easy_thumbnails.signals import saved_file
+from filer.fields.image import FilerImageField
+
 from compras.models import PedidoCompra, PedidoCompraPosicion
 from ventas.models import PedidoVenta, PedidoVentaPosicion
-from django.db.models import Max
-from decimal import *
-from datetime import datetime
-
-from easy_thumbnails.signals import saved_file
-from easy_thumbnails.signal_handlers import generate_aliases
 
 saved_file.connect(generate_aliases)
 

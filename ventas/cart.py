@@ -1,6 +1,8 @@
-from inventario.models import Producto, SaldoInventario
 from datetime import datetime
 from decimal import Decimal
+
+from inventario.models import SaldoInventario
+
 
 class Item:
 	saldoInventario = None

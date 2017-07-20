@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import *
+
 from base.admin import DefaultAdmin
+from .models import *
 
 # deshabilitamos la acción de borrar los seleccionados
 admin.site.disable_action('delete_selected')

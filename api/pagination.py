@@ -1,8 +1,8 @@
-from rest_framework.pagination import LimitOffsetPagination,PageNumberPagination
 from django.conf import settings
+from rest_framework.pagination import LimitOffsetPagination, PageNumberPagination
 from rest_framework.response import Response
-from inventario.models import SaldoInventario,Marca
 
+from inventario.models import SaldoInventario, Marca
 
 NUM_ITEMS_DISPLAY_API = getattr(settings,"NUM_ITEMS_DISPLAY_API",10)
 

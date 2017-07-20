@@ -1,7 +1,10 @@
 from django.contrib import admin
-from .forms import ApiBannerForm
-from .models import Carousel, ApiTabla,ApiSincronizacion,ApiBanner,ApiSection,ArchivoModificacionPrecio
 from django.contrib.admin.models import LogEntry
+
+from .forms import ApiBannerForm
+from .models import Carousel, ApiTabla, ApiSincronizacion, ApiBanner, ApiSection, ArchivoModificacionPrecio
+
+
 # Register your models here.
 
 # clase de visualización del modelos de rango pedido (compras y ventas)
