@@ -58,6 +58,8 @@ urlpatterns = [
 	url(r'^sync/municipio/$', views_division_territorial.MunicipioListView.as_view(), name = 'sync_municipio'),
 	url(r'^sync/tipo-documento/$', views_tercero.TipoDocumentoListView.as_view(), name = 'sync_tipo_documento'),
 
-	
+	# FireBase Cloud Messages
+	url(r'^fcm-devices/$', views_base.FMCDeviceRegister, name = 'fcm_devices'),
+
 	url(r'^$', views_inventario.producto_categoria.as_view(), name = 'producto_categoria'),
 ]

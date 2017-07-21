@@ -12,17 +12,20 @@ class ProductoCategoriaListFilter(admin.SimpleListFilter):
 
     # Parameter for the filter that will be used in the URL query.
     parameter_name = 'categoria'
+
     # el filtro son las categorias
     def lookups(self, request, model_admin):
-    	# Debe ser una lista o una tupla.
-    	# El primer elemento de la tupla es el pk de la categoria
-    	# El segundo es la categoria a visualizar 
+        # Debe ser una lista o una tupla.
+        # El primer elemento de la tupla es el pk de la categoria
+        # El segundo es la categoria a visualizar
         return tuple((c.pk,'%s - %s (%s)' % (c.codigo, c.descripcion,(Producto.objects.filter(Q(categoria = c.pk)|Q(categoria__categoriaPadre=c.pk)).count()))) for c in Categoria.objects.all().order_by('codigo'))
+
     def queryset(self, request, queryset):
-    	if self.value() is None:
-        	return queryset.all()
-		# se filtra por categoria y categoria padre
-    	return queryset.filter(Q(categoria=self.value())|Q(categoria__categoriaPadre=self.value()))
+        if self.value() is None:
+            return queryset.all()
+        # se filtra por categoria y categoria padre
+        return queryset.filter(Q(categoria=self.value())|Q(categoria__categoriaPadre=self.value()))
+
 
 # Clase para el filtro de categorias por CategoriaPadre
 class CategoriaPadreListFilter(admin.SimpleListFilter):
@@ -39,15 +42,16 @@ class CategoriaPadreListFilter(admin.SimpleListFilter):
             return queryset.all()
         return queryset.filter(categoriaPadre = self.value())
 
+
 class CategoriaAdmin(admin.ModelAdmin):
-	fieldsets  = [
-		('Categoría Padre',{'fields':['categoriaPadre']}),
-		('Default', {'fields':['codigo','descripcion','estado']})
-	]
-	list_display = ['codigo','descripcion','categoriaPadre','estado']
-	list_filter = [CategoriaPadreListFilter,'estado']
-	search_fields = ['codigo','descripcion']
-	ordering = ['codigo']
+    fieldsets  = [
+        ('Categoría Padre',{'fields':['categoriaPadre']}),
+        ('Default', {'fields':['codigo','descripcion','estado']})
+    ]
+    list_display = ['codigo','descripcion','categoriaPadre','estado']
+    list_filter = [CategoriaPadreListFilter,'estado']
+    search_fields = ['codigo','descripcion']
+    ordering = ['codigo']
 admin.site.register(Categoria,CategoriaAdmin)
 
 admin.site.register(Marca,DefaultAdmin)
@@ -72,32 +76,39 @@ class ProductoConSinSaldoInventarioListFilter(admin.SimpleListFilter):
         else:
             return queryset.exclude(pk__in = list_productos)
 
+
 class ProductoAdmin(admin.ModelAdmin):
     fieldsets = [
         ('Parametros', {'fields':['categoria','marca']}),
-	   ('Campos del Producto', {'fields':['nombre','referencia','descripcion','especificacion','urldescripcion']}),
-    ]    
+        ('Campos del Producto', {'fields':['nombre','referencia','descripcion','especificacion','urldescripcion']}),
+    ]
     list_display = ['numeroProducto','nombre','referencia','categoria']
     list_display_links = ['nombre']
     list_filter = [ProductoConSinSaldoInventarioListFilter,ProductoCategoriaListFilter,'marca']
     search_fields = ['numeroProducto','referencia','nombre','marca__descripcion']
+    raw_id_fields = ['categoria','marca']
+
 admin.site.register(Producto,ProductoAdmin)
 
 admin.site.register(Plataforma,DefaultAdmin)
+
 
 class CategoriaSaldoInventarioListFilter(admin.SimpleListFilter):
     title = _('Categoría')
 
     # Parameter for the filter that will be used in the URL query.
     parameter_name = 'categoria'
+
     # el filtro son las categorias
     def lookups(self, request, model_admin):
         return tuple((c.pk,'%s - %s (%s)' % (c.codigo, c.descripcion,(SaldoInventario.objects.filter(Q(producto__categoria = c.pk)|Q(producto__categoria__categoriaPadre = c.pk)).count()))) for c in Categoria.objects.all().order_by('codigo'))
+
     def queryset(self, request, queryset):
         # se filtra por categoria padre
         if self.value() is None:
             return queryset.all()
         return queryset.filter(Q(producto__categoria = self.value())|Q(producto__categoria__categoriaPadre = self.value()))
+
 
 class SaldoInventarioAdmin(admin.ModelAdmin):
     form = SaldoInventarioForm
@@ -109,15 +120,18 @@ class SaldoInventarioAdmin(admin.ModelAdmin):
     search_fields = ['referenciaProveedor','producto__numeroProducto','producto__nombre','producto__referencia']
     list_filter = ['proveedor','estado',CategoriaSaldoInventarioListFilter,'producto__marca']
     ordering = ['-producto__numeroProducto','estado']
+    raw_id_fields = ['producto','proveedor']
+
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         kwargs = ordenar_field_for_foreignkey(db_field,kwargs)
         return super(SaldoInventarioAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
-    
+
     def save_model(self, request, obj, form, change):
         obj.usuarioCreacion = request.user
         super(SaldoInventarioAdmin, self).save_model(request, obj, form, change)
 
 admin.site.register(SaldoInventario,SaldoInventarioAdmin)
+
 
 class PromocionAdmin(admin.ModelAdmin):
     fieldsets = [
@@ -132,8 +146,9 @@ class PromocionAdmin(admin.ModelAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         kwargs = ordenar_field_for_foreignkey(db_field,kwargs)
         return super(PromocionAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
-        
+
 admin.site.register(Promocion,PromocionAdmin)
+
 
 class ProductoImagenAdmin(admin.ModelAdmin):
     fields = ['producto','imagen','order']
@@ -149,6 +164,7 @@ class ProductoImagenAdmin(admin.ModelAdmin):
 
 admin.site.register(ProductoImagen,ProductoImagenAdmin)
 
+
 class PorcentajeGananciaAdmin(admin.ModelAdmin):
     fields = ['producto','categoria','porcentaje']
     list_display_links = ['porcentaje']
@@ -159,6 +175,7 @@ class PorcentajeGananciaAdmin(admin.ModelAdmin):
         return super(PorcentajeGananciaAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 admin.site.register(PorcentajeGanancia,PorcentajeGananciaAdmin)
+
 
 class ProductoReviewAdmin(admin.ModelAdmin):
     fields = ['producto','numeroVista','numeroVenta']
@@ -171,6 +188,7 @@ class ProductoReviewAdmin(admin.ModelAdmin):
         return super(ProductoReviewAdmin, self).formfield_for_foreignkey(db_field, request, **kwargs)
 
 admin.site.register(ProductoReview,ProductoReviewAdmin)
+
 
 def ordenar_field_for_foreignkey(db_field, kwargs):
     # Se ordena los productos por numeroProducto

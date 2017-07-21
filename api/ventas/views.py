@@ -29,11 +29,13 @@ class mis_pedidos(ListAPIView):
 		except Exception:
 			raise CustomException(detail="No tiene pedidos")
 
+
 class PedidoVentaDetalleView(RetrieveAPIView):
 	queryset = PedidoVenta.objects.all()
 	serializer_class = PedidoVentaDetalleSerializer
 	permission_classes = [IsAuthenticated]
 	lookup_field = 'idPedidoVenta'
+
 
 class PedidoVentaCompletoView(RetrieveAPIView):
 	queryset = PedidoVenta.objects.all()
@@ -66,11 +68,3 @@ def PedidoVentaCreateView(request):
 	else:
 		raise CustomException(detail=serializer.errors)
 
-
-
-
-
-
-
-		
-		

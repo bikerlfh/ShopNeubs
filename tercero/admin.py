@@ -17,6 +17,7 @@ class DatoBasicoTerceroAdmin(admin.ModelAdmin):
 
 admin.site.register(DatoBasicoTercero,DatoBasicoTerceroAdmin)
 
+
 class ProveedorAdmin(admin.ModelAdmin):
 	fieldsets  = [
 		('Tercero',{'fields':['datoBasicoTercero']}),
@@ -24,8 +25,10 @@ class ProveedorAdmin(admin.ModelAdmin):
 	]
 	list_display = ['datoBasicoTercero','correo','webSite']
 	search_fields = ['datoBasicoTercero']
+	raw_id_fields = ['datoBasicoTercero']
 
 admin.site.register(Proveedor,ProveedorAdmin)
+
 
 class ClienteAdmin(admin.ModelAdmin):
 	list_display = ['datoBasicoTercero','correo','municipio']
