@@ -171,7 +171,7 @@ def busqueda_asincrona_producto(request):
 			listado_saldo_inventario = cache.get('index_promocion')
 	elif request.GET.get("mas_vistos",False):
 		if not cache.get('index_mas_vistos'):
-			review = ProductoReview.objects.all().order_by('-numeroVista')[:top*2].values_list('producto',flat=True)
+			review = ProductoReview.objects.all().order_by('-numeroVista')[:top*10].values_list('producto',flat=True)
 			listado_idSaldoInventario = []
 			for idProducto in review:
 				if SaldoInventario.objects.filter_products(estado=True,producto=idProducto).exists():

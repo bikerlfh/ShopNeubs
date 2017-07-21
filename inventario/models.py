@@ -272,12 +272,14 @@ class PromocionManager(models.Manager):
 		listado_promocion = self.filter(*args,**kwargs)
 		listado_pk = []
 		for p in listado_promocion:
-			if Promocion.objects.filter(saldoInventario__producto_id = p.saldoInventario.producto_id,
-										fechaFin__isnull=True,estado=True,
-										precioOferta__lt=p.precioOferta).exclude(pk=p.pk).exists():
-				listado_pk.append(Promocion.objects.filter(saldoInventario__producto_id = p.saldoInventario.producto_id,
-															fechaFin__isnull=True,estado=True,
-															precioOferta__lt=p.precioOferta).exclude(pk=p.pk)[0].pk)
+			#promocion_menor = Promocion.objects.filter(saldoInventario__producto_id = p.saldoInventario.producto_id,
+			#							fechaFin__isnull=True,estado=True,
+			#							precioOferta__lt=p.precioOferta).exclude(pk=p.pk)
+			kwargs['saldoInventario__producto_id'] = p.saldoInventario.producto_id
+			kwargs['precioOferta__lt'] = p.precioOferta
+			promocion_menor = Promocion.objects.filter(*args,**kwargs).exclude(pk=p.pk)
+			if promocion_menor.exists():
+				listado_pk.append(promocion_menor.first().pk)
 			else:
 				listado_pk.append(p.pk)
 		return Promocion.objects.filter(pk__in=listado_pk)
