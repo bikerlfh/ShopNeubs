@@ -16,18 +16,33 @@ def send_message(title, body, data=None, user=None, low_priority=False,time_to_l
 
 
 def send_promocion(saldoInventario, user=None):
-	title = "Hey! %s esta en promoción" % saldoInventario.producto.nombre
+	title = "Hey! %s en oferta 😍" % saldoInventario.producto.nombre
 	if user:
-		title = "Hey %s! %s esta en promoción" % (user.username,saldoInventario.producto.nombre)
+		title = "Hey %s! %s en oferta 😍" % (user.username, saldoInventario.producto.nombre)
 	body = "No te pierdas la oportunidad de adquirilo por tan solo $%s" % str(saldoInventario.precioOferta)
-	send_message(title, body, user=user)
+	data = {"idSaldoInventario": saldoInventario.pk}
+	send_message(title, body, data=data, user=user)
+
+
+def send_nuevo_producto(saldoInventario,user=None):
+	title = "🛍 ShopNeubs 🛍"
+	if user:
+		title = "Hey %s! %s esta en promoción" % (user.username, saldoInventario.producto.nombre)
+	body = "%s - $%s adquierelo en nuestra tienda" % (saldoInventario.producto.nombre,str(saldoInventario.precioOferta))
+	data = {"idSaldoInventario": saldoInventario.pk}
+	send_message(title, body, data=data, user=user)
 
 
 # Se envia al cliente la notificación del cambio de estado del pedido
 def send_cambio_estado_pedido_venta(pedidoVenta, user):
 	cliente = Cliente.objects.get(usuario_id=user.pk)
-	title = "Se ha cambiado el estado de tu pedido!"
+	title = "ShopNeubs"
 	body = "%s, tu pedido N° %s  ha sido %s" % (cliente.datoBasicoTercero.primerNombre, str(pedidoVenta.numeroPedido), pedidoVenta.estadoPedidoVenta.descripcion)
-	send_message(title, body, user=user)
+
+	data = {"idPedidoVenta":pedidoVenta.pk}
+	send_message(title, body,data=data, user=user)
+
+
+
 
 

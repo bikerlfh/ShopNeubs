@@ -41,6 +41,7 @@ class ApiSincronizacionAdmin(admin.ModelAdmin):
 
 admin.site.register(ApiSincronizacion,ApiSincronizacionAdmin)
 
+
 class ApiBannerAdmin(admin.ModelAdmin):
 	form = ApiBannerForm
 	fieldsets  = [
@@ -48,11 +49,11 @@ class ApiBannerAdmin(admin.ModelAdmin):
 	]
 	list_display = ['imagen','isClickable','saldoInventario','urlRequest','fecha','estado']
 	ordering = ['estado','-fecha']
-	#search_fields = ['tabla','fecha']
 	list_filter = ['estado','isClickable']
+	raw_id_fields = ['saldoInventario']
 
-	def has_delete_permission(self, request, obj=None):
-		return False
+	#def has_delete_permission(self, request, obj=None):
+	#	return False
 
 admin.site.register(ApiBanner,ApiBannerAdmin)
 
@@ -77,6 +78,7 @@ class logEntryAdmin(admin.ModelAdmin):
 	list_filter = ['content_type']
 	
 admin.site.register(LogEntry,logEntryAdmin)
+
 
 class ArchivoModificacionPrecioadmin(admin.ModelAdmin):
 		list_display = ['__str__','proveedor','fecha','ultimo']

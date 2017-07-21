@@ -6,6 +6,7 @@ from inventario.models import Categoria, Marca, Producto, SaldoInventario
 
 THUMBNAIL_DEFAULT_STORAGE = getattr(settings,'THUMBNAIL_DEFAULT_STORAGE','http://192.168.1.50:8000')
 
+
 class CategoriaSerializer(ModelSerializer):
 	#padre = HyperlinkedIdentityField(view_name='categoria_detail',lookup_field='cp')
 	class Meta:
@@ -18,6 +19,7 @@ class CategoriaSerializer(ModelSerializer):
 			'estado',
 		]
 
+
 class MarcaSerializer(ModelSerializer):
 	class Meta:
 		model = Marca
@@ -27,10 +29,12 @@ class MarcaSerializer(ModelSerializer):
 			'descripcion',
 		]
 
+
 class ProductoDetailSerializer(ModelSerializer):
 	idCategoria = SerializerMethodField()
 	idMarca = SerializerMethodField()
 	imagenes = SerializerMethodField()
+
 	class Meta:
 		model = Producto
 		fields = [
@@ -44,6 +48,7 @@ class ProductoDetailSerializer(ModelSerializer):
 			'urldescripcion',
 			'imagenes',
 		]
+
 	# obtiene todas las imagenes en una lista
 	def get_imagenes(self,obj):
 		imagenes = obj.imagenes()
@@ -56,8 +61,10 @@ class ProductoDetailSerializer(ModelSerializer):
 					list_imagenes.append({'order':i,'url': thumbnail_url(imagen, 'producto_detalle')})
 			return list_imagenes
 		return None
+
 	def get_idCategoria(self,obj):
 		return obj.categoria_id
+
 	def get_idMarca(self,obj):
 		return obj.marca_id
 
@@ -66,6 +73,7 @@ class ProductoSimpleSerializer(ModelSerializer):
 	#detail = HyperlinkedIdentityField(view_name='producto_detail',lookup_field='pk')
 	idMarca = SerializerMethodField()
 	imagen = SerializerMethodField()
+
 	class Meta:
 		model = Producto
 		fields = [
@@ -76,6 +84,7 @@ class ProductoSimpleSerializer(ModelSerializer):
 			'nombre',
 			'imagen',
 		]
+
 	# Se consulta la imagen principal del producto
 	def get_imagen(self,obj):
 		imagen = obj.imagen()
@@ -86,8 +95,10 @@ class ProductoSimpleSerializer(ModelSerializer):
 			else:
 				return thumbnail_url(imagen, 'producto')
 		return None
+
 	def get_idMarca(self,obj):
 		return obj.marca_id
+
 
 class SaldoInventarioDetailSerializer(ModelSerializer):
 	producto = ProductoDetailSerializer()
@@ -116,6 +127,8 @@ class SaldoInventarioListSerializer(ModelSerializer):
 			'precioOferta',
 			'estado',
 		]
+
+		
 # se usa para actualizar los precios del carrito
 class SaldoInventarioListSimpleSerializer(ModelSerializer):
 	class Meta:

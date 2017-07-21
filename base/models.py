@@ -25,16 +25,15 @@ class Carousel(models.Model):
 		super(Carousel, self).save(*args, **kwargs)
 
 
-def generate_thumbnails(model, pk, field):
-    instance = model._default_manager.get(pk=pk)
-    fieldfile = getattr(instance, field)
-    generate_aliases_carousel(fieldfile)
+#def generate_thumbnails(model, pk, field):
+#    instance = model._default_manager.get(pk=pk)
+#    fieldfile = getattr(instance, field)
 
 
 class ApiTabla(models.Model):
 	idApiTabla = models.AutoField(primary_key=True)
-	codigo = models.CharField(max_length=2,null=False,blank = False)
-	descripcion = models.CharField(max_length = 20,null=False,blank=False)
+	codigo = models.CharField(max_length=2, null=False, blank=False)
+	descripcion = models.CharField(max_length=20, null=False, blank=False)
 
 	def __str__(self):
 		return '%s - %s' % (self.codigo,self.descripcion)
@@ -43,6 +42,7 @@ class ApiTabla(models.Model):
 		db_table = 'ApiTabla'
 		verbose_name = 'API Tabla'
 		verbose_name_plural = 'API Tablas'
+
 
 class ApiSincronizacion(models.Model):
 	idApiSincronizacion = models.AutoField(primary_key = True)
@@ -68,6 +68,7 @@ class ApiSincronizacion(models.Model):
 				pass
 		super(ApiSincronizacion,self).save(*args,**kwargs)
 
+
 # banner para los dispositivos moviles
 class ApiBanner(models.Model):
 	idApiBanner = models.AutoField(primary_key=True)
@@ -90,6 +91,11 @@ class ApiBanner(models.Model):
 		self.guardar_apiSincronizacion()
 		super(ApiBanner,self).save(*args,**kwargs)
 
+	def delete(self, using=None, keep_parents=False):
+		self.guardar_apiSincronizacion()
+		#self.imagen.delete()
+		super(ApiBanner, self).delete(using=using, keep_parents=keep_parents)
+
 	# def delete(self, *args, **kwargs):
 	# 	# se elimina la imagen
 	# 	#self.imagen.delete()
@@ -109,10 +115,10 @@ class ApiBanner(models.Model):
 			pass
 
 
-	def generate_thumbnails(model, pk, field):
-	    instance = model._default_manager.get(pk=pk)
-	    fieldfile = getattr(instance, field)
-	    generate_aliases_apibanner(fieldfile)
+	#def generate_thumbnails(model, pk, field):
+	#   instance = model._default_manager.get(pk=pk)
+	#   fieldfile = getattr(instance, field)
+	#   generate_aliases_apibanner(fieldfile)
 
 class ApiSection(models.Model):
 	idApiSection = models.AutoField(primary_key = True)
@@ -146,7 +152,6 @@ class ApiSection(models.Model):
 			apiSincronizacion.save()
 		except Exception as e:
 			pass
-
 
 
 # clase para almacenar los archivos de modificación de precios
