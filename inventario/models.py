@@ -44,7 +44,7 @@ class Marca(models.Model):
 	codigo = models.CharField(max_length = 5,unique = True)
 	descripcion = models.CharField(max_length = 20)
 
-	#objects = MarcaManager()
+	# objects = MarcaManager()
 	def __str__(self):
 		return '%s - %s' % (self.codigo , self.descripcion)
 
@@ -190,6 +190,7 @@ class SaldoInventario(models.Model):
 	fechaCreacion = models.DateTimeField(auto_now_add = True,verbose_name = 'Fecha Creación')
 
 	objects = SaldoInventarioManager()
+
 	def __str__(self):
 		return '%s (%s)' % (self.producto,self.proveedor)
 
@@ -218,24 +219,24 @@ class SaldoInventario(models.Model):
 				self.precioVentaUnitario = 0
 		super(SaldoInventario, self).save(*args, **kwargs)
 		# Se guarda el historico de la promocion
-		if self.precioOferta != None and self.precioOferta > 0:
+		if self.precioOferta is not None and self.precioOferta > 0:
 			if Promocion.objects.filter(saldoInventario = self,estado = True).exists():
 				promocion = Promocion.objects.get(saldoInventario = self,estado = True)
-				# Si se cambia la promocion, se debe deshactivar la que ya habia y crear otra
+				# Si se cambia la promocion, se debe desactivar la que ya habia y crear otra
 				if promocion.precioOferta != self.precioOferta:
 					promocion.estado = False
 					promocion.save()
-					promocionNueva = Promocion(saldoInventario = self,precioOferta = self.precioOferta,estado = True)
-					promocionNueva.save()
+					# se crea la nueva promoción
+					Promocion(saldoInventario=self, precioOferta=self.precioOferta, estado=True).save()
 			else:
-				promocion = Promocion(saldoInventario = self,precioOferta = self.precioOferta,estado = True)
-				promocion.save()
+				Promocion(saldoInventario=self, precioOferta=self.precioOferta, estado=True).save()
 		else:
 			# Se deshabilita la promocion activa
 			if Promocion.objects.filter(saldoInventario = self,estado = True).exists():
 				promocion = Promocion.objects.get(saldoInventario = self,estado = True)
 				promocion.estado = False
 				promocion.save()
+
 	class Meta:
 		db_table = 'SaldoInventario'
 		verbose_name = 'Saldo Inventario'
@@ -247,9 +248,9 @@ class SaldoInventario(models.Model):
 		#managed = False
 
 class Garantia(models.Model):
-	idGarantia = models.AutoField(primary_key = True)
-	codigo = models.CharField(max_length = 2,unique = True)
-	descripcion = models.CharField(max_length = 150)
+	idGarantia = models.AutoField(primary_key=True)
+	codigo = models.CharField(max_length=2, unique=True)
+	descripcion = models.CharField(max_length=150)
 
 	def __str__(self):
 		return '%s - %s' % (self.codigo,self.descripcion)
@@ -261,7 +262,7 @@ class Garantia(models.Model):
 class PromocionManager(models.Manager):
 	def filter(self,*args,**kwargs):
 		# Se filtran las promociones que esten activas
-		return super(PromocionManager,self).filter(*args,**kwargs).filter(fechaFin__isnull=True,estado = True)
+		return super(PromocionManager, self).filter(*args, **kwargs).filter(fechaFin__isnull=True, estado=True)
 
 	# Filtra las promociones
 	# Si el filtro trae una promoción, pero existe otra con el mismo producto y de menor valor,
@@ -270,7 +271,6 @@ class PromocionManager(models.Manager):
 		# Se consulta el saldo inventario ordenandolo por precioVentaUnitario (para mostrar siempre el de menor precio)
 		listado_promocion = self.filter(*args,**kwargs)
 		listado_pk = []
-		listado_pk_exclude = []
 		for p in listado_promocion:
 			if Promocion.objects.filter(saldoInventario__producto_id = p.saldoInventario.producto_id,
 										fechaFin__isnull=True,estado=True,
@@ -282,24 +282,27 @@ class PromocionManager(models.Manager):
 				listado_pk.append(p.pk)
 		return Promocion.objects.filter(pk__in=listado_pk)
 
+
 class Promocion(models.Model):
 	idPromocion = models.BigAutoField(primary_key=True)
-	saldoInventario = models.ForeignKey("SaldoInventario",db_column='idSaldoInventario',on_delete = models.PROTECT,verbose_name='Saldo Inventario')
-	precioVenta = models.DecimalField(max_digits = 18, decimal_places = 2,verbose_name = 'Precio Venta')
-	precioOferta = models.DecimalField(max_digits = 18, decimal_places = 2,verbose_name='Precio Oferta')
-	fechaInicio = models.DateTimeField(auto_now_add = True,verbose_name = 'Fecha Inicio')
-	fechaFin = models.DateTimeField(null = True,blank = True,verbose_name = 'Fecha Fin')
-	estado = models.BooleanField(default = True)
+	saldoInventario = models.ForeignKey("SaldoInventario", db_column='idSaldoInventario', on_delete=models.PROTECT,verbose_name='Saldo Inventario')
+	precioVenta = models.DecimalField(max_digits=18, decimal_places=2, verbose_name='Precio Venta')
+	precioOferta = models.DecimalField(max_digits=18, decimal_places=2, verbose_name='Precio Oferta')
+	fechaInicio = models.DateTimeField(auto_now_add=True, verbose_name='Fecha Inicio')
+	fechaFin = models.DateTimeField(null=True, blank=True, verbose_name='Fecha Fin')
+	estado = models.BooleanField(default=True)
 
 	objects = PromocionManager()
+
 	def __str__(self):
 		return '%s'% self.saldoInventario
+
 	def save(self,*args,**kwargs):
 		self.precioVenta = self.saldoInventario.precioVentaUnitario
 		# Se deshabilita la promocion que este activa
-		if self.estado == True:
+		if self.estado is True:
 			try:
-				listadoPromocion = Promocion.objects.filter(saldoInventario = self.saldoInventario, estado = True).exclude(pk = self.pk)
+				listadoPromocion = Promocion.objects.filter(saldoInventario=self.saldoInventario, estado=True).exclude(pk=self.pk)
 				for promo in listadoPromocion:
 					promo.estado = False
 					promo.save()
@@ -314,12 +317,13 @@ class Promocion(models.Model):
 		verbose_name = "Promoción"
 		verbose_name_plural = "Promociones"
 
+
 # MovimientoInventario
 class MovimientoInventario(models.Model):
-	idMovimientoInventario = models.BigAutoField(primary_key = True)
-	pedidoVenta = models.ForeignKey("ventas.PedidoVenta",db_column = 'idPedidoVenta', on_delete = models.PROTECT, blank=True,null=True)
-	pedidoCompra = models.ForeignKey("compras.PedidoCompra",db_column = 'idPedidoCompra', on_delete = models.PROTECT, blank=True,null=True)
-	fecha = models.DateTimeField(auto_now_add = True)
+	idMovimientoInventario = models.BigAutoField(primary_key=True)
+	pedidoVenta = models.ForeignKey("ventas.PedidoVenta", db_column='idPedidoVenta', on_delete=models.PROTECT,blank=True, null=True)
+	pedidoCompra = models.ForeignKey("compras.PedidoCompra", db_column='idPedidoCompra', on_delete=models.PROTECT,blank=True, null=True)
+	fecha = models.DateTimeField(auto_now_add=True)
 	idUsuarioCreacion = models.IntegerField()
 
 	def __str__(self):
@@ -355,6 +359,7 @@ class MovimientoInventario(models.Model):
 											 entradaSalida = 0,
 											 cantidadMovimiento = posicion.cantidad,
 											 valorMovimiento=posicion.costoTotal).save()
+
 
 # MovimientoInventarioPosicion
 class MovimientoInventarioPosicion(models.Model):
@@ -401,6 +406,7 @@ class MovimientoInventarioPosicion(models.Model):
 		db_table = 'MovimientoInventarioPosicion'
 		#managed = False
 
+
 # Procentaje Ganancia
 class PorcentajeGanancia(models.Model):
 	idPorcentajeGanancia = models.BigAutoField(primary_key = True)
@@ -413,6 +419,7 @@ class PorcentajeGanancia(models.Model):
 
 	class Meta:
 		db_table = 'PorcentajeGanancia'
+
 
 class ProductoReview(models.Model):
 	idProductoReview = models.BigAutoField(primary_key = True)
@@ -435,5 +442,6 @@ class ProductoReview(models.Model):
 			except ProductoReview.DoesNotExist:
 				pass
 		super(ProductoReview, self).save(*args, **kwargs)
+
 	class Meta:
 		db_table = 'ProductoReview'
