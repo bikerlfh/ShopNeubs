@@ -49,6 +49,7 @@ class CategoriaDetailView(RetrieveAPIView):
 	# nombre del parametro
 	#lookup_url_kwarg = 'idCategoria'
 
+
 class producto_detalle(RetrieveAPIView):
 	queryset = SaldoInventario.objects.filter_products()
 	serializer_class = SaldoInventarioDetailSerializer
