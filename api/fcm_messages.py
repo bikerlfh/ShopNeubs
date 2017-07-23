@@ -50,7 +50,7 @@ def send_message_cambio_estado_pedido(pedidoVenta, cliente):
 	body = "%s, tu pedido N° %s  ha sido %s" % (cliente.datoBasicoTercero.primerNombre, str(pedidoVenta.numeroPedido), pedidoVenta.estadoPedidoVenta.descripcion)
 
 	data = {"idPedidoVenta": pedidoVenta.pk}
-	send_message(title=title, body=body, data=data, user=user, click_action=ACTION_VER_PEDIDO)
+	send_message(title=title, body=body, data=data, user=cliente.usuario, click_action=ACTION_VER_PEDIDO)
 
 
 # Envía un mensaje con una petición de listado productos
