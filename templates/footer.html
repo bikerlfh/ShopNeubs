@@ -1,15 +1,21 @@
+{% load staticfiles %}
 <footer class="text-center">
     <div class="container-fluid" style="padding-bottom: 0px;">
         <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
                 <h5><b>Horario de Atención</b></h5>
                 <h5>Lunes a Viernes de 7:00 AM a 5:00 PM </h5>
                 <h5> Sábados de 8:00 AM a 12:00 PM </h5>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
                 <p class="text-center"><b>Contáctenos</b></p>
                 <h5><span class="glyphicon glyphicon-phone icon "></span>3222709439 - 3222331893</h5>
                 <h5><span class="glyphicon glyphicon-envelope icon"></span> shop@neubs.com.co</h5>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                <a target="_blank" style="cursor: pointer" href="https://play.google.com/store/apps/details?id=co.com.neubs.shopneubs">
+                    <img style="width: 150px; margin: auto" src="{% static 'img/google_play_badges.png' %}" class="img-responsive">
+                </a>
             </div>
         </div>
         <div class="row">
