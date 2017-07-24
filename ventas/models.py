@@ -5,21 +5,22 @@ from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from api import fcm_messages
 
+
 class EstadoPedidoVenta(models.Model):
 	idEstadoPedidoVenta = models.AutoField(primary_key=True)
 	codigo = models.CharField(max_length=2, unique=True)
 	descripcion = models.CharField(max_length=25)
 
-	def natural_key(self):
-		return '%s - %s' % (self.codigo, self.descripcion)
-
-	def __str__(self):
-		return '%s - %s' % (self.codigo, self.descripcion)
-
 	class Meta:
 		db_table = 'EstadoPedidoVenta'
 		verbose_name = "Estado Pedido Venta"
 		verbose_name_plural = verbose_name
+
+	def __str__(self):
+		return '%s - %s' % (self.codigo, self.descripcion)
+
+	def natural_key(self):
+		return self.__str__()
 
 
 class RangoNumeroPedidoVenta(models.Model):
@@ -32,6 +33,11 @@ class RangoNumeroPedidoVenta(models.Model):
 	numeroActual = models.BigIntegerField(verbose_name="Número Actual")
 	estado = models.BooleanField(default=True)
 
+	class Meta:
+		db_table = 'RangoNumeroPedidoVenta'
+		verbose_name = "Rango Número Pedido"
+		verbose_name_plural = verbose_name
+
 	def __str__(self):
 		return 'N° desde: %s, N° hasta: %s, N° Actual: %s' % (str(self.numeroDesde), str(self.numeroHasta), str(self.numeroActual))
 
@@ -39,11 +45,6 @@ class RangoNumeroPedidoVenta(models.Model):
 		if self.idRangoNumeroPedidoVenta is None:
 			self.numeroActual = self.numeroDesde
 		super(RangoNumeroPedidoVenta, self).save(*args, **kwargs)
-
-	class Meta:
-		db_table = 'RangoNumeroPedidoVenta'
-		verbose_name = "Rango Número Pedido"
-		verbose_name_plural = verbose_name
 
 
 class PedidoVenta(models.Model):
@@ -130,8 +131,6 @@ class PedidoVenta(models.Model):
 		fcm_messages.send_message_cambio_estado_pedido(self)
 
 
-
-
 class PedidoVentaPosicion(models.Model):
 	idPedidoVentaPosicion = models.BigAutoField(primary_key=True)
 	pedidoVenta = models.ForeignKey("PedidoVenta", db_column='idPedidoVenta', on_delete=models.PROTECT)
@@ -145,20 +144,20 @@ class PedidoVentaPosicion(models.Model):
 													 default=None, on_delete=models.PROTECT,
 													 verbose_name='Motivo Cancelación')
 
-	def save(self, *args, **kwargs):
-		# Cuando no ha sido cancelado no se debe tener motivo de cancelación
-		if not self.cancelado:
-			self.motivoCancelacionPedidoVenta = None
-		super(PedidoVentaPosicion, self).save(*args, **kwargs)
-
-	def __str__(self):
-		return '%s / %s / %s' % (self.pedidoVenta, self.producto, self.proveedor)
-
 	class Meta:
 		db_table = 'PedidoVentaPosicion'
 		permissions = (
 			("cancelar_pedido_venta_posicion", "Puede cancelar pedidos de venta"),
 		)
+
+	def __str__(self):
+		return '%s / %s / %s' % (self.pedidoVenta, self.producto, self.proveedor)
+
+	def save(self, *args, **kwargs):
+		# Cuando no ha sido cancelado no se debe tener motivo de cancelación
+		if not self.cancelado:
+			self.motivoCancelacionPedidoVenta = None
+		super(PedidoVentaPosicion, self).save(*args, **kwargs)
 
 
 class PosicionVentaCompra(models.Model):
@@ -167,11 +166,11 @@ class PosicionVentaCompra(models.Model):
 	pedidoCompraPosicion = models.ForeignKey("compras.PedidoCompraPosicion", db_column='idPedidoCompraPosicion', on_delete=models.PROTECT)
 	cantidad = models.IntegerField()
 
-	def __str__(self):
-		return '(%s) - (%s)' % (self.pedidoVentaPosicion, self.pedidoCompraPosicion)
-
 	class Meta:
 		db_table = 'PosicionVentaCompra'
+
+	def __str__(self):
+		return '(%s) - (%s)' % (self.pedidoVentaPosicion, self.pedidoCompraPosicion)
 
 
 class ParametroImpuesto(models.Model):
@@ -180,11 +179,11 @@ class ParametroImpuesto(models.Model):
 	descripcion = models.CharField(max_length=20)
 	porcentaje = models.DecimalField(max_digits=4, decimal_places=2)
 
-	def __str__(self):
-		return '%s %s %s' % (self.codigo, self.descripcion, str(self.porcentaje))
-
 	class Meta:
 		db_table = 'ParametroImpuesto'
+
+	def __str__(self):
+		return '%s %s %s' % (self.codigo, self.descripcion, str(self.porcentaje))
 
 
 class MotivoCancelacionPedidoVenta(models.Model):
@@ -192,8 +191,8 @@ class MotivoCancelacionPedidoVenta(models.Model):
 	codigo = models.CharField(max_length=2, unique=True)
 	descripcion = models.CharField(max_length=25)
 
-	def __str__(self):
-		return '%s - %s' % (self.codigo, self.descripcion)
-
 	class Meta:
 		db_table = 'MotivoCancelacionPedidoVenta'
+
+	def __str__(self):
+		return '%s - %s' % (self.codigo, self.descripcion)

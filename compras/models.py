@@ -11,13 +11,14 @@ class EstadoPedidoCompra(models.Model):
 	codigo = models.CharField(max_length = 2, unique = True)
 	descripcion = models.CharField(max_length = 25)
 
-	def __str__(self):
-		return '%s - %s' % (self.codigo,self.descripcion)
-
 	class Meta:
 		db_table = 'EstadoPedidoCompra'
 		verbose_name = "Estado Pedido Compra"
 		verbose_name_plural = verbose_name
+
+	def __str__(self):
+		return '%s - %s' % (self.codigo,self.descripcion)
+
 
 class RangoNumeroPedidoCompra(models.Model):
 	idRangoNumeroPedidoCompra = models.AutoField(primary_key = True)
@@ -29,6 +30,11 @@ class RangoNumeroPedidoCompra(models.Model):
 	numeroActual = models.BigIntegerField(verbose_name = "Número Actual")
 	estado = models.BooleanField(default = True)
 
+	class Meta:
+		db_table = 'RangoNumeroPedidoCompra'
+		verbose_name = "Rango Número Pedido"
+		verbose_name_plural = verbose_name
+
 	def __str__(self):
 		return 'N° desde: %s, N° hasta: %s, N° Actual: %s' % (str(self.numeroDesde),str(self.numeroHasta),str(self.numeroActual))
 
@@ -37,10 +43,6 @@ class RangoNumeroPedidoCompra(models.Model):
 			self.numeroActual = self.numeroDesde
 		super(RangoNumeroPedidoCompra, self).save(*args, **kwargs)
 
-	class Meta:
-		db_table = 'RangoNumeroPedidoCompra'
-		verbose_name = "Rango Número Pedido"
-		verbose_name_plural = verbose_name
 
 # PedidoCompra
 class PedidoCompra(models.Model):
@@ -52,21 +54,22 @@ class PedidoCompra(models.Model):
 	urlFactura = FilerFileField(blank = True,null = True,max_length=250,verbose_name = 'Url Factura')
 	idUsuarioCreacion =  models.BigIntegerField()
 
-	# retorna el valor total del pedido
-	def get_valor_total(self):
-		return sum(posicion.costoTotal for posicion in PedidoCompraPosicion.objects.filter(pedidoCompra  = self.idPedidoCompra))
-	def get_cantidad_total(self):
-		return sum(posicion.cantidad for posicion in PedidoCompraPosicion.objects.filter(pedidoCompra  = self.idPedidoCompra))
-
-	def __str__(self):
-		return '%s %s' % (str(self.numeroPedido),self.proveedor)
-
 	class Meta:
 		db_table = 'PedidoCompra'
 		permissions= (
 			('solicitar_compra','Puede solicitar pedido de compra'),
 			('consultar_pedido','Puede consultar el pedido de compra'),
 		)
+
+	def __str__(self):
+		return '%s %s' % (str(self.numeroPedido),self.proveedor)
+
+	# retorna el valor total del pedido
+	def get_valor_total(self):
+		return sum(posicion.costoTotal for posicion in PedidoCompraPosicion.objects.filter(pedidoCompra  = self.idPedidoCompra))
+	def get_cantidad_total(self):
+		return sum(posicion.cantidad for posicion in PedidoCompraPosicion.objects.filter(pedidoCompra  = self.idPedidoCompra))
+
 
 # PedidoCompraPosicion
 class PedidoCompraPosicion(models.Model):
@@ -76,14 +79,12 @@ class PedidoCompraPosicion(models.Model):
 	cantidad = models.IntegerField()
 	costoTotal = models.DecimalField(db_column = 'costoTotal',max_digits=10, decimal_places=2)
 
-	def natural_key(self):
-		return 'N° %s - %s' % (self.pedidoCompra.numeroPedido,self.producto)
-
-	def __str__(self):
-		return '%s - %s' % (self.pedidoCompra,self.producto)
-	
 	class Meta:
 		db_table = 'PedidoCompraPosicion'
 		#managed = False
 
-
+	def __str__(self):
+		return '%s - %s' % (self.pedidoCompra,self.producto)
+	
+	def natural_key(self):
+		return 'N° %s - %s' % (self.pedidoCompra.numeroPedido,self.producto)
