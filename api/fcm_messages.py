@@ -15,8 +15,6 @@ def send_message(title, body, data=None, user=None, click_action=None, low_prior
 	if devices is not None:
 		devices.send_message(title=title, body=body, data=data, icon="ic_notification_small", sound="TYPE_NOTIFICATION",
 							 click_action=click_action)  # ,low_priority=low_priority,time_to_live=time_to_live)
-		return True
-	return False
 
 
 def send_message_promocion(saldoInventario, user=None):
@@ -45,12 +43,12 @@ def send_message_nuevo_producto(saldoInventario, user=None):
 
 
 # Se envia al cliente la notificación del cambio de estado del pedido
-def send_message_cambio_estado_pedido(pedidoVenta, cliente):
+def send_message_cambio_estado_pedido(pedidoVenta):
 	title = "ShopNeubs"
-	body = "%s, tu pedido N° %s  ha sido %s" % (cliente.datoBasicoTercero.primerNombre, str(pedidoVenta.numeroPedido), pedidoVenta.estadoPedidoVenta.descripcion)
+	body = "%s, tu pedido N° %s  ha sido %s" % (pedidoVenta.cliente.datoBasicoTercero.primerNombre, str(pedidoVenta.numeroPedido), pedidoVenta.estadoPedidoVenta.descripcion)
 
 	data = {"idPedidoVenta": pedidoVenta.pk}
-	send_message(title=title, body=body, data=data, user=cliente.usuario, click_action=ACTION_VER_PEDIDO)
+	send_message(title=title, body=body, data=data, user=pedidoVenta.cliente.usuario, click_action=ACTION_VER_PEDIDO)
 
 
 # Envía un mensaje con una petición de listado productos

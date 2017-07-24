@@ -3,7 +3,7 @@ from filer.fields.file import FilerFileField
 from django.template.loader import render_to_string
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
-
+from api import fcm_messages
 
 class EstadoPedidoVenta(models.Model):
 	idEstadoPedidoVenta = models.AutoField(primary_key=True)
@@ -126,6 +126,8 @@ class PedidoVenta(models.Model):
 		email_message.content_subtype = "html"
 		email_message.attach_alternative(message_html, 'text/html')
 		email_message.send()
+		# se envía la notificación al dispositivo móvil.
+		fcm_messages.send_message_cambio_estado_pedido(self)
 
 
 
