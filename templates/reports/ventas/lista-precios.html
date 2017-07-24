@@ -2,75 +2,83 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Orden de Pedido</title>
-	<meta charset="UTF-8">
-	<meta name="pdfkit-page-size" content="Letter"/>
-	<meta name="pdfkit-orientation" content="Landscape"/>
-	<style type="text/css">
-	 	.content{
-	 		margin-top: 30px;
+    <title>Orden de Pedido</title>
+    <meta charset="UTF-8">
+    <meta name="pdfkit-page-size" content="Letter"/>
+    <meta name="pdfkit-orientation" content="Landscape"/>
+    <style type="text/css">
+        .content {
+            margin-top: 30px;
 
-	 	}
-		table{
-			border:1px black solid
-			width:100%;			
-		}
-		thead{
-			text-align: center;
-			font-weight: bold;
-		}
-		img{
-			width: 150px;
-			height: 50px;
-			padding: 5px;
-		}
-		.text-center{
-			text-align: center;
-		}
-		thead{
-			color: #ffffff;
-			background-color: #000;
-		}
-		.oferta{
-			background-color: #E90000;
-			color: #fff;
-		}
-		.col-md-6 {
-			width: 100%;
-		    margin-bottom: 0 !important;
-		    margin-top: 0px !important;
-		    background-color:#F0F0F0;
-		}
-	</style>
+        }
+
+        table {
+            border: 1px black solid
+            width: 100%;
+        }
+
+        thead {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        img {
+            width: 150px;
+            height: 50px;
+            padding: 5px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        thead {
+            color: #ffffff;
+            background-color: #000;
+        }
+
+        .oferta {
+            background-color: #E90000;
+            color: #fff;
+        }
+
+        .col-md-6 {
+            width: 100%;
+            margin-bottom: 0 !important;
+            margin-top: 0px !important;
+            background-color: #F0F0F0;
+        }
+    </style>
 </head>
 <body>
-	<div class="content">
-		
-		{% for l in listado %}
-		<div class="col-md-6" style="display:list-item;">
-		<table border="1"  style="width: 100%" >
-			<thead class="text-center">
-				<th width="20px">Código</th>
-				<th>{{l.categoria}}</th>
-				<th>Referencia</th>
-				<th>Proveedor</th>
-				<th width="150px" >Precio</th>
-			</thead>
-			<tbody>
-			{% for saldo in l.listado_saldo_inventario %}
-				<tr {% if saldo.precioOferta %} class="oferta" {% endif %}>
-					<td class="text-center">{{saldo.producto__numeroProducto}}</td>
-					<td>{{saldo.producto__nombre}}</td>
-					<td>{{saldo.referenciaProveedor}}</td>
-					<td>{{saldo.proveedor__datoBasicoTercero__descripcion}}</td>
-					<td class="text-center">${{ saldo.precioOferta|default:saldo.precioVentaUnitario|stringformat:"d"|intcomma}}</td>
-				</tr>
-			{% endfor %}
-			
-			</tbody>
-		</table>
-		</div>
-		{% endfor %}
-	</div>
+<div class="content">
+
+    {% for l in listado %}
+        <div class="col-md-6" style="display:list-item;">
+            <table border="1" style="width: 100%">
+                <thead class="text-center">
+                <th width="20px">Código</th>
+                <th>{{ l.categoria }}</th>
+                <th>Referencia</th>
+                <th>Proveedor</th>
+                <th width="150px">Precio</th>
+                </thead>
+                <tbody>
+                {% for saldo in l.listado_saldo_inventario %}
+                    <tr {% if saldo.precioOferta %} class="oferta" {% endif %}>
+                        <td class="text-center">{{ saldo.producto__numeroProducto }}</td>
+                        <td>{{ saldo.producto__nombre }}</td>
+                        <td>{{ saldo.referenciaProveedor }}</td>
+                        <td>{{ saldo.proveedor__datoBasicoTercero__descripcion }}</td>
+                        <td class="text-center">
+                            ${{ saldo.precioOferta|default:saldo.precioVentaUnitario|stringformat:"d"|intcomma }}</td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    {% endfor %}
+</div>
 </body>
 </html>

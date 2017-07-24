@@ -1,0 +1,1 @@
+Tu pedido N° {{pedidoVenta.numeroPedido}} ha sido Autorizado

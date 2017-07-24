@@ -3,89 +3,109 @@
 {% load tags_extra %}
 {% load thumbnail %}
 
-{% block title %} ShopNeubs: Tienda tecnológica online donde encontrarás procesadores, motherboards, monitores, SSD, perifericos, consolas, videojuegos, accesorios y mucho más. {% endblock %}
+{% block title %} ShopNeubs: Tienda tecnológica online donde encontrarás procesadores, motherboards, monitores, SSD,
+    perifericos, consolas, videojuegos, accesorios y mucho más. {% endblock %}
 
-{% block meta_description %}En un solo sitio, tecnología a tu alcance y al mejor precio. Puedes hacer tu comprar online de: Memorias flash, monitores pc, board, disco duros, fuentes de poder, portátiles, video juegos, consolas, periféricos, tarjetas de videos, caja Atx - chasis, licencias y entre otras.{% endblock %}
+{% block meta_description %}En un solo sitio, tecnología a tu alcance y al mejor precio. Puedes hacer tu comprar online
+    de: Memorias flash, monitores pc, board, disco duros, fuentes de poder, portátiles, video juegos, consolas,
+    periféricos, tarjetas de videos, caja Atx - chasis, licencias y entre otras.{% endblock %}
 
 {% block script_head %}
     <!-- <link href="{% static 'css/index-style.min.css'%}" rel="stylesheet" type="text/css"/> -->
-    <link href="{% static 'css/producto-style.min.css'%}" rel="stylesheet" type="text/css"/>
-    <link href="{% static 'css/animate.css'%}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'css/producto-style.min.css' %}" rel="stylesheet" type="text/css"/>
+    <link href="{% static 'css/animate.css' %}" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/slick.min.css' %}">
-    <script type="text/javascript" src="{% static 'js/wow.min.js'%}"></script>
+    <script type="text/javascript" src="{% static 'js/wow.min.js' %}"></script>
     <style type="text/css">
-        .carousel-inner>.item>img, .carousel-inner>.item>a>img {
-            width:100%;
-            margin:auto;
-            height:auto
+        .carousel-inner > .item > img, .carousel-inner > .item > a > img {
+            width: 100%;
+            margin: auto;
+            height: auto
         }
+
         #category img {
-            width:180px;
-            height:180px
+            width: 180px;
+            height: 180px
         }
+
         .article-feature[class*="col-"] {
-            padding:5px
+            padding: 5px
         }
+
         .btn-category:hover {
-            opacity:.6
+            opacity: .6
         }
+
         .producto-relacionados {
-            margin:12px 12px;
-            padding:5px 10px
+            margin: 12px 12px;
+            padding: 5px 10px
         }
+
         .form-horizontal .control-label {
-            text-align:left;
-            font-weight:700;
-            font-size:17px;
-            font-family:'Aller'
+            text-align: left;
+            font-weight: 700;
+            font-size: 17px;
+            font-family: 'Aller'
         }
-        @media screen and(max-width:530px) {
-            .carousel-inner>.item>img, .carousel-inner>.item>a>img {
-                max-height:180px
+
+        @media screen and(max-width: 530px) {
+            .carousel-inner > .item > img, .carousel-inner > .item > a > img {
+                max-height: 180px
             }
         }
+
         @media screen and (min-width: 1200px) {
-            #products >.col-lg-4{
+            #products > .col-lg-4 {
                 width: 24%;
             }
+
             .col-lg-3 {
-                    width: 24%;
+                width: 24%;
             }
-        } 
-         @media screen and (max-width: 450px)  {
-            .col-xs-12{
+        }
+
+        @media screen and (max-width: 450px) {
+            .col-xs-12 {
                 width: 100%;
             }
-            #products >.col-lg-4{
+
+            #products > .col-lg-4 {
                 width: 100%;
             }
         }
-        @media screen and (max-width: 767px)  {
-            .col-xs-6{
+
+        @media screen and (max-width: 767px) {
+            .col-xs-6 {
                 width: 45%;
             }
-            #products >.col-xs-6{
+
+            #products > .col-xs-6 {
                 width: 50%;
             }
         }
+
         @media screen and (min-width: 768px) and (max-width: 991px) {
-            .col-sm-4{
+            .col-sm-4 {
                 width: 32%;
             }
-             #products >.col-sm-6{
+
+            #products > .col-sm-6 {
                 width: 33.33333%;
             }
         }
+
         @media screen and (min-width: 992px) and (max-width: 1200px) {
-            .col-md-3{
+            .col-md-3 {
                 width: 24%
             }
-             #products >.col-md-4{
-                width: 33.33333%;   
+
+            #products > .col-md-4 {
+                width: 33.33333%;
             }
         }
+
         @media screen and (max-width: 800px) {
-            .wow{
+            .wow {
                 animation-name: none !important;
                 visibility: visible !important;
             }
@@ -93,130 +113,150 @@
     </style>
 {% endblock %}
 
-{% block carousel%}
+{% block carousel %}
     <!--Carousel de productos -->
     {% if carousel %}
-    <div id="myCarousel" class="carousel slide" data-ride="carousel">
-        <!-- Indicators -->
-        <ol class="carousel-indicators">
-        {% for item in carousel %}
-            {% if forloop.first %}
-                <li data-target="#myCarousel" data-slide-to="{{forloop.counter0}}" class="active"></li>
-            {% else %}
-                 <li data-target="#myCarousel" data-slide-to="{{forloop.counter0}}"></li>
-            {% endif%}
-        {% endfor%}
-        </ol>
-        <div class="carousel-inner" role="listbox">
-            {% for item in carousel%}
-                {% if forloop.first %}
-                    <div class="item active">
-                        <a {% if item.url %} href="{{item.url}}" {% endif%}>
-                            <img class="img-responsive" src="{{ item.imagen|thumbnail_url:'carousel'}}">
-                        </a>
-                        <div class="carousel-caption">
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                {% for item in carousel %}
+                    {% if forloop.first %}
+                        <li data-target="#myCarousel" data-slide-to="{{ forloop.counter0 }}" class="active"></li>
+                    {% else %}
+                        <li data-target="#myCarousel" data-slide-to="{{ forloop.counter0 }}"></li>
+                    {% endif %}
+                {% endfor %}
+            </ol>
+            <div class="carousel-inner" role="listbox">
+                {% for item in carousel %}
+                    {% if forloop.first %}
+                        <div class="item active">
+                            <a {% if item.url %} href="{{ item.url }}" {% endif %}>
+                                <img class="img-responsive" src="{{ item.imagen|thumbnail_url:'carousel' }}">
+                            </a>
+                            <div class="carousel-caption">
+                            </div>
                         </div>
-                    </div>
-                {% else %}
-                    <div class="item">
-                        <a {% if item.url %} href="{{item.url}}" {% endif%}>
-                            <img  class="img-responsive" src="{{ item.imagen|thumbnail_url:'carousel'}}">
-                        </a>
-                    </div>
-                {% endif%}
-            {% endfor%}
-            <!-- Controls -->
-            <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
-              <span class="glyphicon glyphicon-chevron-left"></span>
-            </a>
-            <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
-              <span class="glyphicon glyphicon-chevron-right"></span>
-            </a>
-        </div>  
-    </div>
+                    {% else %}
+                        <div class="item">
+                            <a {% if item.url %} href="{{ item.url }}" {% endif %}>
+                                <img class="img-responsive" src="{{ item.imagen|thumbnail_url:'carousel' }}">
+                            </a>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <!-- Controls -->
+                <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                </a>
+                <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                </a>
+            </div>
+        </div>
     {% endif %}
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <section id='section-promocion'>
-        <h2 class="title-principal text-center">OFERTAS</h2>
-        <h4 class="text-center">Descubre todas nuestras ofertas <a style="color: #FF5722; font-weight: bold" href="{% url 'ofertas'%}">AQUI</a></h4>
-    </section>
-</div>
-<div class="container-fluid">
-    <!--Encabezado principal -->
-    <section id="category" style="margin-left: 0px;">
-        <h2 class="title-principal text-center">CATEGORÍAS</h2>
-        <div class="container-fluid text-center">
-            <div class="row wow">
-                {% for categoria in listado_categoria %}
-                {% cycle 'slideInLeft' 'bounceInUp' 'bounceInUp' 'slideInRight' as animation silent %}
-                <article data-wow-delay="0.2s" class="col-lg-3 col-md-3 col-sm-4 col-xs-12 wow {{ animation }} btn-category bg-grey cursor-pointer" onclick="javascript:redirect('{% url 'productos_categoria' categoria.descripcion %}')" style="margin-left: 8px; margin-bottom: 8px;">
-                    <div >
-                    <figure>
-                        <img src="{% static 'img/categoria/'|add:categoria.codigo|add:'.png' %}" alt="Generic placeholder image"  >
-                    </figure>   
-                    <h4 style="display: block; font-weight: bolder">{{ categoria.descripcion|upper }}</h4>
-                    </div>
-                </article>
-                {% endfor %}
-            </div>  
-        </div>   
-    </section> 
-</div>
+    <div class="container-fluid">
+        <section id='section-promocion'>
+            <h2 class="title-principal text-center">OFERTAS</h2>
+            <h4 class="text-center">Descubre todas nuestras ofertas <a style="color: #FF5722; font-weight: bold"
+                                                                       href="{% url 'ofertas' %}">AQUI</a></h4>
+        </section>
+    </div>
+    <div class="container-fluid">
+        <!--Encabezado principal -->
+        <section id="category" style="margin-left: 0px;">
+            <h2 class="title-principal text-center">CATEGORÍAS</h2>
+            <div class="container-fluid text-center">
+                <div class="row wow">
+                    {% for categoria in listado_categoria %}
+                        {% cycle 'slideInLeft' 'bounceInUp' 'bounceInUp' 'slideInRight' as animation silent %}
+                        <article data-wow-delay="0.2s"
+                                 class="col-lg-3 col-md-3 col-sm-4 col-xs-12 wow {{ animation }} btn-category bg-grey cursor-pointer"
+                                 onclick="javascript:redirect('{% url 'productos_categoria' categoria.descripcion %}')"
+                                 style="margin-left: 8px; margin-bottom: 8px;">
+                            <div>
+                                <figure>
+                                    <img src="{% static 'img/categoria/'|add:categoria.codigo|add:'.png' %}"
+                                         alt="Generic placeholder image">
+                                </figure>
+                                <h4 style="display: block; font-weight: bolder">{{ categoria.descripcion|upper }}</h4>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </div>
 
-<div class="container-fluid">
-    <section id='section-mas-vistos'> 
-        <h2 class="title-principal text-center">MÁS DESTACADOS</h2>
-        <h4 class="text-center">Los productos más vistos</h4>
-    </section>
-</div>
+    <div class="container-fluid">
+        <section id='section-mas-vistos'>
+            <h2 class="title-principal text-center">MÁS DESTACADOS</h2>
+            <h4 class="text-center">Los productos más vistos</h4>
+        </section>
+    </div>
 
 {% endblock %}
 
 {% if listado_marcas %}
     {% block above_footer %}
-    <div class="row">
-      <div class="container-fluid">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-          <div class="slider">          
-            {% for marca in listado_marcas %}
-              <div>
-                <img src="{% static 'img/marca/'|add:marca.codigo|add:'.jpg' %}" width="100px" height="100px" onclick="redirect('{% url 'productos_marca' marca.descripcion %}')">
-              </div>
-            {% endfor %}
-          </div> 
+        <div class="row">
+            <div class="container-fluid">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="slider">
+                        {% for marca in listado_marcas %}
+                            <div>
+                                <img src="{% static 'img/marca/'|add:marca.codigo|add:'.jpg' %}" width="100px"
+                                     height="100px" onclick="redirect('{% url 'productos_marca' marca.descripcion %}')">
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div> 
     {% endblock %}
 {% endif %}
 
 
 {% block script_footer %}
-<script type="text/javascript" src="{% static 'js/slick.min.js'%}"></script>
-<script type="text/javascript">
-    wow = new WOW(
-        {
-          boxClass:     'wow',      // default
-          animateClass: 'animated', // default
-          offset:       0,          // default
-          mobile:       false,       // default
-          live:         true        // default
-        }
-    )
-    wow.init();
-    //Slider de marcas
-    $(".slider").slick({infinite:!0,centerMode:!0,slidesToShow:6,slidesToScroll:1,autoplay:!0,autoplaySpeed:1000,responsive:[{breakpoint:1024,settings:{slidesToShow:3,slidesToScroll:3,infinite:!0,}},{breakpoint:600,settings:{slidesToShow:2,slidesToScroll:2}},{breakpoint:480,settings:{slidesToShow:1,slidesToScroll:1}}]})
+    <script type="text/javascript" src="{% static 'js/slick.min.js' %}"></script>
+    <script type="text/javascript">
+        wow = new WOW(
+            {
+                boxClass: 'wow',      // default
+                animateClass: 'animated', // default
+                offset: 0,          // default
+                mobile: false,       // default
+                live: true        // default
+            }
+        )
+        wow.init();
+        //Slider de marcas
+        $(".slider").slick({
+            infinite: !0,
+            centerMode: !0,
+            slidesToShow: 6,
+            slidesToScroll: 1,
+            autoplay: !0,
+            autoplaySpeed: 1000,
+            responsive: [{
+                breakpoint: 1024,
+                settings: {slidesToShow: 3, slidesToScroll: 3, infinite: !0,}
+            }, {breakpoint: 600, settings: {slidesToShow: 2, slidesToScroll: 2}}, {
+                breakpoint: 480,
+                settings: {slidesToShow: 1, slidesToScroll: 1}
+            }]
+        })
 
-$(document).ready(function(){
-    cargar_productos_asincrono("{% url 'busqueda_asincrona_producto'%}",'#section-promocion','promocion=True')
-    cargar_productos_asincrono("{% url 'busqueda_asincrona_producto'%}",'#section-mas-vistos','mas_vistos=True')
-    {# Cuando es un dispositivo movil se visualiza primero las categorias #}
-    if (screen.width<768) {
-        $($("#section-promocion").parents('.container-fluid').first()).insertAfter($("#category").parents('.container-fluid').first())
-    }
-})
-</script>
+        $(document).ready(function () {
+            cargar_productos_asincrono("{% url 'busqueda_asincrona_producto'%}", '#section-promocion', 'promocion=True')
+            cargar_productos_asincrono("{% url 'busqueda_asincrona_producto'%}", '#section-mas-vistos', 'mas_vistos=True')
+            {# Cuando es un dispositivo movil se visualiza primero las categorias #}
+            if (screen.width < 768) {
+                $($("#section-promocion").parents('.container-fluid').first()).insertAfter($("#category").parents('.container-fluid').first())
+            }
+        })
+    </script>
 {% endblock %}

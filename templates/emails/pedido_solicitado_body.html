@@ -1,0 +1,57 @@
+{% load humanize %}
+{% load tags_extra %}
+<!DOCTYPE html>
+<html>
+<body>
+<div style="width:100%;margin: auto;color:black;">
+    <p style="font-size:17px">Hola,<strong>{{ pedidoVenta.cliente.datoBasicoTercero.descripcion }}</strong></p>
+
+    <p style="font-size: 17px;">Tu pedido ha sido remitido para verificación de stock.</p>
+    <p style="font-size: 17px;">Pronto nos comunicaremos contigo para ultimar algunos detalles como el método de pago, recepción
+        del pedido y datos del envío. También puedes comunicarte con nosotros a los números 3222709439 - 3222331893</p>
+    <p style="font-size: 17px;"><b>¡Importante!</b> Una vez verificado el Stock, debes efectuar el pago y enviar
+        un correo a <b>shop@neubs.com.co</b> con el comprobante de pago (escáner, foto o pantallazo).
+    <p style="font-size: 17px;">A continuación el detalle del pedido:</p>
+    <table style="border-collapse:collapse;border-spacing: 0px; width:100%;border:1px">
+        <tr style="border-bottom: 1px solid #ddd;">
+            <th colspan="5" style="background-color:#f7f4f4; padding:6px; text-align:center">Detalle del Pedido</th>
+        </tr>
+        <tr style="border-bottom: 1px solid #ddd;">
+            <th style="padding:6px">Numero de pedido:</th>
+            <td>{{ pedidoVenta.numeroPedido }}</td>
+            <th>Estado</th>
+            <td>{{ pedidoVenta.estadoPedidoVenta.descripcion }}</td>
+            <th style="padding:6px">{{ pedidoVenta.fecha|date:"d/m/Y H:i:s" }}</th>
+        </tr>
+    </table>
+    <table style="border-collapse:collapse;border-spacing: 0px; width:100%;border:1px">
+        <tr style="border-bottom: 1px solid #ddd; background-color:#f7f4f4; text-align:center;">
+            <th style="padding:6px">Código</th>
+            <th style="padding:6px">Nombre</th>
+            <th style="padding:6px">Cantidad</th>
+            <th style="padding:6px">Precio Unitario</th>
+            <th style="padding:6px">Precio Total</th>
+        </tr>
+        {% for posicion in pedidoVenta.listadoPedidoVentaPosicion %}
+        <tr style="border-bottom: 1px solid #ddd; text-align:center">
+            <td style="padding:6px">{{ posicion.producto.numeroProducto }}</td>
+            <td style="padding:6px">{{ posicion.producto.nombre }}</td>
+            <td style="padding:6px">{{ posicion.cantidad }}</td>
+            <td style="padding:6px">${%  get_precio_unitario_pedido_venta_posicion posicion %}</td>
+            <td style="padding:6px">${{ posicion.costoTotal|stringformat:"d"|intcomma }}</td>
+        </tr>
+        {% endfor %}
+        <tr style="border-bottom: 1px solid #ddd;">
+            <th colspan="4" style="text-align: right;">Valor Total</th>
+            <td colspan="1" style="padding:6px;text-align:center">${{ pedidoVenta.get_valor_total|stringformat:"d"|intcomma }}</td>
+        <tr>
+    </table>
+    <p style="font-size: 17px;">Gracias por preferirnos</p>
+    <p style="font-size: 17px;">Un saludo cordial,
+        <br>
+        <img src="https://s3.amazonaws.com/s3shopneubs/static/img/logo-email.png"
+             style="width: 200px;height: 55px; ;display: block;float: left;padding-top:7px;border-radius: 8px;">
+    </p>
+</div>
+</body>
+</html>

@@ -1,5 +1,8 @@
 from django.db import models
 from filer.fields.file import FilerFileField
+from django.template.loader import render_to_string
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
 
 
 class EstadoPedidoVenta(models.Model):
@@ -59,6 +62,17 @@ class PedidoVenta(models.Model):
 	# listado de pedidos posicion
 	listadoPedidoVentaPosicion = []
 
+	class Meta:
+		db_table = 'PedidoVenta'
+		permissions = (
+			("autorizar_pedido", "Puede autorizar pedidos de venta"),
+			("consultar_pedido", "Puede consultar los pedidos de venta"),
+			("reportes", "Puede generar reportes"),
+		)
+
+	def __str__(self):
+		return '%s - %s' % (str(self.numeroPedido), self.cliente)
+
 	# retorna el valor total del pedido
 	def get_valor_total(self):
 		return sum(
@@ -67,23 +81,53 @@ class PedidoVenta(models.Model):
 	def get_cantidad_total(self):
 		return sum(posicion.cantidad for posicion in PedidoVentaPosicion.objects.filter(pedidoVenta=self.idPedidoVenta))
 
-	def __str__(self):
-		return '%s - %s' % (str(self.numeroPedido), self.cliente)
-
 	def save(self, *args, **kwargs):
+		pedido_solicitado = False
+		if self.idPedidoVenta is None:
+			pedido_solicitado = True
+
 		super(PedidoVenta, self).save(*args, **kwargs)
 		if len(self.listadoPedidoVentaPosicion) > 0:
 			for posicion in self.listadoPedidoVentaPosicion:
 				posicion.pedidoVenta = self
 				posicion.save()
 
-	class Meta:
-		db_table = 'PedidoVenta'
-		permissions = (
-			("autorizar_pedido", "Puede autorizar pedidos de venta"),
-			("consultar_pedido", "Puede consultar los pedidos de venta"),
-			("reportes", "Puede generar reportes"),
-		)
+		# se envía el email al cliente
+		if pedido_solicitado:
+			self.send_pedido_solicitado_email()
+
+	# envía el email de confirmaciónd e recepción del pedido
+	# solo cuando el pedido es SOLICITADO
+	def send_pedido_solicitado_email(self):
+
+		if len(self.listadoPedidoVentaPosicion) is 0:
+			self.listadoPedidoVentaPosicion = PedidoVentaPosicion.objects.filter(pedidoVenta_id=self.pk)
+
+		context = {"pedidoVenta":self}
+		subject = render_to_string("emails/pedido_solicitado_subject.txt",context)
+
+		message_html = render_to_string("emails/pedido_solicitado_body.html",context)
+		from_email = getattr(settings, "DEFAULT_FROM_EMAIL", "shop@neubs.com.co")
+
+		email_message = EmailMultiAlternatives(subject, message_html, from_email, [self.cliente.usuario.email])
+		email_message.content_subtype = "html"
+		email_message.attach_alternative(message_html, 'text/html')
+		email_message.send()
+
+	def send_pedido_autorizado_email(self):
+
+		context = {"pedidoVenta":self}
+		subject = render_to_string("emails/pedido_autorizado_subject.txt",context)
+
+		message_html = render_to_string("emails/pedido_autorizado_body.html",context)
+		from_email = getattr(settings, "DEFAULT_FROM_EMAIL", "shop@neubs.com.co")
+
+		email_message = EmailMultiAlternatives(subject, message_html, from_email, [self.cliente.usuario.email])
+		email_message.content_subtype = "html"
+		email_message.attach_alternative(message_html, 'text/html')
+		email_message.send()
+
+
 
 
 class PedidoVentaPosicion(models.Model):

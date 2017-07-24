@@ -1,55 +1,55 @@
 <div class="modal-dialog modal-lg" role="document">
-	<div class="modal-content">
-	  	<div class="modal-header">
-			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h4 class="modal-title" id="myModalLabel">{{ title|default:'Busqueda' }}</h4>
-		</div>
-		<div class="modal-body">
-			<table id="tabla_dinamica" class="display" cellspacing="0" width="100%">
-			    <thead>
-			        <tr>
-			        	{% for key, value in columns.items %}
-			        		<th>{{ key }}</th>
-			        	{% endfor %}
-			        	<th></th>
-			        </tr>
-			    </thead>
-			</table>
-		</div>
-		<div class="modal-footer">
-			<!-- <button type="button" class="btn btn-primary">Save changes</button> -->
-		</div>
-	</div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">{{ title|default:'Busqueda' }}</h4>
+        </div>
+        <div class="modal-body">
+            <table id="tabla_dinamica" class="display" cellspacing="0" width="100%">
+                <thead>
+                <tr>
+                    {% for key, value in columns.items %}
+                        <th>{{ key }}</th>
+                    {% endfor %}
+                    <th></th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript">
-$(document).ready(function() {
-    tabla = $('#tabla_dinamica').DataTable( {
-    	select: true,
-        ajax: "{{ url }}",
-        columns: [
-	    	{% for key,value in columns.items %}
-	            { data: "{{value}}" },
-	        {% endfor %}
-	        { 'defaultContent': "<button type='button' class='seleccionar btn btn-primary'><span class='icon-bar glyphicon glyphicon-save icon'></span></button>"},
-        ],
-        language: lenguage_spanish,
+    $(document).ready(function () {
+        tabla = $('#tabla_dinamica').DataTable({
+            select: true,
+            ajax: "{{ url }}",
+            columns: [
+                {% for key,value in columns.items %}
+                    {data: "{{value}}"},
+                {% endfor %}
+                {'defaultContent': "<button type='button' class='seleccionar btn btn-primary'><span class='icon-bar glyphicon glyphicon-save icon'></span></button>"},
+            ],
+            language: lenguage_spanish,
+        });
+        $('#tabla_dinamica').on("click", "button.seleccionar", function () {
+            data = tabla.row($(this).parents('tr')).data()
+            if (data != null) {
+                {% if objectPk %}
+                    $('{{objectPk}}').val(data.pk)
+                {% endif %}
+                {% if objectShow %}
+                    {% for key,value in objectShow.items %}
+                        $('{{key}}').val(data.{{value}})
+                    {% endfor %}
+                {% endif %}
+                {# Se esconde el modal #}
+                $(this).parents('.modal').first().modal('hide')
+            }
+        });
     });
-    $('#tabla_dinamica').on("click","button.seleccionar",function()
-	{
-		data = tabla.row($(this).parents('tr')).data()
-		if(data != null) {
-			{% if objectPk %}
-				$('{{objectPk}}').val(data.pk)
-			{% endif %}
-			{% if objectShow %}
-				{% for key,value in objectShow.items %}
-				$('{{key}}').val(data.{{value}})
-				{% endfor %}
-			{% endif %}
-			{# Se esconde el modal #}
-			$(this).parents('.modal').first().modal('hide')
-		}
-	});
-});
 </script>

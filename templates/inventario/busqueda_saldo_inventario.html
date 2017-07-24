@@ -1,171 +1,176 @@
 <div class="modal-dialog modal-lg">
-  <div class="modal-content">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      <h4 class="modal-title" id="myModalLabel">Busqueda Saldo Inventario</h4>
-    </div>
-    <div class="modal-body">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-          <form class="form-horizontal">
-            
-            <div class="form-group">
-              <label for="producto" class="col-lg-1 col-md-2 col-sm-2 col-xs-4 control-label">Producto</label>
-              <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6">
-                <input type="hidden" name="idProducto" id="idProducto" required>
-                <input class="form-control" type="text" name="producto" id="producto" disabled required onkeypress="return false">
-              </div>
-              
-              <div class="col-lg-2 col-md-4 col-sm-4 col-xs-2">
-                <button type="button" id="btn-busqueda-pedido" class="form-control btn-success" style="width: 50px" data-toggle="modal" onclick="showBusquedaOnModal(this,'{% url 'busqueda_producto'%}',null)">
-                  <span class="icon-bar glyphicon glyphicon-search icon"></span>
-                </button>
-              </div>
-            </div>
-            <div class="form-group ">
-              <label for="proveedor" class="col-lg-1 col-md-2 col-sm-2 col-xs-4 control-label">Proveedor</label>
-              <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6">
-                <input type="hidden" name="idProveedor" id="idProveedor" required>
-                <input class="form-control" type="text" name="proveedor" id="proveedor" disabled required onkeypress="return false">
-              </div>
-              
-              <div class="col-lg-2 col-md-4 col-sm-4 col-xs-2">
-                <button type="button" id="btn-busqueda-pedido" class="form-control btn-success" style="width: 50px" data-toggle="modal" onclick="showBusquedaOnModal(this,'{% url 'busqueda_proveedor_modal'%}',null)" >
-                  <span class="icon-bar glyphicon glyphicon-search icon"></span>
-                </button>
-              </div>
-            </div>
-            <div class="form-group ">
-              <label for="proveedor" class="col-lg-1 col-md-2 col-sm-2 col-xs-4 control-label">Estado</label>
-              <div class="col-lg-3 col-md-5 col-sm-5 col-xs-6">
-                <select id="estado" class="form-control">
-                  <option value="-1">-----</option>
-                  <option value="1" selected="selected">Activo</option>
-                  <option value="0">Inactivo</option>
-                </select>
-              </div>          
-            </div>
-            <div class="form-group">
-              <div class="col-sm-offset-1 col-sm-12">
-                <button type="button" class="btn btn-success" onclick="consultar_saldo_inventario()">Buscar</button>
-              </div>
-            </div>
-            
-          </form>
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                    aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Busqueda Saldo Inventario</h4>
         </div>
-        
-    </div>
-    <div class="modal-footer">
-      <div class="col-lg-12">
-          <div class="table-responive">
-            <table id="tabla_saldo_inventario" class="table table-striped">
-              <thead>
-                <tr>
-                  <th>Producto</th>
-                  <th>Proveedor</th>
-                  <th>referencia</th>
-                  <th>Cantidad</th>
-                  <th>Precio Venta</th>
-                  <th>Precio Oferta</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                 
-              </tbody>
-            </table>
-          </div>
+        <div class="modal-body">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <form class="form-horizontal">
+
+                    <div class="form-group">
+                        <label for="producto" class="col-lg-1 col-md-2 col-sm-2 col-xs-4 control-label">Producto</label>
+                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6">
+                            <input type="hidden" name="idProducto" id="idProducto" required>
+                            <input class="form-control" type="text" name="producto" id="producto" disabled required
+                                   onkeypress="return false">
+                        </div>
+
+                        <div class="col-lg-2 col-md-4 col-sm-4 col-xs-2">
+                            <button type="button" id="btn-busqueda-pedido" class="form-control btn-success"
+                                    style="width: 50px" data-toggle="modal"
+                                    onclick="showBusquedaOnModal(this,'{% url 'busqueda_producto' %}',null)">
+                                <span class="icon-bar glyphicon glyphicon-search icon"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label for="proveedor"
+                               class="col-lg-1 col-md-2 col-sm-2 col-xs-4 control-label">Proveedor</label>
+                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-6">
+                            <input type="hidden" name="idProveedor" id="idProveedor" required>
+                            <input class="form-control" type="text" name="proveedor" id="proveedor" disabled required
+                                   onkeypress="return false">
+                        </div>
+
+                        <div class="col-lg-2 col-md-4 col-sm-4 col-xs-2">
+                            <button type="button" id="btn-busqueda-pedido" class="form-control btn-success"
+                                    style="width: 50px" data-toggle="modal"
+                                    onclick="showBusquedaOnModal(this,'{% url 'busqueda_proveedor_modal' %}',null)">
+                                <span class="icon-bar glyphicon glyphicon-search icon"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group ">
+                        <label for="proveedor" class="col-lg-1 col-md-2 col-sm-2 col-xs-4 control-label">Estado</label>
+                        <div class="col-lg-3 col-md-5 col-sm-5 col-xs-6">
+                            <select id="estado" class="form-control">
+                                <option value="-1">-----</option>
+                                <option value="1" selected="selected">Activo</option>
+                                <option value="0">Inactivo</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-1 col-sm-12">
+                            <button type="button" class="btn btn-success" onclick="consultar_saldo_inventario()">
+                                Buscar
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <div class="col-lg-12">
+                <div class="table-responive">
+                    <table id="tabla_saldo_inventario" class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Proveedor</th>
+                            <th>referencia</th>
+                            <th>Cantidad</th>
+                            <th>Precio Venta</th>
+                            <th>Precio Oferta</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
-  </div>
 </div>
-{% block script_footer %} 
-<style type="text/css">
-  .modal-lg{
-    width: 70%;
-  }
-</style>
-<script type="text/javascript">
-// carga en el dataTable los saldos inventarios mediante ajax 
-function consultar_saldo_inventario()
-{
-  var url = "{% url 'saldo_inventario_json'%}?"
-  var an = ""
-  if ($('#idProducto').val() > 0) {
-    url += "idProducto="+$('#idProducto').val()
-    an = "&"
-  }
-  if ($('#idProveedor').val() > 0){
-    url += an + "idProveedor="+$('#idProveedor').val()
-    an = "&"
-  }
-  if($("#estado").val() >= 0)
-    url += an + "estado="+$('#estado').val()
-  tabla = $('#tabla_saldo_inventario').DataTable( {
-      select: true,
-        ajax: url,
-        destroy: true,
-        columns: [
-          { data: "fields.producto" },
-          { data: "fields.proveedor" },
-          { data: "fields.referenciaProveedor" },
-          { data: "fields.cantidad" },
-          { data: "fields.precioVentaUnitario" },
-          { data: "fields.precioOferta" },
-          { 'defaultContent': "<button type='button' class='seleccionar btn btn-primary'><span class='icon-bar glyphicon glyphicon-save icon'></span></button>"},
-        ],
-        language: lenguage_spanish,
-    });
-}
-/* Funcion para mostrar una busqueda en un modal dinamico.
- * Este modal se crea al momento de invocar la funcion y se destuye al momento de cerrarlo.
- * @param {type} button: boton donde es llamada la busqueda
- * @param {type} url   : Url de la vista de la busqueda
- * @param {type} parametros: data
- * @returns {null}
- */
-function showBusquedaOnModal(button,url,parametros)
-{
-    // Se verifica el ultimo modal que esta cargado
-    if ($(".modal[id^='myModal']").last() != null) 
-    {
-        var modal = $(".modal[id^='myModal']").last();
-        var idModal = 1;
-        if (modal.attr('id') != undefined) {
-            // Se obtiene el id del modal que se va a crear
-            idModal = modal.attr('id').toString().split("myModal")[1].length > 0? parseInt(modal.attr('id').toString().split("myModal")[1]) + 1 : 1;
+{% block script_footer %}
+    <style type="text/css">
+        .modal-lg {
+            width: 70%;
         }
-        $(button).attr('data-target','#myModal'+idModal);
-        // Div del modal a crear
-        var divModal = "<div class='modal fade' id='myModal"+idModal+"' tabindex='0' role='dialog' aria-labelledby='myModalLabel"+idModal+"' aria-hidden='true' data-backdrop='true' style='display: none;'></div>";
-        //divModal += "<div class='modal-dialog modal-lg' role='document'  id='modal-dialog-display"+idModal+"'></div></div>";
-        // Se agrega al final del body el modal.
-        $("body").append(divModal);
-        usar_ajax(url,'#myModal'+idModal,parametros,'GET');
-        
-        // Se agrega el evento de borrar el modal
-        $('#myModal'+idModal).on('hidden.bs.modal', function () {
-            $('#myModal'+idModal).last().remove();
-        });
-    }
-}
-$(document).ready(function()
-{
-  $('#tabla_saldo_inventario').on("click","button.seleccionar",function()
-  {
-    data = tabla.row($(this).parents('tr')).data()
-    if(data != null) {
-      {% if objectPk %}
-        $('{{objectPk}}').val(data.pk)
-      {% endif %}
-      {% if objectShow %}
-        {% for key,value in objectShow.items %}
-        $('{{key}}').val(data.{{value}})
-        {% endfor %}
-      {% endif %}
-      {# Se esconde el modal #}
-      $(this).parents('.modal').first().modal('hide')
-    }
-  });
-})
-</script>
+    </style>
+    <script type="text/javascript">
+        // carga en el dataTable los saldos inventarios mediante ajax
+        function consultar_saldo_inventario() {
+            var url = "{% url 'saldo_inventario_json'%}?"
+            var an = ""
+            if ($('#idProducto').val() > 0) {
+                url += "idProducto=" + $('#idProducto').val()
+                an = "&"
+            }
+            if ($('#idProveedor').val() > 0) {
+                url += an + "idProveedor=" + $('#idProveedor').val()
+                an = "&"
+            }
+            if ($("#estado").val() >= 0)
+                url += an + "estado=" + $('#estado').val()
+            tabla = $('#tabla_saldo_inventario').DataTable({
+                select: true,
+                ajax: url,
+                destroy: true,
+                columns: [
+                    {data: "fields.producto"},
+                    {data: "fields.proveedor"},
+                    {data: "fields.referenciaProveedor"},
+                    {data: "fields.cantidad"},
+                    {data: "fields.precioVentaUnitario"},
+                    {data: "fields.precioOferta"},
+                    {'defaultContent': "<button type='button' class='seleccionar btn btn-primary'><span class='icon-bar glyphicon glyphicon-save icon'></span></button>"},
+                ],
+                language: lenguage_spanish,
+            });
+        }
+        /* Funcion para mostrar una busqueda en un modal dinamico.
+         * Este modal se crea al momento de invocar la funcion y se destuye al momento de cerrarlo.
+         * @param {type} button: boton donde es llamada la busqueda
+         * @param {type} url   : Url de la vista de la busqueda
+         * @param {type} parametros: data
+         * @returns {null}
+         */
+        function showBusquedaOnModal(button, url, parametros) {
+            // Se verifica el ultimo modal que esta cargado
+            if ($(".modal[id^='myModal']").last() != null) {
+                var modal = $(".modal[id^='myModal']").last();
+                var idModal = 1;
+                if (modal.attr('id') != undefined) {
+                    // Se obtiene el id del modal que se va a crear
+                    idModal = modal.attr('id').toString().split("myModal")[1].length > 0 ? parseInt(modal.attr('id').toString().split("myModal")[1]) + 1 : 1;
+                }
+                $(button).attr('data-target', '#myModal' + idModal);
+                // Div del modal a crear
+                var divModal = "<div class='modal fade' id='myModal" + idModal + "' tabindex='0' role='dialog' aria-labelledby='myModalLabel" + idModal + "' aria-hidden='true' data-backdrop='true' style='display: none;'></div>";
+                //divModal += "<div class='modal-dialog modal-lg' role='document'  id='modal-dialog-display"+idModal+"'></div></div>";
+                // Se agrega al final del body el modal.
+                $("body").append(divModal);
+                usar_ajax(url, '#myModal' + idModal, parametros, 'GET');
+
+                // Se agrega el evento de borrar el modal
+                $('#myModal' + idModal).on('hidden.bs.modal', function () {
+                    $('#myModal' + idModal).last().remove();
+                });
+            }
+        }
+        $(document).ready(function () {
+            $('#tabla_saldo_inventario').on("click", "button.seleccionar", function () {
+                data = tabla.row($(this).parents('tr')).data()
+                if (data != null) {
+                    {% if objectPk %}
+                        $('{{objectPk}}').val(data.pk)
+                    {% endif %}
+                    {% if objectShow %}
+                        {% for key,value in objectShow.items %}
+                            $('{{key}}').val(data.{{value}})
+                        {% endfor %}
+                    {% endif %}
+                    {# Se esconde el modal #}
+                    $(this).parents('.modal').first().modal('hide')
+                }
+            });
+        })
+    </script>
 {% endblock %}

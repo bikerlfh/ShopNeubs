@@ -60,8 +60,9 @@ SU mejor descripción
 			</tbody>
 		</table>
 	</div>
-	
+    {% if not listado_pedido %}
 	<h5 class="text-center">No hay pedidos registrados. Te invitamos a agregar productos a tu carrito de compra y realizar tu primer pedido.</h5>
+    {% endif %}
 </div>
 <div class="modal fade " id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 </div>

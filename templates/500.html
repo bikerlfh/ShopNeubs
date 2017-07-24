@@ -2,21 +2,21 @@
 {% load staticfiles %}
 
 {% block title %}
-Neubs - Error 500
+    Neubs - Error 500
 {% endblock %}
 
 {% block meta_description %}
-500 - Server Error
+    500 - Server Error
 {% endblock %}
 
 {% block content %}
-<div class="row">
-	<div class="container-fluid text-center" style="padding-top: 30px;"">
-		<h2 class="bg-grey"> SERVER ERROR 500 </h2>
-		<h1 class="title-principal" style="font-size:80px;"> ERROR 500 </h1>
-		<h3><br>
-		Lo invitamos que ingrese a la página principal 
-		<br><strong>{{ request.session.app_name }}</strong> </h3>
-	</div>
-</div>
+    <div class="row">
+        <div class="container-fluid text-center" style="padding-top: 30px;">
+            <h2 class="bg-grey"> SERVER ERROR 500 </h2>
+            <h1 class="title-principal" style="font-size:80px;"> ERROR 500 </h1>
+            <h3><br>
+                Lo invitamos que ingrese a la página principal
+                <br><strong>{{ request.session.app_name }}</strong></h3>
+        </div>
+    </div>
 {% endblock %}

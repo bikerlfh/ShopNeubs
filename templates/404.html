@@ -2,21 +2,21 @@
 {% load staticfiles %}
 
 {% block title %}
-Neubs - Error 404
+    Neubs - Error 404
 {% endblock %}
 
 {% block meta_description %}
-Pagina no encontrada Error 404
+    Pagina no encontrada Error 404
 {% endblock %}
 
 {% block content %}
-<div class="row">
-	<div class="container-fluid text-center" style="padding-top: 30px;"">
-		<h2 class="bg-grey"> Lo sentimos, página no encontrada </h2>
-		<h1 class="title-principal" style="font-size:80px;"> ERROR 404 </h1>
-		<h3> Es posible que la dirección que busca no exista.<br>
-		Lo invitamos que ingrese a la página principal 
-		<br><strong>{{ request.session.app_name }}</strong> </h3>
-	</div>
-</div>
+    <div class="row">
+        <div class="container-fluid text-center" style="padding-top: 30px;">
+            <h2 class="bg-grey"> Lo sentimos, página no encontrada </h2>
+            <h1 class="title-principal" style="font-size:80px;"> ERROR 404 </h1>
+            <h3> Es posible que la dirección que busca no exista.<br>
+                Lo invitamos que ingrese a la página principal
+                <br><strong>{{ request.session.app_name }}</strong></h3>
+        </div>
+    </div>
 {% endblock %}

@@ -2,157 +2,162 @@
 {% load staticfiles %}
 
 {% block title %}
-Neubs - Consulta Avanzada Pedido Venta
+    Neubs - Consulta Avanzada Pedido Venta
 {% endblock %}
 
 {% block meta_description %}
-Consulta Avanzada Pedido Venta
+    Consulta Avanzada Pedido Venta
 {% endblock %}
 
 {% block posicion_pagina %}
-<ol class="breadcrumb">
-    <a  href="/">Home /</a></li>
-    <a class="active" href="{{ request.get_absolute_url }}">Consulta Avanzada Pedido Venta</a></li>
-</ol>
+    <ol class="breadcrumb">
+        <a href="/">Home /</a></li>
+        <a class="active" href="{{ request.get_absolute_url }}">Consulta Avanzada Pedido Venta</a></li>
+    </ol>
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row">
-    	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
-		<form class="form-horizontal" id="fromPedido" name="fromPedido" method="POST" ">
-		<h3 class="item-heading bg-grey"> CONSULTA PEDIDO AVANZADA </h3>
-	    <hr>
-		{% csrf_token %}
-			<div class="form-group">
-				<label for="proveedor" class="col-lg-2 col-md-3 col-sm-3 col-xs-4 control-label">Pedido Venta</label>
-				<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-					<input type="hidden" name="idPedidoVenta" id="idPedidoVenta" required>
-					<input class="form-control" type="text" name="numeroPedido" id="numeroPedido" disabled required onkeypress="return false">
-				</div>
-				<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-					<button type="button" id="btn-busqueda-pedido" class="form-control btn-success" style="width: 50px" data-toggle="modal" data-target="#myModal" src-url='{% url 'busqueda_venta_pedido_modal' %}' data="all=True">
-						<span class="icon-bar glyphicon glyphicon-search icon"></span>
-					</button>
-				</div>
-			</div>
-			<div class="form-group">
-				<label for="cliente" class="col-lg-2 col-md-3 col-sm-3 col-xs-4 control-label">Cliente</label>
-				<div class="col-lg-5 col-md-7 col-sm-7 col-xs-7">
-					<input class="form-control" type="text" name="cliente" id="cliente" placeholder="cliente" required onkeypress="return false">
-				</div>
-			</div>
-			<h3 class="text-center">ITEMS DEL PEDIDO VENTA</h3>
-			<div class="table-responive">
-				<div class="row">
-				<div class="container-fluid">
-				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-				<table id="tabla_pedido_posicion" class="table table-striped">
-					<thead>
-						<tr>
-							<th>Producto</th>
-							<th>Proveedor</th>
-							<th>Cantidad</th>
-							<th>Costo Total</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
-				</div>
-				</div>
-				</div>
-			</div>
-		</form>
-		</div>
-	</div>
-</div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+                <form class="form-horizontal" id="fromPedido" name="fromPedido" method="POST"
+                ">
+                <h3 class="item-heading bg-grey"> CONSULTA PEDIDO AVANZADA </h3>
+                <hr>
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="proveedor" class="col-lg-2 col-md-3 col-sm-3 col-xs-4 control-label">Pedido
+                        Venta</label>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                        <input type="hidden" name="idPedidoVenta" id="idPedidoVenta" required>
+                        <input class="form-control" type="text" name="numeroPedido" id="numeroPedido" disabled required
+                               onkeypress="return false">
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                        <button type="button" id="btn-busqueda-pedido" class="form-control btn-success"
+                                style="width: 50px" data-toggle="modal" data-target="#myModal"
+                                src-url='{% url 'busqueda_venta_pedido_modal' %}' data="all=True">
+                            <span class="icon-bar glyphicon glyphicon-search icon"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="cliente" class="col-lg-2 col-md-3 col-sm-3 col-xs-4 control-label">Cliente</label>
+                    <div class="col-lg-5 col-md-7 col-sm-7 col-xs-7">
+                        <input class="form-control" type="text" name="cliente" id="cliente" placeholder="cliente"
+                               required onkeypress="return false">
+                    </div>
+                </div>
+                <h3 class="text-center">ITEMS DEL PEDIDO VENTA</h3>
+                <div class="table-responive">
+                    <div class="row">
+                        <div class="container-fluid">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <table id="tabla_pedido_posicion" class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Proveedor</th>
+                                        <th>Cantidad</th>
+                                        <th>Costo Total</th>
+                                        <th></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-<!-- Modal -->
-<div class="modal fade " id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-</div>
-<!-- Modal para visualizar la posicion venta compra -->
-<div class="modal fade " id="modal-posicion-venta-compra" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
-	<div class="modal-dialog modal-lg" role="document">
-		<div class="modal-content">
-		  	<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="myModalLabel1">Pedido</h4>
-			</div>
-			<div class="modal-body">
-				<table id="tabla_posicion-venta-compra" class="display" cellspacing="0" width="100%">
-				    <thead>
-				        <tr>
-				        	<th>Pedido Compra</th>
-				        	<th>Proveedor</th>
-				        	<th>Producto</th>
-				        	<th>Cantidad</th>
-				        </tr>
-				    </thead>
-				</table>
-			</div>
-			<div class="modal-footer">
-				<!-- <button type="button" class="btn btn-primary">Save changes</button> -->
-			</div>
-		</div>
-	</div>
-</div>
+    <!-- Modal -->
+    <div class="modal fade " id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    </div>
+    <!-- Modal para visualizar la posicion venta compra -->
+    <div class="modal fade " id="modal-posicion-venta-compra" tabindex="-1" role="dialog"
+         aria-labelledby="myModalLabel1">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel1">Pedido</h4>
+                </div>
+                <div class="modal-body">
+                    <table id="tabla_posicion-venta-compra" class="display" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th>Pedido Compra</th>
+                            <th>Proveedor</th>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
-{% block script_footer %} 
-<link rel="stylesheet" href="{% static 'css/jquery.dataTables.min.css'%}">
-<script type="text/javascript" src="{% static  'js/jquery.dataTables.min.js' %}"></script>
-<script type="text/javascript">
-$('#myModal').on('hidden.bs.modal', function (e) {
-		$(this).html('')
+{% block script_footer %}
+    <link rel="stylesheet" href="{% static 'css/jquery.dataTables.min.css' %}">
+    <script type="text/javascript" src="{% static  'js/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript">
+        $('#myModal').on('hidden.bs.modal', function (e) {
+            $(this).html('')
 
-	// cuando se selecciona un pedido venta, se deben cargar las posiciones de este
-	if($("#idPedidoVenta").val()>0)
-	{
-		tabla = $('#tabla_pedido_posicion').DataTable({
-	    	select: false,
-	    	destroy: true,
-	    	paging: false,
-	    	searching: false,
-	        ajax: "/ventas/pedido/posicion/json/"+$("#idPedidoVenta").val()+"/",
-	        columns: [
-	        	{data:"fields.producto"},
-	        	{data:"fields.proveedor"},
-	        	{data:"fields.cantidad"},
-	        	{
-	    			data:"fields.costoTotal",
-	             	render: function ( data, type, row ) {
-			        	return '$'+ data.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-			    	}
-				},
-				{ 'defaultContent': "<button type='button'class='seleccionar btn btn-primary'data-toggle='modal' data-target='#modal-posicion-venta-compra'><span class='icon-bar glyphicon glyphicon-search icon'></span></button>"},
-	        ],
-	        language: lenguage_spanish,
-	    });
-	}
-	else
-		$("#idEstadoPedidoVenta").attr('disabled','disabled')
-});
-$(document).ready(function()
-{
-	$('#tabla_pedido_posicion').on("click","button.seleccionar",function()
-	{
-		data = tabla.row($(this).parents('tr')).data()
-	    $('#tabla_posicion-venta-compra').DataTable({
-	    	select: false,
-	    	destroy: true,
-	        ajax: '/ventas/pedido/venta-compra/json/'+data.pk+'/',
-	        columns: [
-	            { data: "numeroPedido" },
-	            { data: "proveedor" },
-	            { data: "producto" },
-	            { data: "cantidad" },
-	        ],
-	        language: lenguage_spanish,
-	    });
-	    $("#myModalLabel1").html("Relacion Compra - Venta (N° Pedido Venta : "+$('#numeroPedido').val()+")")
-	});
-});
-</script>
+            // cuando se selecciona un pedido venta, se deben cargar las posiciones de este
+            if ($("#idPedidoVenta").val() > 0) {
+                tabla = $('#tabla_pedido_posicion').DataTable({
+                    select: false,
+                    destroy: true,
+                    paging: false,
+                    searching: false,
+                    ajax: "/ventas/pedido/posicion/json/" + $("#idPedidoVenta").val() + "/",
+                    columns: [
+                        {data: "fields.producto"},
+                        {data: "fields.proveedor"},
+                        {data: "fields.cantidad"},
+                        {
+                            data: "fields.costoTotal",
+                            render: function (data, type, row) {
+                                return '$' + data.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                            }
+                        },
+                        {'defaultContent': "<button type='button'class='seleccionar btn btn-primary'data-toggle='modal' data-target='#modal-posicion-venta-compra'><span class='icon-bar glyphicon glyphicon-search icon'></span></button>"},
+                    ],
+                    language: lenguage_spanish,
+                });
+            }
+            else
+                $("#idEstadoPedidoVenta").attr('disabled', 'disabled')
+        });
+        $(document).ready(function () {
+            $('#tabla_pedido_posicion').on("click", "button.seleccionar", function () {
+                data = tabla.row($(this).parents('tr')).data()
+                $('#tabla_posicion-venta-compra').DataTable({
+                    select: false,
+                    destroy: true,
+                    ajax: '/ventas/pedido/venta-compra/json/' + data.pk + '/',
+                    columns: [
+                        {data: "numeroPedido"},
+                        {data: "proveedor"},
+                        {data: "producto"},
+                        {data: "cantidad"},
+                    ],
+                    language: lenguage_spanish,
+                });
+                $("#myModalLabel1").html("Relacion Compra - Venta (N° Pedido Venta : " + $('#numeroPedido').val() + ")")
+            });
+        });
+    </script>
 {% endblock %}

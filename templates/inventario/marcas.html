@@ -5,32 +5,33 @@
 {% load tags_extra %}
 
 {% block title %}
-Nuestras Marcas
+    Nuestras Marcas
 {% endblock %}
 
 {% block meta_description %}
-Neubs - Marcas
+    Neubs - Marcas
 {% endblock %}
 
 {% block posicion_pagina %}
 
-	{% get_breadcrumb request.get_full_path %}
+    {% get_breadcrumb request.get_full_path %}
 
 {% endblock %}
 
 
 {% block content %}
-<div class="row">
-	<div class="container-fluid ">
-	<h2 class="text-center">Nuestras Marcas</h2>
-    <h4 class="text-center">Las mejores marcas en un solo lugar</h4>
-	{% for marca in listado_marcas %}
-		<div class="col-lg-2 col-md-2 col-sm-2 col-xs-6" >
-          <a href="{% url 'productos_marca' marca.descripcion %}">
-          	<img src="{% static 'img/marca/'|add:marca.codigo|add:'.jpg' %}" width="100px" height="100px" title="{{ marca.descripcion }}" alt="{{ marca.descripcion }}">
-  	 	  </a>
+    <div class="row">
+        <div class="container-fluid ">
+            <h2 class="text-center">Nuestras Marcas</h2>
+            <h4 class="text-center">Las mejores marcas en un solo lugar</h4>
+            {% for marca in listado_marcas %}
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                    <a href="{% url 'productos_marca' marca.descripcion %}">
+                        <img src="{% static 'img/marca/'|add:marca.codigo|add:'.jpg' %}" width="100px" height="100px"
+                             title="{{ marca.descripcion }}" alt="{{ marca.descripcion }}">
+                    </a>
+                </div>
+            {% endfor %}
         </div>
-	{% endfor %}
-	</div>
-</div>
+    </div>
 {% endblock %}

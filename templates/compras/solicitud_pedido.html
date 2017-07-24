@@ -2,212 +2,219 @@
 {% load staticfiles %}
 
 {% block title %}
-Neubs - Pedido Compra
+    Neubs - Pedido Compra
 {% endblock %}
 
 {% block meta_description %}
-Pedido de compra - solo administradores
+    Pedido de compra - solo administradores
 {% endblock %}
 
 {% block script_head %}
-<style type="text/css">
-	.row{
-		margin-left: 0px;
-		margin-right: 0px;
-	}
-</style>
+    <style type="text/css">
+        .row {
+            margin-left: 0px;
+            margin-right: 0px;
+        }
+    </style>
 
 {% endblock %}
 
 
 {% block posicion_pagina %}
-<ol class="breadcrumb">
-    <a  href="{% url 'home' %}">Home /</a></li>
-    <a class="active" href="{% url 'solicitud_compra' %}">Solicitud del Pedido</a></li>
-</ol>
-{% endblock %} 
-
-{% block content %}
-<div class="row">
-	<div class="container-fluid">
-		<form class="form-horizontal" id="from-pedido" name="from-pedido" method="POST" action="{% url 'solicitud_compra' %}">
-		<h3 class="item-heading bg-grey">SOLICITUD DE PEDIDO </h3>
-		<hr>
-		{% csrf_token %}
-			<div class="form-group">
-				<label for="proveedor" class="col-lg-2 col-md-2 col-sm-2 col-xs-3 control-label ">Proveedor</label>
-				<div class="col-lg-5 col-md-6 col-sm-8 col-xs-8">
-					<input type="hidden" name="idProveedor" id="idProveedor" required>
-					<input class="form-control" type="text" name="proveedor" id="proveedor" placeholder="Proveedor" required onkeypress="return false">
-				</div>
-				<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
-					<button type="button" class="form-control btn-success" style="width: 50px" data-toggle="modal" data-target="#myModal" src-url='{% url 'busqueda_proveedor_modal' %}' >
-						<span class="icon-bar glyphicon glyphicon-search icon"></span>
-					</button>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-lg-2 col-md-2 col-sm-2 col-xs-3 control-label ">Estado Pedido</label>
-				<div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-					<select id="idEstadoPedidoCompra" name="idEstadoPedidoCompra" class="form-control" required>
-						<option>---------</option>
-						{% for estado in listado_estado_pedido_compra %}
-						<option value="{{estado.pk}}" {% if codigo_estado_pedido == estado.codigo %} selected="True" {%endif%} >{{estado}}</option>
-						{% endfor %}
-					</select>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-lg-8 col-md-11 col-sm-11 col-xs-11">
-						<button type="button" class="btn btn-primary " onclick="agregar_item_compra()" style="float: right;">Agregar Item</button>
-				</div>
-			</div>
-			<div class="table-responive" >
-				<table class="table table-striped">
-					<thead>
-						<tr>
-							<th>#</th>
-							<th>Producto</th>
-							<th></th>
-							<th>Cantidad</th>
-							<th>Precio Unitario</th>
-							<th>Costo Total</th>
-							<th></th>	
-						</tr>
-					</thead>
-					<tbody>
-						 <!-- FILAS CARGADAS DESDE JQUERY function agregar_item_compra() -->
-					</tbody>
-				</table>
-			</div>
-			<button type="submit" class="btn btn-success" style="float: right;">Envíar</button>
-		</form>
-	</div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade " id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-</div>
-<div class="modal fade " id="modal-producto" tabindex="-1" role="dialog" aria-labelledby="modalProductoLabel">
-</div>
+    <ol class="breadcrumb">
+        <a href="{% url 'home' %}">Home /</a></li>
+        <a class="active" href="{% url 'solicitud_compra' %}">Solicitud del Pedido</a></li>
+    </ol>
 {% endblock %}
 
-{% block script_footer %} 
-<link rel="stylesheet" href="{% static 'css/jquery.dataTables.min.css'%}">
-<script type="text/javascript" src="{% static  'js/jquery.dataTables.min.js' %}"></script>
-<script type="text/javascript">
-$('#myModal').on('hidden.bs.modal', function (e) {
-		$(this).html('')
-})
-// variable para llevar el conteo del numero de filas
-numero_pedidos = 0;
-function validar_fila()
-{
-	
-	valido = true
-	if (numero_pedidos > 0) {
-		$("input[id^='idProducto']").each(function(){ 
-			if($(this).val().length <= 0){ 
-				valido = false;
-				return;
-			}
-		});
-		$("input[id^='cantidad']").each(function(){ 
-			if($(this).val().length <= 0){ valido = false;return;}
-		});
-		$("input[id^='precio_unitario']").each(function(){ 
-			if($(this).val().length <= 0){ valido = false;return;}
-		});
-	}
-	if(!valido)
-		toastr.warning('Todos los campos de la fila deben estar llenos','Warning')
-	return valido;
-}
-// agrega un item de posición a la tabla
-function agregar_item_compra()
-{
-	// Se valida que las filas esten llenas correctamente antes de agregar otra
-	if (!validar_fila()) 
-		return;
-	var row = "<tr id='tr-posicion-"+numero_pedidos+"'>"
-	row +=		"<th>"+(numero_pedidos+1)+"</th>"
-	row +=		"<th><input type='hidden' id='idProducto"+numero_pedidos+"' name='idProducto"+numero_pedidos+"''><input type='text' class='form-control' id='producto"+numero_pedidos+"'' name='producto"+numero_pedidos+"'' onkeypress='return false' placeholder='Producto' required ></th>";
-	row +=		"<th>"
-	row +=			"<button type='button' class='form-control btn-success' style='width: 50px' data-toggle='modal' data-target='#modal-producto' src-url='{% url 'busqueda_producto' %}' data=\"objectPk=idProducto"+numero_pedidos+"&objectShow=producto"+numero_pedidos+"\">"
-	row +=				"<span class='icon-bar glyphicon glyphicon-search icon'></span>"
-	row +=			"</button></th>"
-	row +=		"<th><input type='number' class='form-control' id='cantidad"+numero_pedidos+"' name='cantidad"+numero_pedidos+"' placeholder='Cantidad' onkeyup='calcular_costo_total("+numero_pedidos+")' required></th>"
-	row += 		"<th><input type='number' class='form-control' id='precio_unitario"+numero_pedidos+"' name='precio_unitario"+numero_pedidos+"' placeholder='Precio Unitario' onkeyup='calcular_costo_total("+numero_pedidos+")' required></th>"
-	row +=		"<th><input type='hidden' id='costo_total"+numero_pedidos+"' name='costo_total"+numero_pedidos+"'><p class='form-control-static' id='pcosto_total"+numero_pedidos+"'>$0</p></th>"
-	row +=		"<th><button type='button' class='btn btn-danger' onclick='remover_item("+numero_pedidos+")'><span class='glyphicon glyphicon glyphicon-remove'></span></button></th>"
-	row +=		"</tr>";
-	$("tbody").append(row);
-	numero_pedidos++;
-}
-// remueve un item de la fila
-function remover_item(n_row)
-{
-	$("#tr-posicion-"+n_row).remove()
-}
-function calcular_costo_total(n_row)
-{
-	if($("#precio_unitario"+n_row).val() == null || $("#precio_unitario"+n_row).val() == 0) 
-		return;
-	if($("#cantidad"+n_row).val() == null || $("#cantidad"+n_row).val() == 0) 
-		return;
-	var costo_total = $("#precio_unitario"+n_row).val() * $("#cantidad"+n_row).val()
+{% block content %}
+    <div class="row">
+        <div class="container-fluid">
+            <form class="form-horizontal" id="from-pedido" name="from-pedido" method="POST"
+                  action="{% url 'solicitud_compra' %}">
+                <h3 class="item-heading bg-grey">SOLICITUD DE PEDIDO </h3>
+                <hr>
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="proveedor" class="col-lg-2 col-md-2 col-sm-2 col-xs-3 control-label ">Proveedor</label>
+                    <div class="col-lg-5 col-md-6 col-sm-8 col-xs-8">
+                        <input type="hidden" name="idProveedor" id="idProveedor" required>
+                        <input class="form-control" type="text" name="proveedor" id="proveedor" placeholder="Proveedor"
+                               required onkeypress="return false">
+                    </div>
+                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                        <button type="button" class="form-control btn-success" style="width: 50px" data-toggle="modal"
+                                data-target="#myModal" src-url='{% url 'busqueda_proveedor_modal' %}'>
+                            <span class="icon-bar glyphicon glyphicon-search icon"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 col-md-2 col-sm-2 col-xs-3 control-label ">Estado Pedido</label>
+                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                        <select id="idEstadoPedidoCompra" name="idEstadoPedidoCompra" class="form-control" required>
+                            <option>---------</option>
+                            {% for estado in listado_estado_pedido_compra %}
+                                <option value="{{ estado.pk }}" {% if codigo_estado_pedido == estado.codigo %}
+                                        selected="True" {% endif %} >{{ estado }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-8 col-md-11 col-sm-11 col-xs-11">
+                        <button type="button" class="btn btn-primary " onclick="agregar_item_compra()"
+                                style="float: right;">Agregar Item
+                        </button>
+                    </div>
+                </div>
+                <div class="table-responive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Producto</th>
+                            <th></th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>Costo Total</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- FILAS CARGADAS DESDE JQUERY function agregar_item_compra() -->
+                        </tbody>
+                    </table>
+                </div>
+                <button type="submit" class="btn btn-success" style="float: right;">Envíar</button>
+            </form>
+        </div>
+    </div>
 
-	$("#costo_total"+n_row).val(costo_total)
-	$("#pcosto_total"+n_row).html("$"+costo_total.toString().replace(/(\d)(?=(\d{3})+$)/g, "$1,"))
-}
-$(document).ready(function()
-{
-	agregar_item_compra()
-	$( "#from-pedido" ).submit(function( event ) {
-		
-  		if($("#idProveedor").val().length == 0){
-	  		alert("Debe seleccionar el proveedor")
-	  		event.preventDefault();
-	  		return;
-	  	}
-	  	if($("input[id^='idProducto']").length == 0){
-	  		alert("Agrege posiciones al pedido")
-	  		event.preventDefault();
-	  		return;
-	  	}
-	  	
-	});
-});
-// Se valida que el producto no este seleccionado
-$('#modal-producto').on('hidden.bs.modal', function (e) {
-	if($("input[id^='idProducto']").length > 1){
-		var lastProducto = $("input[id^='idProducto']").last()
-		if($("input[id^='idProducto'][value='"+$(lastProducto).val()+"']").not($(lastProducto)) != null){
-			var num = $(lastProducto).attr('id').split('idProducto')[1]
-  		 	toastr.warning('Favor seleccione otro producto')
-  		 	toastr.error('El producto ' + $('#producto'+num).val() + ' ya se encuentra en el pedido')
-  		 	$('#producto'+num).val('')
-  		 	$(lastProducto).val('')
-		}
-	}
-	// Se consulta el precio unitario (SaldoInventario)
-	if($("#idProveedor").val()!= null){
-		idProducto = $("input[id^='idProducto']").last().val()
-		$.ajax({
-	      async: true,
-	      type: "get",
-	      url: "{% url 'get_precioCompraUnitario_saldo_inventario' %}",
-	      data: 'idProducto='+idProducto+"&idProveedor="+$("#idProveedor").val(),
-	      success: function(data){
-		 	$("input[id^='precio_unitario']").last().val(data) 
-	      },
-	      error: function(jqXHR,estado,error){
-	        console.log(error);
-	      },
-	    }); 
-	}
-	$(this).html('')
-});
-</script>
+    <!-- Modal -->
+    <div class="modal fade " id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    </div>
+    <div class="modal fade " id="modal-producto" tabindex="-1" role="dialog" aria-labelledby="modalProductoLabel">
+    </div>
+{% endblock %}
+
+{% block script_footer %}
+    <link rel="stylesheet" href="{% static 'css/jquery.dataTables.min.css' %}">
+    <script type="text/javascript" src="{% static  'js/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript">
+        $('#myModal').on('hidden.bs.modal', function (e) {
+            $(this).html('')
+        })
+        // variable para llevar el conteo del numero de filas
+        numero_pedidos = 0;
+        function validar_fila() {
+
+            valido = true
+            if (numero_pedidos > 0) {
+                $("input[id^='idProducto']").each(function () {
+                    if ($(this).val().length <= 0) {
+                        valido = false;
+                        return;
+                    }
+                });
+                $("input[id^='cantidad']").each(function () {
+                    if ($(this).val().length <= 0) {
+                        valido = false;
+                        return;
+                    }
+                });
+                $("input[id^='precio_unitario']").each(function () {
+                    if ($(this).val().length <= 0) {
+                        valido = false;
+                        return;
+                    }
+                });
+            }
+            if (!valido)
+                toastr.warning('Todos los campos de la fila deben estar llenos', 'Warning')
+            return valido;
+        }
+        // agrega un item de posición a la tabla
+        function agregar_item_compra() {
+            // Se valida que las filas esten llenas correctamente antes de agregar otra
+            if (!validar_fila())
+                return;
+            var row = "<tr id='tr-posicion-" + numero_pedidos + "'>"
+            row += "<th>" + (numero_pedidos + 1) + "</th>"
+            row += "<th><input type='hidden' id='idProducto" + numero_pedidos + "' name='idProducto" + numero_pedidos + "''><input type='text' class='form-control' id='producto" + numero_pedidos + "'' name='producto" + numero_pedidos + "'' onkeypress='return false' placeholder='Producto' required ></th>";
+            row += "<th>"
+            row += "<button type='button' class='form-control btn-success' style='width: 50px' data-toggle='modal' data-target='#modal-producto' src-url='{% url 'busqueda_producto' %}' data=\"objectPk=idProducto" + numero_pedidos + "&objectShow=producto" + numero_pedidos + "\">"
+            row += "<span class='icon-bar glyphicon glyphicon-search icon'></span>"
+            row += "</button></th>"
+            row += "<th><input type='number' class='form-control' id='cantidad" + numero_pedidos + "' name='cantidad" + numero_pedidos + "' placeholder='Cantidad' onkeyup='calcular_costo_total(" + numero_pedidos + ")' required></th>"
+            row += "<th><input type='number' class='form-control' id='precio_unitario" + numero_pedidos + "' name='precio_unitario" + numero_pedidos + "' placeholder='Precio Unitario' onkeyup='calcular_costo_total(" + numero_pedidos + ")' required></th>"
+            row += "<th><input type='hidden' id='costo_total" + numero_pedidos + "' name='costo_total" + numero_pedidos + "'><p class='form-control-static' id='pcosto_total" + numero_pedidos + "'>$0</p></th>"
+            row += "<th><button type='button' class='btn btn-danger' onclick='remover_item(" + numero_pedidos + ")'><span class='glyphicon glyphicon glyphicon-remove'></span></button></th>"
+            row += "</tr>";
+            $("tbody").append(row);
+            numero_pedidos++;
+        }
+        // remueve un item de la fila
+        function remover_item(n_row) {
+            $("#tr-posicion-" + n_row).remove()
+        }
+        function calcular_costo_total(n_row) {
+            if ($("#precio_unitario" + n_row).val() == null || $("#precio_unitario" + n_row).val() == 0)
+                return;
+            if ($("#cantidad" + n_row).val() == null || $("#cantidad" + n_row).val() == 0)
+                return;
+            var costo_total = $("#precio_unitario" + n_row).val() * $("#cantidad" + n_row).val()
+
+            $("#costo_total" + n_row).val(costo_total)
+            $("#pcosto_total" + n_row).html("$" + costo_total.toString().replace(/(\d)(?=(\d{3})+$)/g, "$1,"))
+        }
+        $(document).ready(function () {
+            agregar_item_compra()
+            $("#from-pedido").submit(function (event) {
+
+                if ($("#idProveedor").val().length == 0) {
+                    alert("Debe seleccionar el proveedor")
+                    event.preventDefault();
+                    return;
+                }
+                if ($("input[id^='idProducto']").length == 0) {
+                    alert("Agrege posiciones al pedido")
+                    event.preventDefault();
+                    return;
+                }
+
+            });
+        });
+        // Se valida que el producto no este seleccionado
+        $('#modal-producto').on('hidden.bs.modal', function (e) {
+            if ($("input[id^='idProducto']").length > 1) {
+                var lastProducto = $("input[id^='idProducto']").last()
+                if ($("input[id^='idProducto'][value='" + $(lastProducto).val() + "']").not($(lastProducto)) != null) {
+                    var num = $(lastProducto).attr('id').split('idProducto')[1]
+                    toastr.warning('Favor seleccione otro producto')
+                    toastr.error('El producto ' + $('#producto' + num).val() + ' ya se encuentra en el pedido')
+                    $('#producto' + num).val('')
+                    $(lastProducto).val('')
+                }
+            }
+            // Se consulta el precio unitario (SaldoInventario)
+            if ($("#idProveedor").val() != null) {
+                idProducto = $("input[id^='idProducto']").last().val()
+                $.ajax({
+                    async: true,
+                    type: "get",
+                    url: "{% url 'get_precioCompraUnitario_saldo_inventario' %}",
+                    data: 'idProducto=' + idProducto + "&idProveedor=" + $("#idProveedor").val(),
+                    success: function (data) {
+                        $("input[id^='precio_unitario']").last().val(data)
+                    },
+                    error: function (jqXHR, estado, error) {
+                        console.log(error);
+                    },
+                });
+            }
+            $(this).html('')
+        });
+    </script>
 {% endblock %}
 

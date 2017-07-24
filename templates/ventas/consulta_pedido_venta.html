@@ -3,178 +3,191 @@
 {% load humanize %}
 
 {% block title %}
-Neubs - Consulta Pedido Venta
+    Neubs - Consulta Pedido Venta
 {% endblock %}
 
 {% block meta_description %}
-Consulta pedido venta - Solo Administradores
+    Consulta pedido venta - Solo Administradores
 {% endblock %}
 
 
 {% block script_head %}
 
-<style type="text/css">
-	.row{
-		margin-left: 0px;
-		margin-right: 0px;
-	}
-</style>
+    <style type="text/css">
+        .row {
+            margin-left: 0px;
+            margin-right: 0px;
+        }
+    </style>
 {% endblock %}
 
 {% block posicion_pagina %}
-<ol class="breadcrumb">
-    <a  href="/">Home /</a></li>
-    
-    <a class="active" href="#">Consulta Pedido Venta</a></li>
-</ol>
+    <ol class="breadcrumb">
+        <a href="/">Home /</a></li>
+
+        <a class="active" href="#">Consulta Pedido Venta</a></li>
+    </ol>
 {% endblock %}
 
 
 {% block content %}
-<div class="row">
-	<div class="container-fluid">
-		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-			<form id='form-pedido' class="form-horizontal"  method="POST" action="">
-			<h3 class="item-heading bg-grey">CONSULTA PEDIDO VENTA </h3>
-			<hr>
-			{% csrf_token %}
-				<div class="form-group">
-					<label class="col-lg-2 col-md-2 col-sm-2 col-xs-3 control-label" for="numeroPedido">{{form.numeroPedido.label}}</label>
-					<div class="col-lg-3 col-md-7 col-sm-7 Col-xs-7">
-						{{form.numeroPedido}}
-					</div>
-				</div>
-		  		<div class="form-group">
-					<label class="col-lg-2 col-md-2 col-sm-2 col-xs-3 control-label" for="Cliente">{{form.cliente.label}}</label>
-					{{form.idCliente}}
-					<div class="col-lg-7 col-md-7 col-sm-7 col-xs-7 ">
-						{{form.cliente}}
-					</div>
-					<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ">
-						<button type="button" id="btn-busqueda-pedido" class="form-control btn-success" style="width: 50px" data-toggle="modal" data-target="#myModal" src-url="{% url 'busqueda_cliente_modal' %}">
-							<span class="icon-bar glyphicon glyphicon-search icon"></span>
-						</button>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-lg-2 col-md-2 col-sm-2 col-xs-3 control-label" for="estadoPedidoVenta">{{form.estadoPedidoVenta.label}}</label>
-					<div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
-						{{form.estadoPedidoVenta}}
-					</div>
-				</div>
-				<div class="form-group">
-				    <div class="col-sm-10" style="float: right;">
-				      <button type="submit" class="btn btn-success" >Buscar</button>
-				      <button type="reset" class="btn btn-danger" onclick="redirect('{% url 'consulta_pedido_venta' %}')">Limpiar</button>
-				    </div>
-				  </div>
-			</form>
+    <div class="row">
+        <div class="container-fluid">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <form id='form-pedido' class="form-horizontal" method="POST" action="">
+                    <h3 class="item-heading bg-grey">CONSULTA PEDIDO VENTA </h3>
+                    <hr>
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label class="col-lg-2 col-md-2 col-sm-2 col-xs-3 control-label"
+                               for="numeroPedido">{{ form.numeroPedido.label }}</label>
+                        <div class="col-lg-3 col-md-7 col-sm-7 Col-xs-7">
+                            {{ form.numeroPedido }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-md-2 col-sm-2 col-xs-3 control-label"
+                               for="Cliente">{{ form.cliente.label }}</label>
+                        {{ form.idCliente }}
+                        <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7 ">
+                            {{ form.cliente }}
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 ">
+                            <button type="button" id="btn-busqueda-pedido" class="form-control btn-success"
+                                    style="width: 50px" data-toggle="modal" data-target="#myModal"
+                                    src-url="{% url 'busqueda_cliente_modal' %}">
+                                <span class="icon-bar glyphicon glyphicon-search icon"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 col-md-2 col-sm-2 col-xs-3 control-label"
+                               for="estadoPedidoVenta">{{ form.estadoPedidoVenta.label }}</label>
+                        <div class="col-lg-7 col-md-7 col-sm-7 col-xs-7">
+                            {{ form.estadoPedidoVenta }}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-10" style="float: right;">
+                            <button type="submit" class="btn btn-success">Buscar</button>
+                            <button type="reset" class="btn btn-danger"
+                                    onclick="redirect('{% url 'consulta_pedido_venta' %}')">Limpiar
+                            </button>
+                        </div>
+                    </div>
+                </form>
 
-			{% if listado_pedido_venta %}
-			<h3 class=" text-center">LISTADO PEDIDO VENTA</h3>
-			<div class="table-responive">
-				<table id="table_pedido" class="table table-striped">
-					<thead>
-						<tr>
-							<th>Número</th>
-							<th>Cliente</th>
-							<th>Fecha Solicitud</th>
-							<th>Fecha Autorización</th>
-							<th>N° Productos</th>
-							<th>Valor Total</th>
-							<th>Estado</th>
-							<th>Ver más</th>
-							<th>Orden Pedido</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for pedido in listado_pedido_venta %}
-						<tr style="cursor:pointer;">
-							<td>{{pedido.numeroPedido}}</td>
-							<td>{{pedido.cliente}}</td>
-							<td>{{pedido.fecha|date:"d/m/Y H:m:s"}}</td>
-							<td>{{pedido.fechaAutorizacion|date:"d/m/Y H:m:s"|default:'-----'}}</td>
-							<td>{{pedido.get_cantidad_total|stringformat:"d"|intcomma}}</td>
-							<td>${{pedido.get_valor_total|stringformat:"d"|intcomma}}</td>
-							<td>{{pedido.estadoPedidoVenta.descripcion}}</td>
-							<td>
-								<button type="button" class="form-control btn-success center-block" title="Ver detalle" style="width:40px" onclick="mostrarPosicionPedido({{pedido.pk}},{{pedido.numeroPedido}})" data-toggle="modal" data-target="#modal-pedido-posicion">
-									<span class="icon-bar glyphicon glyphicon-search icon"></span>
-								</button>
-							</td>
-							<td>
-								<a class="form-control btn-success center-block" style="width:40px" href="{% url 'reporte_orden_pedido' pedido.pk%}" target="_blanck" title="Generar Orden Pedido">
-									<span class="icon-bar glyphicon glyphicon-save-file"></span>
-								</a>
-							</td>
-						</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-			</div>
-			{% endif %}
-			<!-- Modal -->
-			<div class="modal fade" id="modal-pedido-posicion" tabindex="-1" role="dialog" aria-labelledby="title-modal">
-				<div class="modal-dialog modal-lg" role="document">
-					<div class="modal-content">
-					  	<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<h4 class="modal-title" id="title-modal">Detalle del Pedido</h4>
-						</div>
-						<div class="modal-body">
-							<table id="tabla-pedido-posicion" class="display" cellspacing="0" width="100%">
-							    <thead>
-							        <tr>
-							        	<th>Producto</th>
-							        	<th>Proveedor</th>
-							        	<th>Cantidad</th>
-							        	<th>Costo Total</th>
-							        </tr>
-							    </thead>
-							</table>
-						</div>
-						<div class="modal-footer">
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="modal fade " id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"></div>
-		</div>
-	</div>
-</div>
+                {% if listado_pedido_venta %}
+                    <h3 class=" text-center">LISTADO PEDIDO VENTA</h3>
+                    <div class="table-responive">
+                        <table id="table_pedido" class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Número</th>
+                                <th>Cliente</th>
+                                <th>Fecha Solicitud</th>
+                                <th>Fecha Autorización</th>
+                                <th>N° Productos</th>
+                                <th>Valor Total</th>
+                                <th>Estado</th>
+                                <th>Ver más</th>
+                                <th>Orden Pedido</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for pedido in listado_pedido_venta %}
+                                <tr style="cursor:pointer;">
+                                    <td>{{ pedido.numeroPedido }}</td>
+                                    <td>{{ pedido.cliente }}</td>
+                                    <td>{{ pedido.fecha|date:"d/m/Y H:m:s" }}</td>
+                                    <td>{{ pedido.fechaAutorizacion|date:"d/m/Y H:m:s"|default:'-----' }}</td>
+                                    <td>{{ pedido.get_cantidad_total|stringformat:"d"|intcomma }}</td>
+                                    <td>${{ pedido.get_valor_total|stringformat:"d"|intcomma }}</td>
+                                    <td>{{ pedido.estadoPedidoVenta.descripcion }}</td>
+                                    <td>
+                                        <button type="button" class="form-control btn-success center-block"
+                                                title="Ver detalle" style="width:40px"
+                                                onclick="mostrarPosicionPedido({{ pedido.pk }},{{ pedido.numeroPedido }})"
+                                                data-toggle="modal" data-target="#modal-pedido-posicion">
+                                            <span class="icon-bar glyphicon glyphicon-search icon"></span>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <a class="form-control btn-success center-block" style="width:40px"
+                                           href="{% url 'reporte_orden_pedido' pedido.pk %}" target="_blanck"
+                                           title="Generar Orden Pedido">
+                                            <span class="icon-bar glyphicon glyphicon-save-file"></span>
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+                <!-- Modal -->
+                <div class="modal fade" id="modal-pedido-posicion" tabindex="-1" role="dialog"
+                     aria-labelledby="title-modal">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                        aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="title-modal">Detalle del Pedido</h4>
+                            </div>
+                            <div class="modal-body">
+                                <table id="tabla-pedido-posicion" class="display" cellspacing="0" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Proveedor</th>
+                                        <th>Cantidad</th>
+                                        <th>Costo Total</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade " id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"></div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block script_footer %}
-<link rel="stylesheet" href="{% static 'css/jquery.dataTables.min.css'%}">
-<script type="text/javascript" src="{% static  'js/jquery.dataTables.min.js' %}"></script>
-<script type="text/javascript">
-$(document).ready(function() {
-    $('#table_pedido').DataTable({language: lenguage_spanish});
-});
+    <link rel="stylesheet" href="{% static 'css/jquery.dataTables.min.css' %}">
+    <script type="text/javascript" src="{% static  'js/jquery.dataTables.min.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#table_pedido').DataTable({language: lenguage_spanish});
+        });
 
-function mostrarPosicionPedido(idPedidoVenta,numeroPedido)
-{
-	$('#tabla-pedido-posicion').DataTable(
-	{
-    	select: false,
-    	destroy: true,
-    	paging: false,
-    	searching: false,
-        ajax: "/ventas/pedido/posicion/json/"+idPedidoVenta+"/",
-        columns: [
-        	{data:"fields.producto"},
-        	{data:"fields.proveedor"},
-        	{data:"fields.cantidad"},
-        	{
-    			data:"fields.costoTotal",
-             	render: function ( data, type, row ) {
-		        	return '$'+ data.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-		    	}
-			},
-        ],
-        language: lenguage_spanish,
-    });
-    $('#title-modal').html('Detalle del Pedido N° ' + numeroPedido)
-}
-</script>
+        function mostrarPosicionPedido(idPedidoVenta, numeroPedido) {
+            $('#tabla-pedido-posicion').DataTable(
+                {
+                    select: false,
+                    destroy: true,
+                    paging: false,
+                    searching: false,
+                    ajax: "/ventas/pedido/posicion/json/" + idPedidoVenta + "/",
+                    columns: [
+                        {data: "fields.producto"},
+                        {data: "fields.proveedor"},
+                        {data: "fields.cantidad"},
+                        {
+                            data: "fields.costoTotal",
+                            render: function (data, type, row) {
+                                return '$' + data.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                            }
+                        },
+                    ],
+                    language: lenguage_spanish,
+                });
+            $('#title-modal').html('Detalle del Pedido N° ' + numeroPedido)
+        }
+    </script>
 {% endblock %}

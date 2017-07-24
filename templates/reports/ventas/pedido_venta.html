@@ -4,107 +4,128 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Orden de Pedido</title>
-	<meta charset="UTF-8">
-	<style type="text/css">
-		@page { size:210mm 297mm ;}
-		@page {size: portrait;}
-		@page :left {
-		 margin-left: 3cm;
-		 margin-right: 4cm;
-		}
-		@page :right {
-		 margin-left: 4cm;
-		 margin-right: 3cm;
-		}
-		@page :first {
-		 margin-top: 50cm;
-		}
-		@page:left {
-		  @bottom-left {
-		    content: counter(pagina);
-		   }
-		 }
-		@page:right {
-		  @bottom-right {
-		    content: counter(pagina);
-		   }
-		 }
+    <title>Orden de Pedido</title>
+    <meta charset="UTF-8">
+    <style type="text/css">
+        @page {
+            size: 210mm 297mm ;
+        }
 
-	 	.content{
-	 		margin-top: 30px;
+        @page {
+            size: portrait;
+        }
 
-	 	}
-		table{
-			border:1px black solid;
-			width: 100%;
-		}
-		thead{
-			text-align: center;
-			font-weight: bold;
-		}
-		img{
-			width: 150px;
-			height: 50px;
-			padding: 5px;
-		}
-		.text-center{
-			text-align: center;
-		}
-		.garantia{
-			font-size: 12px;
-			text-align: justify;
-		}
+        @page :left {
+            margin-left: 3cm;
+            margin-right: 4cm;
+        }
 
-	</style>
+        @page :right {
+            margin-left: 4cm;
+            margin-right: 3cm;
+        }
+
+        @page :first {
+            margin-top: 50cm;
+        }
+
+        @page :left {
+            @bottom-left {
+                content: counter(pagina);
+            }
+        }
+
+        @page :right {
+            @bottom-right {
+                content: counter(pagina);
+            }
+        }
+
+        .content {
+            margin-top: 30px;
+
+        }
+
+        table {
+            border: 1px black solid;
+            width: 100%;
+        }
+
+        thead {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        img {
+            width: 150px;
+            height: 50px;
+            padding: 5px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .garantia {
+            font-size: 12px;
+            text-align: justify;
+        }
+
+    </style>
 </head>
 <body>
-	<div class="content">
-		{% for pedido in listado_pedido_venta %}
-			<table border="1" class="text-center">
-				<tr style="font-weight: bold;">
-					<td rowspan="2" style="background-color: #303841;"><img src="https://s3shopneubs.s3.amazonaws.com/static/img/logo.png"></td>
-					<td>CLIENTE</td>
-					<td>FECHA</td>
-					<td>ORDEN DE PEDIDO</td>
-				</tr>
-				<tr >
-					<td>{{ pedido.cliente }}</td>
-					<td>{{pedido.fecha|date:"d/m/Y"}}</td>
-					<td style="color: #FF5722;font-weight: bold;">N° {{pedido.numeroPedido}}</td>
-				</tr>
-			</table>
-			<br>
-			
-			<table border="1">
-				<thead>
-					<tr>
-						<td>Producto</td>
-						<td>Cant.</td>
-						<td>Garantía</td>
-						<td>Serial</td>
-						<td>Precio</td>
-						<td>Subtotal</td>
-					</tr>
-				</thead>
-				{% for posicion in pedido.listadoPedidoVentaPosicion %}
-					<tr>
-						<td>{{posicion.producto}}</td>
-						<td class="text-center">{{posicion.cantidad}}</td>
-						<td class="text-center">{% get_garantia posicion.producto.pk posicion.proveedor.pk %}</td>
-						<td style="min-width: 200px"></td>
-						<td class="text-center">{{posicion.costoTotal|stringformat:"d"|intcomma}}</td>
-						<td class="text-center">${{posicion.costoTotal|stringformat:"d"|intcomma}}</td>
-					</tr>
-					
-				{% endfor %}
-			</table>
-			<p style="text-align: right;">TOTAL <b style="padding-left: 10px">${{pedido.get_valor_total|stringformat:"d"|intcomma}}</b></p>
-			<p class="garantia">Para efectos de garantía se necesita copia del documento de compra y la mercancía con todos los accesorios.
-			No se dará garantía por daños ocacionados por alto voltaje, deterioro o desconfiguración de la máquina, software, virus, sellos de seguridad, o menos de 6 pixeles dañados en monitores. NO MARCAR LAS ETIQUETAS DE LOS PRODUCTOS CON NINGÚN TIPO DE MARCADOR. NO SE RESPONDE POR DAÑO FISICO DEL PRODUCTO DESPUÉS QUE SE ENTREGUE AL CLIENTE.</p>
-			<hr>
-		{% endfor %}
-	</div>
+<div class="content">
+    {% for pedido in listado_pedido_venta %}
+        <table border="1" class="text-center">
+            <tr style="font-weight: bold;">
+                <td rowspan="2" style="background-color: #303841;"><img
+                        src="https://s3shopneubs.s3.amazonaws.com/static/img/logo.png"></td>
+                <td>CLIENTE</td>
+                <td>FECHA</td>
+                <td>ORDEN DE PEDIDO</td>
+            </tr>
+            <tr>
+                <td>{{ pedido.cliente }}</td>
+                <td>{{ pedido.fecha|date:"d/m/Y" }}</td>
+                <td style="color: #FF5722;font-weight: bold;">N° {{ pedido.numeroPedido }}</td>
+            </tr>
+        </table>
+        <br>
+
+        <table border="1">
+            <thead>
+            <tr>
+                <td>Producto</td>
+                <td>Cant.</td>
+                <td>Garantía</td>
+                <td>Serial</td>
+                <td>Precio</td>
+                <td>Subtotal</td>
+            </tr>
+            </thead>
+            {% for posicion in pedido.listadoPedidoVentaPosicion %}
+                <tr>
+                    <td>{{ posicion.producto }}</td>
+                    <td class="text-center">{{ posicion.cantidad }}</td>
+                    <td class="text-center">{% get_garantia posicion.producto.pk posicion.proveedor.pk %}</td>
+                    <td style="min-width: 200px"></td>
+                    <td class="text-center">{{ posicion.costoTotal|stringformat:"d"|intcomma }}</td>
+                    <td class="text-center">${{ posicion.costoTotal|stringformat:"d"|intcomma }}</td>
+                </tr>
+
+            {% endfor %}
+        </table>
+        <p style="text-align: right;">TOTAL <b
+                style="padding-left: 10px">${{ pedido.get_valor_total|stringformat:"d"|intcomma }}</b></p>
+        <p class="garantia">Para efectos de garantía se necesita copia del documento de compra y la mercancía con todos
+            los accesorios.
+            No se dará garantía por daños ocacionados por alto voltaje, deterioro o desconfiguración de la máquina,
+            software, virus, sellos de seguridad, o menos de 6 pixeles dañados en monitores. NO MARCAR LAS ETIQUETAS DE
+            LOS PRODUCTOS CON NINGÚN TIPO DE MARCADOR. NO SE RESPONDE POR DAÑO FISICO DEL PRODUCTO DESPUÉS QUE SE
+            ENTREGUE AL CLIENTE.</p>
+        <hr>
+    {% endfor %}
+</div>
 
 </body>
 </html>

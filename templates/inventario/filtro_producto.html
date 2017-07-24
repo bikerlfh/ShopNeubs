@@ -3,227 +3,254 @@
 {% load tags_extra %}
 
 {% block title %}
-ShopNeubs | {{page_title|title}}
+    ShopNeubs | {{ page_title|title }}
 {% endblock %}
 
 {% block meta_description %}
-{{ meta_descriptions|default:'Productos tecnológicos en ShopNeubs'}}
+    {{ meta_descriptions|default:'Productos tecnológicos en ShopNeubs' }}
 {% endblock %}
 
 {% block script_head %}
-<link rel="stylesheet" href="{% static 'css/producto-style.min.css'%}">
-<link href="{% static 'css/animate.css'%}" rel="stylesheet" type="text/css"/>
-<script type="text/javascript" src="{% static 'js/wow.min.js'%}"></script>
-<style type="text/css">
-    a>.active{
-      color:#FF5722
-  }
-</style>
+    <link rel="stylesheet" href="{% static 'css/producto-style.min.css' %}">
+    <link href="{% static 'css/animate.css' %}" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="{% static 'js/wow.min.js' %}"></script>
+    <style type="text/css">
+        a > .active {
+            color: #FF5722
+        }
+    </style>
 
 {% endblock %}
 
 {% block posicion_pagina %}
 
-  {% get_breadcrumb request.get_full_path %}
+    {% get_breadcrumb request.get_full_path %}
 
-{% endblock %} 
+{% endblock %}
 
 {% block content %}
-<div class="row" style="margin-left: 0px;">
-  <div class="container-fluid" style="padding-right: 0px;">
-    <div class="col-lg-9 col-md-9 col-sm-8 col-xs-12" style="padding-right: 25px;" > 
-      <div id="mySidenav" class="sidenav">
-        <h4 style="margin-left: 35px;">CATEGORIAS</h4>
-        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <ul id="nav-responsive"> 
-          {% if listado_categorias %}
-            {% for categoria_padre in listado_categorias%}
-              <li>
-                <a href="{% url 'productos_categoria' categoria_padre.categoriaPadre.descripcion %}" class="text-left">
-                  {{categoria_padre.categoriaPadre.descripcion}}
-                  {% if categoria_padre.categoriaHijo %}
-                      <spam id="chevron" class="glyphicon glyphicon-chevron-down pull-right" style=" font-size:19px">
-                      </spam>
-                    </a>
-                    <ul>
-                      {% for categoria_hijo in categoria_padre.categoriaHijo%}
-                        <li>
-                          <a href="{% url 'productos_categoria' categoria_hijo.categoriaPadre.descripcion %}">{{categoria_hijo.categoriaPadre.descripcion}}</a>
-                        </li>
-                      {% endfor %}
+    <div class="row" style="margin-left: 0px;">
+        <div class="container-fluid" style="padding-right: 0px;">
+            <div class="col-lg-9 col-md-9 col-sm-8 col-xs-12" style="padding-right: 25px;">
+                <div id="mySidenav" class="sidenav">
+                    <h4 style="margin-left: 35px;">CATEGORIAS</h4>
+                    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+                    <ul id="nav-responsive">
+                        {% if listado_categorias %}
+                            {% for categoria_padre in listado_categorias %}
+                                <li>
+                                    <a href="{% url 'productos_categoria' categoria_padre.categoriaPadre.descripcion %}"
+                                       class="text-left">
+                                        {{ categoria_padre.categoriaPadre.descripcion }}
+                                        {% if categoria_padre.categoriaHijo %}
+                                            <spam id="chevron" class="glyphicon glyphicon-chevron-down pull-right"
+                                                  style=" font-size:19px">
+                                            </spam>
+                                            </a>
+                                            <ul>
+                                                {% for categoria_hijo in categoria_padre.categoriaHijo %}
+                                                    <li>
+                                                        <a href="{% url 'productos_categoria' categoria_hijo.categoriaPadre.descripcion %}">{{ categoria_hijo.categoriaPadre.descripcion }}</a>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% else %}
+                                            </a>
+                                        {% endif %}
+                                </li>
+                            {% endfor %}
+                        {% endif %}
                     </ul>
-                   {% else %}
-                    </a>
-                  {% endif %}
-              </li>     
-            {% endfor %}
-          {% endif %}
-        </ul>
-      </div>
-      <span class="openNav pull-left cursor-pointer" style="font-size:30px;" onclick="openNav()">&#9776; </span>
+                </div>
+                <span class="openNav pull-left cursor-pointer" style="font-size:30px;"
+                      onclick="openNav()">&#9776; </span>
 
-      {# Titulo de la pagina #}
-      {% if page_title %}
-        <h3>{{page_title|title}}</h3>
-        <hr>
-      {% endif %}
-
-      {% if listado_saldo_inventario %}
-        <div class="opcion-vista">
-          <div class="pull-right">
-            {% with listado_saldo_inventario as listado %}
-            <a class="cursor-pointer" id="grid" title="Mosaico" style="padding-left:2px"; ><span class="glyphicon glyphicon-th-large active "></span></a>
-            <a class="cursor-pointer" id="list" title="Listado" style="padding-right: 6px;"><span class="glyphicon glyphicon-th-list "></span></a>
-            <!-- ORDENAMIENTO DE LOS PRODUCTOS -->
-            <p>Ordernar por: </p>
-            <div class="btn-group" style="padding-left: 3px">
-              <button class="btn btn-default btn-xs dropdown-toggle" style="color:#303841; font-size:13px;border:0px" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              {% if request.GET.order == 'asc'%}
-                Menor Precio
-              {% elif request.GET.order == 'desc' %}
-                Mayor Precio
-              {% elif request.GET.order == 'promo' %}
-                Ofertas
-              {% else %}
-                Más relevantes
-              {% endif %}
-              <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" style="">
-              {% if request.GET.order != 'asc'%}
-                <li><a class="cursor-pointer" onclick="sort_products({{listado.number}},'asc')">Menor Precio</a></li>
-              {% endif %}
-              {% if request.GET.order != 'desc' %}
-                <li><a class="cursor-pointer" onclick="sort_products({{listado.number}},'desc')">Mayor Precio</a></li>
-              {% endif %}
-              {% if request.GET.order != 'promo' %}
-                <li><a class="cursor-pointer" onclick="sort_products({{listado.number}},'promo')">Ofertas</a></li>
-              {% endif %}
-              {% if request.GET.order != 'rel' and request.GET.order != None %}
-                <li><a class="cursor-pointer" onclick="sort_products({{listado.number}},'rel')">Más relevantes</a></li>
-              {% endif %}
-              </ul>
-            </div>
-            {% endwith %}
-          </div>
-        </div> 
-        {% include "inventario/div_producto.html"%}
-        
-      {% elif request.GET.filtro %}
-        {# Cuando no existen productos en la busqueda del usuario #}
-        <div class="page-header">
-          <h4 class="title-principal">Resultado de Búsqueda </h4>
-        </div>
-        <h4 class="item-text">
-          No se han encontrado resultados para su búsqueda <strong> "{{ request.GET.filtro}}" .</strong> 
-          Intentalo de Nuevo
-        </h4>
-        <ul style="margin-top: 6px;">
-          <h4 class="item-heading"> Tenga en cuenta lo siguiente: </h4>
-          <li> Usa términos generales </li>
-          <li> Revisa la ortografía de la palabra</li>
-        </ul>
-      {% else %}
-        {# Cuando no existen productos #}
-          <h4 class="item-text">
-            No se han encontrado resultados en la página actual. Inténtalo de Nuevo.
-            </h4>
-      {% endif %}
-      <!--Visualización de numero de articulos -->
-      <div class="opcion-vista">
-        <div class="pull-right">
-          <p>Mostrando {{ listado_saldo_inventario.start_index }} a {{listado_saldo_inventario.end_index}} de {{ listado_saldo_inventario.count }} ({{ listado_saldo_inventario.num_pages }} Páginas) </p>
-        </div>
-      </div>
-      <!--Paginador-->
-      {% if listado_saldo_inventario %}
-        <div>
-          <hr style="margin-bottom: 9px; margin-top: 5px;">
-          <nav aria-label="Page navigation">
-            <ul class="pagination">
-              {% if listado_saldo_inventario.has_previous %}
-              <li>
-                <a href="javascript:sort_products({{ listado_saldo_inventario.previous_page_number }})" aria-label="Previous">
-                  <span aria-hidden="true">&laquo;</span>
-                </a>
-              </li>
-              {% else %}
-              <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
-              {% endif %}
-              {% for i in listado_saldo_inventario.paginator.page_range %}
-                {% if listado_saldo_inventario.number == i %}
-                  <li class="active"><a  href="#">{{ i }}<span class="sr-only">(current)</span></a></li>
-                {% else %}
-                  <li><a href="javascript:sort_products({{ i }})">{{ i }}</a></li>
+                {# Titulo de la pagina #}
+                {% if page_title %}
+                    <h3>{{ page_title|title }}</h3>
+                    <hr>
                 {% endif %}
-              {% endfor %}
-              {% if listado_saldo_inventario.has_next %}
-              <li>
-                <a href="javascript:sort_products({{ listado_saldo_inventario.next_page_number }})" aria-label="Next">
-                  <span aria-hidden="true">&raquo;</span>
-                </a>
-              </li>
-              {% else %}
-              <li class="disabled"><a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
-              {% endif %}
-            </ul>
-          </nav>
-        </div>
-      {% endif %}
 
-    </div>
-    {# MENU CATEGORIAS #}
-    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12" style=" padding-right: 0px;padding-left: 0px;">
-      <nav>
-        <ul id="nav-categorias" class="nav-vertical-right box">
-        <li><h4 class="text-center"><strong>CATEGORIAS</strong></h4></li>
-        <hr style="margin-bottom:0px;">
-         {% if listado_categorias %}
-            {% for categoria_padre in listado_categorias%}
-              <li>
-                <a href="{% url 'productos_categoria' categoria_padre.categoriaPadre.descripcion  %}">{{categoria_padre.categoriaPadre.descripcion}}
-              {% if categoria_padre.categoriaHijo %}
-                <spam id="chevron" class="glyphicon glyphicon-chevron-down " style=" float:right;font-size:19px"></spam>
-                </a>
-                <ul>
-                    {% for categoria_hijo in categoria_padre.categoriaHijo%}
-                      <li>
-                        <a href="{% url 'productos_categoria' categoria_hijo.categoriaPadre.descripcion %}">{{categoria_hijo.categoriaPadre.descripcion}}</a>
-                      </li>
-                    {% endfor %}
-                 </ul>
-               {% else %}
-                </a>
-               {% endif %} 
-               </li>     
-            {% endfor %}
-          {% endif %}
-        </ul>
-      </nav>
-    </div>
-    {# MENU MARCAS#}
-    {% if listado_marcas %}
-      <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12" style=" padding-right: 0px;padding-left: 0px;float: right;">
-        <div class="nav-vertical-right">
-          <h4 class="text-center"><strong>MARCAS</strong></h4>
-          <hr style="margin-bottom:0px;">
-            {% for marca in listado_marcas %}
-              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                <a href="{{ request.get_full_path|filter_url_absolute|add:marca.descripcion|add:'/' }}" alt="{{marca.descripcion}}">
-                  <img class="center-block" src="{% static 'img/marca/'|add:marca.codigo|add:'.jpg' %}" width="98px" height="98px">
-                </a>
-              </div>
-            {% endfor %}
+                {% if listado_saldo_inventario %}
+                    <div class="opcion-vista">
+                        <div class="pull-right">
+                            {% with listado_saldo_inventario as listado %}
+                                <a class="cursor-pointer" id="grid" title="Mosaico" style="padding-left:2px" ;><span
+                                        class="glyphicon glyphicon-th-large active "></span></a>
+                                <a class="cursor-pointer" id="list" title="Listado" style="padding-right: 6px;"><span
+                                        class="glyphicon glyphicon-th-list "></span></a>
+                                <!-- ORDENAMIENTO DE LOS PRODUCTOS -->
+                                <p>Ordernar por: </p>
+                                <div class="btn-group" style="padding-left: 3px">
+                                    <button class="btn btn-default btn-xs dropdown-toggle"
+                                            style="color:#303841; font-size:13px;border:0px" type="button"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        {% if request.GET.order == 'asc' %}
+                                            Menor Precio
+                                        {% elif request.GET.order == 'desc' %}
+                                            Mayor Precio
+                                        {% elif request.GET.order == 'promo' %}
+                                            Ofertas
+                                        {% else %}
+                                            Más relevantes
+                                        {% endif %}
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" style="">
+                                        {% if request.GET.order != 'asc' %}
+                                            <li><a class="cursor-pointer"
+                                                   onclick="sort_products({{ listado.number }},'asc')">Menor Precio</a>
+                                            </li>
+                                        {% endif %}
+                                        {% if request.GET.order != 'desc' %}
+                                            <li><a class="cursor-pointer"
+                                                   onclick="sort_products({{ listado.number }},'desc')">Mayor Precio</a>
+                                            </li>
+                                        {% endif %}
+                                        {% if request.GET.order != 'promo' %}
+                                            <li><a class="cursor-pointer"
+                                                   onclick="sort_products({{ listado.number }},'promo')">Ofertas</a>
+                                            </li>
+                                        {% endif %}
+                                        {% if request.GET.order != 'rel' and request.GET.order != None %}
+                                            <li><a class="cursor-pointer"
+                                                   onclick="sort_products({{ listado.number }},'rel')">Más
+                                                relevantes</a></li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            {% endwith %}
+                        </div>
+                    </div>
+                    {% include "inventario/div_producto.html" %}
+
+                {% elif request.GET.filtro %}
+                    {# Cuando no existen productos en la busqueda del usuario #}
+                    <div class="page-header">
+                        <h4 class="title-principal">Resultado de Búsqueda </h4>
+                    </div>
+                    <h4 class="item-text">
+                        No se han encontrado resultados para su búsqueda <strong> "{{ request.GET.filtro }}" .</strong>
+                        Intentalo de Nuevo
+                    </h4>
+                    <ul style="margin-top: 6px;">
+                        <h4 class="item-heading"> Tenga en cuenta lo siguiente: </h4>
+                        <li> Usa términos generales</li>
+                        <li> Revisa la ortografía de la palabra</li>
+                    </ul>
+                {% else %}
+                    {# Cuando no existen productos #}
+                    <h4 class="item-text">
+                        No se han encontrado resultados en la página actual. Inténtalo de Nuevo.
+                    </h4>
+                {% endif %}
+                <!--Visualización de numero de articulos -->
+                <div class="opcion-vista">
+                    <div class="pull-right">
+                        <p>Mostrando {{ listado_saldo_inventario.start_index }}
+                            a {{ listado_saldo_inventario.end_index }} de {{ listado_saldo_inventario.count }}
+                            ({{ listado_saldo_inventario.num_pages }} Páginas) </p>
+                    </div>
+                </div>
+                <!--Paginador-->
+                {% if listado_saldo_inventario %}
+                    <div>
+                        <hr style="margin-bottom: 9px; margin-top: 5px;">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+                                {% if listado_saldo_inventario.has_previous %}
+                                    <li>
+                                        <a href="javascript:sort_products({{ listado_saldo_inventario.previous_page_number }})"
+                                           aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+                                    </li>
+                                {% endif %}
+                                {% for i in listado_saldo_inventario.paginator.page_range %}
+                                    {% if listado_saldo_inventario.number == i %}
+                                        <li class="active"><a href="#">{{ i }}<span class="sr-only">(current)</span></a>
+                                        </li>
+                                    {% else %}
+                                        <li><a href="javascript:sort_products({{ i }})">{{ i }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if listado_saldo_inventario.has_next %}
+                                    <li>
+                                        <a href="javascript:sort_products({{ listado_saldo_inventario.next_page_number }})"
+                                           aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="disabled"><a href="#" aria-label="Next"><span
+                                            aria-hidden="true">&raquo;</span></a></li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                    </div>
+                {% endif %}
+
+            </div>
+            {# MENU CATEGORIAS #}
+            <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12" style=" padding-right: 0px;padding-left: 0px;">
+                <nav>
+                    <ul id="nav-categorias" class="nav-vertical-right box">
+                        <li><h4 class="text-center"><strong>CATEGORIAS</strong></h4></li>
+                        <hr style="margin-bottom:0px;">
+                        {% if listado_categorias %}
+                            {% for categoria_padre in listado_categorias %}
+                                <li>
+                                    <a href="{% url 'productos_categoria' categoria_padre.categoriaPadre.descripcion %}">{{ categoria_padre.categoriaPadre.descripcion }}
+                                        {% if categoria_padre.categoriaHijo %}
+                                            <spam id="chevron" class="glyphicon glyphicon-chevron-down "
+                                                  style=" float:right;font-size:19px"></spam>
+                                            </a>
+                                            <ul>
+                                                {% for categoria_hijo in categoria_padre.categoriaHijo %}
+                                                    <li>
+                                                        <a href="{% url 'productos_categoria' categoria_hijo.categoriaPadre.descripcion %}">{{ categoria_hijo.categoriaPadre.descripcion }}</a>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% else %}
+                                            </a>
+                                        {% endif %}
+                                </li>
+                            {% endfor %}
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+            {# MENU MARCAS#}
+            {% if listado_marcas %}
+                <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12"
+                     style=" padding-right: 0px;padding-left: 0px;float: right;">
+                    <div class="nav-vertical-right">
+                        <h4 class="text-center"><strong>MARCAS</strong></h4>
+                        <hr style="margin-bottom:0px;">
+                        {% for marca in listado_marcas %}
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <a href="{{ request.get_full_path|filter_url_absolute|add:marca.descripcion|add:'/' }}"
+                                   alt="{{ marca.descripcion }}">
+                                    <img class="center-block"
+                                         src="{% static 'img/marca/'|add:marca.codigo|add:'.jpg' %}" width="98px"
+                                         height="98px">
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
         </div>
-      </div>
-    {% endif %}
-  </div>
-</div>
+    </div>
 {% endblock %}
 
 {% if listado_marcas %}
-  {% block above_footer %}
-  <!-- <div class="row">
+    {% block above_footer %}
+        <!-- <div class="row">
     <div class="container-fluid">
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="slider">          
@@ -242,149 +269,143 @@ ShopNeubs | {{page_title|title}}
       </div>
     </div>
   </div>  -->
-  {% endblock %}
+    {% endblock %}
 {% endif %}
 
 {% block script_footer %}
-<script type="text/javascript">
+    <script type="text/javascript">
 
-function sort_products(num_page,order=null){
-  url = $(location).attr('href')
-  char = '?'
-  if($.get('filtro') != null)
-    char='&'
+        function sort_products(num_page, order=null) {
+            url = $(location).attr('href')
+            char = '?'
+            if ($.get('filtro') != null)
+                char = '&'
 
-  if($.get('page') != null )
-    url = url.replace(/page=[\d]+/g, "page="+num_page)
-  else
-    url+= char+'page='+num_page   
-  
-  if(order != null){
-    if($.get('order') != null){
-      if($.get('order') != order && num_page != 1){
-        url = url.replace(/&page=[\d]+/g, "")
-      }
-      url = url.replace(/order=[\w]+/g, "order="+order)
-    }
-    else
-      url+='&order='+order
-  }
-  // si el usuario esta visualizando los productos en modo listado
-  // se envía el parametro para que se vuelvan a listar
-  if($(document).find('div .list-group-item').length > 0)
-    url+='&show=list'
-  else
-    url = url.replace(/&show=[\w]+/g, "")
-  $(location).attr('href',url)
-}
+            if ($.get('page') != null)
+                url = url.replace(/page=[\d]+/g, "page=" + num_page)
+            else
+                url += char + 'page=' + num_page
 
-$(document).ready(function()
-{
-  // Se visualiza en vista si esta especificado el parametro GET 'visualizacion'
-  if($.get('show') == 'list'){
-    cambiarVisualizacionProductos(true)
-  }
-  //La función de onclick en la etiqueta de spam 
-  $("#nav-categorias > li > a > spam, #nav-responsive > li > a > spam").on("click", function(e)
-  {
-    //se declara la variable padre
-    var parent_a = $(this).parent()
-    //se toma dos puesto anteriores de spam en la cual se va obtener el desendiente de li que es ul
-    if(parent_a.parent().has("ul")) 
-    {
-      e.preventDefault();
-    }
+            if (order != null) {
+                if ($.get('order') != null) {
+                    if ($.get('order') != order && num_page != 1) {
+                        url = url.replace(/&page=[\d]+/g, "")
+                    }
+                    url = url.replace(/order=[\w]+/g, "order=" + order)
+                }
+                else
+                    url += '&order=' + order
+            }
+            // si el usuario esta visualizando los productos en modo listado
+            // se envía el parametro para que se vuelvan a listar
+            if ($(document).find('div .list-group-item').length > 0)
+                url += '&show=list'
+            else
+                url = url.replace(/&show=[\w]+/g, "")
+            $(location).attr('href', url)
+        }
 
-    //Si la variable parent no tiene la clase open se realiza lo siguiente
-    if(!parent_a.hasClass("open")) 
-    {
-      // al ul se asigna un slideup (que recoge) a 350px
-      $("#nav-categorias li ul").slideUp(350);
-      //se remueve la clase open
-      $("#nav-categorias li a ").removeClass("open");
-      //a la etiqueta spam se agrega la clase de icon down
-      $("#nav-categorias li a spam").attr("class","glyphicon glyphicon-chevron-down");
-      //de esta variable que es sapn, se remueve la clase icon down
-      $(this).removeClass('glyphicon glyphicon-chevron-down');
+        $(document).ready(function () {
+            // Se visualiza en vista si esta especificado el parametro GET 'visualizacion'
+            if ($.get('show') == 'list') {
+                cambiarVisualizacionProductos(true)
+            }
+            //La función de onclick en la etiqueta de spam
+            $("#nav-categorias > li > a > spam, #nav-responsive > li > a > spam").on("click", function (e) {
+                //se declara la variable padre
+                var parent_a = $(this).parent()
+                //se toma dos puesto anteriores de spam en la cual se va obtener el desendiente de li que es ul
+                if (parent_a.parent().has("ul")) {
+                    e.preventDefault();
+                }
 
-      // de la etiqueta de padre de li la proxima ul se le agrega slide down
-      parent_a.next("ul").slideDown(350);
-      //se agrega la clase open
-      parent_a.addClass("open");
-      //se agrega la clase de icon up
-      $(this).addClass('glyphicon glyphicon-chevron-up')
-      ;
-    }
-    else
-    {
-      //si no se remueve la clase open
-      parent_a.removeClass("open");
-      //se minimiza ul 
-      parent_a.next("ul").slideUp(350);
-      //se agrega clase de icon-down  
-      $("spam").addClass('glyphicon glyphicon-chevron-down');
-    }
-  });
+                //Si la variable parent no tiene la clase open se realiza lo siguiente
+                if (!parent_a.hasClass("open")) {
+                    // al ul se asigna un slideup (que recoge) a 350px
+                    $("#nav-categorias li ul").slideUp(350);
+                    //se remueve la clase open
+                    $("#nav-categorias li a ").removeClass("open");
+                    //a la etiqueta spam se agrega la clase de icon down
+                    $("#nav-categorias li a spam").attr("class", "glyphicon glyphicon-chevron-down");
+                    //de esta variable que es sapn, se remueve la clase icon down
+                    $(this).removeClass('glyphicon glyphicon-chevron-down');
+
+                    // de la etiqueta de padre de li la proxima ul se le agrega slide down
+                    parent_a.next("ul").slideDown(350);
+                    //se agrega la clase open
+                    parent_a.addClass("open");
+                    //se agrega la clase de icon up
+                    $(this).addClass('glyphicon glyphicon-chevron-up')
+                    ;
+                }
+                else {
+                    //si no se remueve la clase open
+                    parent_a.removeClass("open");
+                    //se minimiza ul
+                    parent_a.next("ul").slideUp(350);
+                    //se agrega clase de icon-down
+                    $("spam").addClass('glyphicon glyphicon-chevron-down');
+                }
+            });
 
 
-  //Cuando el usuario da click en el boton de visualualización como Lista
-  $('#list').click(function(){
-    cambiarVisualizacionProductos(true);
-    $(this).css("color","#FF5722");
-    $(".active").css("color","#303841");
-  });
-  //Cuando el usuario da click en el boton de visualualización como Mosaico
-  $('#grid').click(function(){
-    cambiarVisualizacionProductos(false);
-    $('.active').css("color","#FF5722");
-    $('#list').css("color","#303841");
-  });
+            //Cuando el usuario da click en el boton de visualualización como Lista
+            $('#list').click(function () {
+                cambiarVisualizacionProductos(true);
+                $(this).css("color", "#FF5722");
+                $(".active").css("color", "#303841");
+            });
+            //Cuando el usuario da click en el boton de visualualización como Mosaico
+            $('#grid').click(function () {
+                cambiarVisualizacionProductos(false);
+                $('.active').css("color", "#FF5722");
+                $('#list').css("color", "#303841");
+            });
 
-  /* Selecciona la categoria donde el usuario esta */
-  // del breadcrub sacamos el ultimo valor
-  var last_url = $('.breadcrumb>li>a:last').html()
-  // Se busca el a de la categoria que contenga el valor de last_url
-  var a_selected = $("#nav-categorias li a:contains('"+last_url+"'):first,#nav-responsive li a:contains('"+last_url+"'):first")
-  //  Se le agrega la clase selected al padre de a (categoria seleccionada)
-  $(a_selected).parent().attr('class','selected')
-  // Si es una subcategoria, se da click al spam para que se despliegue
-  $(a_selected).parents('li:last').children('a').children('spam').click()
-});
-
-function cambiarVisualizacionProductos(en_listado)
-{
-  if(en_listado){
-    //Al id productos de la clase item se le agrega la clase list-group-item
-    $('#products .producto-box').addClass('list-group-item');
-    //A la clase item-text-display se le adiciona el estilo de display a block
-    $(".item-text-display").css("display","block");
-  }
-  else{
-    //al id de productos de la clase item se remueve la clase list-group-item
-    $('#products .producto-box').removeClass('list-group-item');
-    //a la clase de descripcion se le cambia el atributo del estilo de display
-    $(".item-text-display").css("display","none")
-  }
-}
-function createEllipsis ( containerId ) {
-    $container = $("#" + containerId);
-    var containerHeight = $container.height();
-    var $text = $container.find("h5");
- 
-    while ( $text.outerHeight() > containerHeight ) {
-        $text.text(function (index, text) {
-            return text.replace(/\W*\s(\S)*$/, '...');
+            /* Selecciona la categoria donde el usuario esta */
+            // del breadcrub sacamos el ultimo valor
+            var last_url = $('.breadcrumb>li>a:last').html()
+            // Se busca el a de la categoria que contenga el valor de last_url
+            var a_selected = $("#nav-categorias li a:contains('" + last_url + "'):first,#nav-responsive li a:contains('" + last_url + "'):first")
+            //  Se le agrega la clase selected al padre de a (categoria seleccionada)
+            $(a_selected).parent().attr('class', 'selected')
+            // Si es una subcategoria, se da click al spam para que se despliegue
+            $(a_selected).parents('li:last').children('a').children('spam').click()
         });
-    }
-    createEllipsis("descripcion-texto");
-  }
-function openNav() {
-  $("#mySidenav").css('width',"300px");
-}
 
-function closeNav() {
-  //el nav sider toma un ancho de 0px
-  $("#mySidenav").css('width' , '0');
-}
-</script>
+        function cambiarVisualizacionProductos(en_listado) {
+            if (en_listado) {
+                //Al id productos de la clase item se le agrega la clase list-group-item
+                $('#products .producto-box').addClass('list-group-item');
+                //A la clase item-text-display se le adiciona el estilo de display a block
+                $(".item-text-display").css("display", "block");
+            }
+            else {
+                //al id de productos de la clase item se remueve la clase list-group-item
+                $('#products .producto-box').removeClass('list-group-item');
+                //a la clase de descripcion se le cambia el atributo del estilo de display
+                $(".item-text-display").css("display", "none")
+            }
+        }
+        function createEllipsis(containerId) {
+            $container = $("#" + containerId);
+            var containerHeight = $container.height();
+            var $text = $container.find("h5");
+
+            while ($text.outerHeight() > containerHeight) {
+                $text.text(function (index, text) {
+                    return text.replace(/\W*\s(\S)*$/, '...');
+                });
+            }
+            createEllipsis("descripcion-texto");
+        }
+        function openNav() {
+            $("#mySidenav").css('width', "300px");
+        }
+
+        function closeNav() {
+            //el nav sider toma un ancho de 0px
+            $("#mySidenav").css('width', '0');
+        }
+    </script>
 {% endblock %}

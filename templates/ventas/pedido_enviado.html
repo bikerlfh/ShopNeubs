@@ -1,20 +1,24 @@
 {% extends 'base.html' %}
 {% load staticfiles %}
 {% block script_head %}
-<style type="text/css">
-	p{
-		font-size: 17px;
-		font-weight: 100;
-	}
-</style>
-{% endblock%}
+    <style type="text/css">
+        p {
+            font-size: 17px;
+            font-weight: 100;
+        }
+    </style>
+{% endblock %}
 
 {% block content %}
-	<div class="container-fluid text-center">
-		<h2>¡Tu Pedido ha sido enviado!</h2>
-		<hr>
-		<p>
-		Tu pedido ha sido generado satisfactoriamente con el número <b style="color: #FF5722;"> N°.  {{ numeroPedido }}</b></p>
-		<p>Pronto nos comunicaremos contigo. Cualquier inquietud, comunicate a los números telefonicos <b>3222709439 - 3202331893 </b> o envíanos un correo eléctronico a <b style="color: #FF5722; font-weight: bold">shop@neubs.com.co</b>. Recuerda que puedes llevar seguimiento del estado de tus pedidos desde el link <a style="color: #FF5722; font-weight: bold" href="{% url 'mis_pedidos'%}">MIS PEDIDOS</a>.</p>
-	</div>
+    <div class="container-fluid text-center">
+        <h2>¡Tu Pedido ha sido enviado!</h2>
+        <hr>
+        <p>
+            Tu pedido ha sido generado satisfactoriamente con el número <b style="color: #FF5722;">
+            N°. {{ numeroPedido }}</b></p>
+        <p>Pronto nos comunicaremos contigo. Cualquier inquietud, comunicate a los números telefonicos <b>3222709439 -
+            3202331893 </b> o envíanos un correo eléctronico a <b style="color: #FF5722; font-weight: bold">shop@neubs.com.co</b>.
+            Recuerda que puedes llevar seguimiento del estado de tus pedidos desde el link <a
+                    style="color: #FF5722; font-weight: bold" href="{% url 'mis_pedidos' %}">MIS PEDIDOS</a>.</p>
+    </div>
 {% endblock %}

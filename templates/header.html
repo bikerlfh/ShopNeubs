@@ -2,55 +2,61 @@
 <header>
     <nav class="navbar navbar-default">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse" aria-expanded="false">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse" aria-expanded="false">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{% url 'home'%}" style="color: white;padding: 9px 40px;"><img src="{% static 'img/logo.png'%}" style="padding-top: 0px;"></a>
+            <a class="navbar-brand" href="{% url 'home' %}" style="color: white;padding: 9px 40px;"><img
+                    src="{% static 'img/logo.png' %}" style="padding-top: 0px;"></a>
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse">
-            <ul class="nav navbar-nav navbar-right" >
+            <ul class="nav navbar-nav navbar-right">
                 {% if not request.user.is_authenticated %}
-                    <li><a class="link-Ingresar" href="{% url 'auth_login'%}?next={{request.GET.next}}">Ingresar</a></li>
-                    <li><a class="link-Registro" href="{% url 'registration_register'%}">Registro</a></li>
+                    <li><a class="link-Ingresar" href="{% url 'auth_login' %}?next={{ request.GET.next }}">Ingresar</a>
+                    </li>
+                    <li><a class="link-Registro" href="{% url 'registration_register' %}">Registro</a></li>
                 {% else %}
                     <style type="text/css">
-                    @media screen and (min-width:768px) and (max-width:991px) {
-                        .buttonsearch {
-                            position: absolute;
-                            float: right;
-                            right: 310px;
-                            color: #FF5722;
-                        }
-                        .searchbardiv {
-                            right:340px;
-                            width:40%
-                        }
-                    }
-                    @media screen and (min-width:992px) and (max-width:1200px) {
+                        @media screen and (min-width: 768px) and (max-width: 991px) {
+                            .buttonsearch {
+                                position: absolute;
+                                float: right;
+                                right: 310px;
+                                color: #FF5722;
+                            }
 
-                    }
+                            .searchbardiv {
+                                right: 340px;
+                                width: 40%
+                            }
+                        }
+
+                        @media screen and (min-width: 992px) and (max-width: 1200px) {
+
+                        }
                     </style>
-                    <li><a href="{% url 'profile'%}"><b> {{ request.user|title }}</b></a></li>
-                    <li><a href="{% url 'mis_pedidos'%}">Mis pedidos</a></li>
-                    <li><a class="" href="{% url 'auth_logout'%}">Salir</a></li>
+                    <li><a href="{% url 'profile' %}"><b> {{ request.user|title }}</b></a></li>
+                    <li><a href="{% url 'mis_pedidos' %}">Mis pedidos</a></li>
+                    <li><a class="" href="{% url 'auth_logout' %}">Salir</a></li>
                 {% endif %}
             </ul>
         </div>
         <div class="container searchbardiv" id="formsearch">
-            <form role="search" method="GET" id="searchform" action="{% url 'search'%}"  >
+            <form role="search" method="GET" id="searchform" action="{% url 'search' %}">
                 <div class="input-group">
-                    <input type="text" id="searchbox" class="form-control" name="filtro" value="{{ request.GET.filtro }}" required>
+                    <input type="text" id="searchbox" class="form-control" name="filtro"
+                           value="{{ request.GET.filtro }}" required>
                     <div class="input-group-btn">
-                        <button class="btn btn-default bg-orange"  id="searchsubmit"  type="submit">
+                        <button class="btn btn-default bg-orange" id="searchsubmit" type="submit">
                             <span class="glyphicon glyphicon-search"></span>
-                        </button>  
+                        </button>
                     </div>
                 </div>
             </form>
-       </div>
+        </div>
         <button type="button" class="buttonsearch" id="buttonsearch">
             <i class="glyphicon glyphicon-search openclosesearch"></i>
         </button>
@@ -63,7 +69,7 @@
 {% if request.user.is_authenticated and request.user.is_staff %}
     {% include "header_staff.html" %}
     <style type="text/css">
-        .panel{
+        .panel {
             display: none;
         }
     </style>

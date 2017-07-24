@@ -135,4 +135,6 @@ class PedidoVentaManager:
 			transaction.commit()
 		finally:
 			transaction.set_autocommit(True)
+		# si se autorizó el pedido, se envía el email
+		self.__pedidoVenta.send_pedido_autorizado_email()
 		return True
