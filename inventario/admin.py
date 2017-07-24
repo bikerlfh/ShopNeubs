@@ -130,7 +130,7 @@ class SaldoInventarioAdmin(admin.ModelAdmin):
 	form = SaldoInventarioForm
 	fieldsets = [
 		('Default', {'fields': ['producto', 'proveedor', 'garantia', 'referenciaProveedor', 'cantidad', 'costoTotal',
-								'precioCompraUnitario', 'precioVentaUnitario', 'precioOferta', 'plataformas',
+								'precioCompraUnitario', 'precioVentaUnitario', 'precioOferta',
 								'estado']}),
 	]
 	list_display = ['producto', 'proveedor', 'referenciaProveedor', 'cantidad', 'costoTotal', 'precioCompraUnitario',
