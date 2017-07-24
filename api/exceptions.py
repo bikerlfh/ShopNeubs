@@ -4,11 +4,12 @@ from rest_framework.exceptions import APIException
 
 
 class CustomException(APIException):
-    #status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
-    default_detail = 'A server error occurred.'
+	# status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+	default_detail = 'A server error occurred.'
 
-    def __init__(self, detail, field='detail', status_code=status.HTTP_400_BAD_REQUEST):
-        if status_code is not None:self.status_code = status_code
-        if detail is not None:
-            self.detail = {field: force_text(detail)}
-        else: self.detail = {'detail': force_text(self.default_detail)}
+	def __init__(self, detail, field='detail', status_code=status.HTTP_400_BAD_REQUEST):
+		if status_code is not None: self.status_code = status_code
+		if detail is not None:
+			self.detail = {field: force_text(detail)}
+		else:
+			self.detail = {'detail': force_text(self.default_detail)}

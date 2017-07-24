@@ -1,9 +1,8 @@
 from django.db.models import Q
+from fcm_django.models import FCMDevice
 from rest_framework.decorators import permission_classes, api_view
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny
-
-from fcm_django.models import FCMDevice
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 
@@ -15,7 +14,7 @@ from .serializers import ApiSincronizacionSerializer, ApiTablaSerializer, ApiBan
 class APITablaListView(ListAPIView):
 	serializer_class = ApiTablaSerializer
 
-	def get_queryset(self,*args,**kwargs):
+	def get_queryset(self, *args, **kwargs):
 		queryset_list = ApiTabla.objects.all()
 		return queryset_list
 
@@ -23,18 +22,18 @@ class APITablaListView(ListAPIView):
 class APISincronizacionListView(ListAPIView):
 	serializer_class = ApiSincronizacionSerializer
 
-	def get_queryset(self,*args,**kwargs):
-		filter_Q = Q(ultima = True)
+	def get_queryset(self, *args, **kwargs):
+		filter_Q = Q(ultima=True)
 		# Se valida la tabla
-		if self.request.GET.get('tabla',None):
-			filter_Q = filter_Q & Q(tabla_id = self.request.GET.get('tabla',None))
+		if self.request.GET.get('tabla', None):
+			filter_Q = filter_Q & Q(tabla_id=self.request.GET.get('tabla', None))
 		return ApiSincronizacion.objects.filter(filter_Q).order_by('-fecha')
 
 
 class APIBannerListView(ListAPIView):
 	serializer_class = ApiBannerSerializer
 
-	def get_queryset(self,*args,**kwargs):
+	def get_queryset(self, *args, **kwargs):
 		return ApiBanner.objects.all().order_by('-fecha')
 
 
@@ -49,9 +48,9 @@ class APISectionListView(ListAPIView):
 @permission_classes([AllowAny])
 def FMCDeviceRegister(request):
 	if request.POST:
-		registration_id = request.POST.get("registration_id",None)
-		type = request.POST.get("type",None)
-		active = request.POST.get("active",None)
+		registration_id = request.POST.get("registration_id", None)
+		type = request.POST.get("type", None)
+		active = request.POST.get("active", None)
 		user = None
 		if request.user.is_authenticated():
 			user = request.user
@@ -80,13 +79,11 @@ def FMCDeviceRegister(request):
 				fcm_device_user = FCMDevice.objects.get(user_id=request.user.pk)
 				fcm_device_user.registration_id = registration_id
 				fcm_device_user.save()
-				return Response(data={'detail': 'Token updated'}, status = HTTP_200_OK)
+				return Response(data={'detail': 'Token updated'}, status=HTTP_200_OK)
 			# de lo contrario se crea el registro con el usuario
 
 		# se crea el registro cuando no esta autenticado y cuando está autenticado pero no tiene registro el token
-		FCMDevice(registration_id=registration_id,user=user, type=type,active=active).save()
+		FCMDevice(registration_id=registration_id, user=user, type=type, active=active).save()
 		return Response(data={'detail': 'Token created'}, status=HTTP_201_CREATED)
 	else:
 		raise CustomException(detail="los campos son necesarios")
-
-

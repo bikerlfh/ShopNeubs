@@ -1,8 +1,9 @@
-from django.db import models
-from filer.fields.file import FilerFileField
-from django.template.loader import render_to_string
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
+from django.db import models
+from django.template.loader import render_to_string
+from filer.fields.file import FilerFileField
+
 from api import fcm_messages
 
 

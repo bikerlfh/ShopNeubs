@@ -11,6 +11,8 @@ class PaisSerializer(ModelSerializer):
 			'codigo',
 			'descripcion',
 		]
+
+
 class DepartamentoSerializer(ModelSerializer):
 	class Meta:
 		model = Departamento
@@ -20,6 +22,8 @@ class DepartamentoSerializer(ModelSerializer):
 			'codigo',
 			'descripcion',
 		]
+
+
 class MunicipioSerializer(ModelSerializer):
 	class Meta:
 		model = Municipio

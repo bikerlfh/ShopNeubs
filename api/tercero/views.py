@@ -14,13 +14,14 @@ from division_territorial.models import Municipio
 from tercero.models import TipoDocumento, Cliente, DatoBasicoTercero
 from .serializers import UserCreateSerializer, UsuarioSerializer, TipoDocumentoSerializer, PerfilSerializer
 
-SESSION_CACHE_TIEMOUT = getattr(settings,'SESSION_CACHE_TIEMOUT',7200)
-
+SESSION_CACHE_TIEMOUT = getattr(settings, 'SESSION_CACHE_TIEMOUT', 7200)
 
 User = get_user_model()
 
+
 class register(CreateAPIView):
 	serializer_class = UserCreateSerializer
+
 
 class UsuarioDetailView(RetrieveAPIView):
 	queryset = User.objects.all()
@@ -28,39 +29,44 @@ class UsuarioDetailView(RetrieveAPIView):
 	# fila a buscar
 	lookup_field = 'pk'
 
+
 class UsuarioDetailUsernameView(RetrieveAPIView):
 	queryset = User.objects.all()
 	serializer_class = UsuarioSerializer
 	# fila a buscar
 	lookup_field = 'username'
 
+
 class TipoDocumentoListView(ListAPIView):
 	queryset = TipoDocumento.objects.all().order_by('codigo')
 	serializer_class = TipoDocumentoSerializer
-	#filter_backends = [OrderingFilter]
+
+	# filter_backends = [OrderingFilter]
 
 	# Se cachea
 	@method_decorator(cache_page(SESSION_CACHE_TIEMOUT))
-	def dispatch(self,request, *args, **kwargs):
-		return super(TipoDocumentoListView, self).dispatch(request,*args, **kwargs)
+	def dispatch(self, request, *args, **kwargs):
+		return super(TipoDocumentoListView, self).dispatch(request, *args, **kwargs)
+
 
 class PerfilView(ListAPIView):
-	#queryset = Cliente.objects.all()
+	# queryset = Cliente.objects.all()
 	serializer_class = PerfilSerializer
 	permission_classes = [IsAuthenticated]
 
-	#lookup_field = 'pk'
+	# lookup_field = 'pk'
 
-	def get_queryset(self,*args,**kwargs):
+	def get_queryset(self, *args, **kwargs):
 		try:
 			return Cliente.objects.filter(usuario=self.request.user.pk)
 		except Cliente.DoesNotExist:
-			raise CustomException(detail="El usuario no está creado como cliente",field="usuario_no_cliente")
+			raise CustomException(detail="El usuario no está creado como cliente", field="usuario_no_cliente")
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def PerfilCreateView(request):
-	cliente_datos = { 'idCliente':0 }
+	cliente_datos = {'idCliente': 0}
 	transaction.set_autocommit(False)
 	try:
 		data = request.POST
@@ -69,15 +75,15 @@ def PerfilCreateView(request):
 		if Cliente.objects.filter(usuario=user.pk).exists():
 			raise Exception("El usuario ya existe como cliente")
 
-		idTipoDocumento = data.get('idTipoDocumento',None)
+		idTipoDocumento = data.get('idTipoDocumento', None)
 		nit = data.get('nit')
-		primerNombre = data.get('primerNombre',None)
-		segundoNombre = data.get('segundoNombre',None)
-		primerApellido = data.get('primerApellido',None)
-		segundoApellido = data.get('segundoApellido',None)
-		direccion = data.get('direccion',None)
-		telefono = data.get('telefono',None)
-		idMunicipio = data.get('idMunicipio',None)
+		primerNombre = data.get('primerNombre', None)
+		segundoNombre = data.get('segundoNombre', None)
+		primerApellido = data.get('primerApellido', None)
+		segundoApellido = data.get('segundoApellido', None)
+		direccion = data.get('direccion', None)
+		telefono = data.get('telefono', None)
+		idMunicipio = data.get('idMunicipio', None)
 
 		# Validaciones
 		if idTipoDocumento is None:
@@ -99,23 +105,22 @@ def PerfilCreateView(request):
 		if idMunicipio is None:
 			raise Exception("El campo idMunicipio es necesario")
 
-
 		tipoDocumento = TipoDocumento.objects.get(pk=idTipoDocumento)
-		
+
 		# Se valida el tercero
-		if DatoBasicoTercero.objects.filter(nit=nit,tipoDocumento=idTipoDocumento).exists():
+		if DatoBasicoTercero.objects.filter(nit=nit, tipoDocumento=idTipoDocumento).exists():
 			raise Exception("Ya existe un usuario con el nit y tipo de documento")
-			
-		datoBasicoTercero = DatoBasicoTercero(nit = nit,primerNombre = primerNombre,segundoNombre = segundoNombre,
-											  primerApellido = primerApellido,segundoApellido = segundoApellido,
-											  direccion = direccion,telefono = telefono,tipoDocumento = tipoDocumento)
+
+		datoBasicoTercero = DatoBasicoTercero(nit=nit, primerNombre=primerNombre, segundoNombre=segundoNombre,
+											  primerApellido=primerApellido, segundoApellido=segundoApellido,
+											  direccion=direccion, telefono=telefono, tipoDocumento=tipoDocumento)
 		datoBasicoTercero.save()
 
 		municipio = Municipio.objects.get(pk=idMunicipio)
-		cliente = Cliente(usuario=user,datoBasicoTercero=datoBasicoTercero,correo=user.email,municipio=municipio)
+		cliente = Cliente(usuario=user, datoBasicoTercero=datoBasicoTercero, correo=user.email, municipio=municipio)
 		cliente.save()
 
-		cliente_datos= {
+		cliente_datos = {
 			"idCliente": cliente.pk,
 		}
 	except Exception as e:
@@ -128,12 +133,13 @@ def PerfilCreateView(request):
 		pass
 		transaction.set_autocommit(True)
 
-	return Response(data=cliente_datos,status=HTTP_201_CREATED)
+	return Response(data=cliente_datos, status=HTTP_201_CREATED)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def PerfilUpdateView(request):
-	cliente_datos = { 'idCliente':0 }
+	cliente_datos = {'idCliente': 0}
 	transaction.set_autocommit(False)
 	try:
 		data = request.POST
@@ -142,15 +148,15 @@ def PerfilUpdateView(request):
 		if not Cliente.objects.filter(usuario=user.pk).exists():
 			raise Exception("El usuario no existe como cliente")
 
-		idTipoDocumento = data.get('idTipoDocumento',None)
+		idTipoDocumento = data.get('idTipoDocumento', None)
 		nit = data.get('nit')
-		primerNombre = data.get('primerNombre',None)
-		segundoNombre = data.get('segundoNombre',None)
-		primerApellido = data.get('primerApellido',None)
-		segundoApellido = data.get('segundoApellido',None)
-		direccion = data.get('direccion',None)
-		telefono = data.get('telefono',None)
-		idMunicipio = data.get('idMunicipio',None)
+		primerNombre = data.get('primerNombre', None)
+		segundoNombre = data.get('segundoNombre', None)
+		primerApellido = data.get('primerApellido', None)
+		segundoApellido = data.get('segundoApellido', None)
+		direccion = data.get('direccion', None)
+		telefono = data.get('telefono', None)
+		idMunicipio = data.get('idMunicipio', None)
 
 		# Validaciones
 		if idTipoDocumento is None:
@@ -172,12 +178,11 @@ def PerfilUpdateView(request):
 		if idMunicipio is None:
 			raise Exception("El campo idMunicipio es necesario")
 
-
 		cliente = Cliente.objects.get(usuario=user.pk)
 		tipoDocumento = TipoDocumento.objects.get(pk=idTipoDocumento)
-		
+
 		datoBasicoTercero = DatoBasicoTercero.objects.get(pk=cliente.datoBasicoTercero_id)
-			
+
 		datoBasicoTercero.nit = nit
 		datoBasicoTercero.primerNombre = primerNombre
 		datoBasicoTercero.segundoNombre = segundoNombre
@@ -189,10 +194,10 @@ def PerfilUpdateView(request):
 		datoBasicoTercero.save()
 
 		municipio = Municipio.objects.get(pk=idMunicipio)
-		cliente.municipio=municipio
+		cliente.municipio = municipio
 		cliente.save()
 
-		cliente_datos = { "idCliente": cliente.pk }
+		cliente_datos = {"idCliente": cliente.pk}
 	except Exception as e:
 		transaction.rollback()
 		raise CustomException(detail=e)
@@ -203,14 +208,4 @@ def PerfilUpdateView(request):
 		pass
 		transaction.set_autocommit(True)
 
-	return Response(data=cliente_datos,status=HTTP_200_OK)
-		
-		
-
-
-
-
-
-
-
-
+	return Response(data=cliente_datos, status=HTTP_200_OK)

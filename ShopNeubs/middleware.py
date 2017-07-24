@@ -1,5 +1,5 @@
-from django.http import HttpResponsePermanentRedirect
 from django.conf import settings
+from django.http import HttpResponsePermanentRedirect
 
 """
     LAS PETICIONES HTTP LAS DIRECCIONA A HTTPS
